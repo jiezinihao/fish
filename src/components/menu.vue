@@ -97,6 +97,8 @@ animate()
 // const menuItemTexture = textureLoader.load("")
 
 onMounted(() => {
+    console.log(menu);
+    
     menu.value.appendChild(renderer.domElement)
 
 })

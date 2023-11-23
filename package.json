@@ -11,13 +11,16 @@
   "dependencies": {
     "sass": "^1.68.0",
     "three": "^0.151.3",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "vue-canvas-nest": "^2.0.0"
   },
   "devDependencies": {
     "@types/three": "^0.150.1",
     "@vitejs/plugin-vue": "^4.2.3",
+    "fast-glob": "^3.3.1",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
+    "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^1.8.5"
   }
 }
