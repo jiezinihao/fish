@@ -23,8 +23,22 @@
             </div>
         </a>
         <div class="connect_other">
-            <a href="">github</a>
-            <a href="">QQ</a>
+            <a href="" target="_blank">github</a>
+        </div>
+        <div class="connect_msg">
+            <h3>
+                留言
+            </h3>
+            <div class="connect_msg_con">
+                <p><em>匿名：</em> 1223</p>
+                <p><em>匿名：</em>你好，作者</p>
+                <p><em>匿名：</em>你好</p>
+                <p><em>匿名：</em>巴拉巴拉</p>
+
+            </div>
+            <h4>我也写一句:</h4>
+            <input class="input_name" type="text" id="name" value="匿名">
+            <input type="text" id="message" placeholder="想说什么~">
         </div>
     </div>
 </template>
@@ -195,4 +209,53 @@ a {
             }
         }
     }
-}</style>
+
+    .connect_msg {
+        border-radius: 5px;
+        padding: 10px;
+        width: 1100px;
+        margin-top: 30px;
+        h3{
+            font-size: 24px;
+        }
+        .connect_msg_con {
+            margin: 20px 0;
+            border-top: 1px solid #333;
+
+            p {
+                em {
+                    font-weight: bold;
+                }
+
+                font-size: 18px;
+                color: #333;
+                margin: 20px 0;
+            }
+        }
+
+        h4 {
+            font-size: 18px;
+            color: #333;
+            margin: 30px 0 10px 0;
+        }
+
+        .input_name{
+            width: 100px;
+            border-radius: 5px 0 0 5px;
+        }
+        input {
+            width: 500px;
+            border: 1px solid #999;
+            border-radius: 0 5px 5px 0;
+            line-height: 20px;
+            font-size: 16px;
+            resize: none;
+            padding: 10px;
+            &:focus{
+                outline: none;
+                border: 1px solid #333;
+            }
+        }
+    }
+}
+</style>
