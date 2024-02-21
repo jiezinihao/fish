@@ -4,8 +4,12 @@ import { ref, reactive, onMounted } from 'vue'
 import notes from "../../components/notes.vue"
 import travel from "../../components/travel.vue"
 import connect from "../../components/connect.vue"
+import initLoginBg from "./init"
+
+
 let currentTab = ref(1);
 let nav = ref<any>(null);
+
 //栏目信息
 const tabs = reactive([
   {
@@ -37,7 +41,8 @@ const listenerFont = () => {
   //获取手指初始坐标
   let startX = 0;
   let index = -1;//选中哪一个tabs，默认值为-1，表示未匹配到
-  let active = false;
+  let active = false;//鼠标是否按下
+
   div.addEventListener("mousedown", (e: any) => {
     active = true
     //获取手指初始坐标
@@ -63,9 +68,9 @@ const listenerFont = () => {
       tabs.forEach((item,i) => {
         if (index !== i && Math.abs(e.pageX - item.leftPosition - 120) < 90) {
           if (e.pageX - item.leftPosition - 120 < 0) {
-            item.leftPosition += 90
+            item.leftPosition += 60
           } else {
-            item.leftPosition -= 90
+            item.leftPosition -= 60
           }
         }
       })
@@ -75,12 +80,17 @@ const listenerFont = () => {
   });
 }
 onMounted(() => {
-  listenerFont()
+  // listenerFont()
+  initLoginBg()
+  window.onresize = ()=>{
+    initLoginBg()
+  }
 })
 
 </script>
 <template>
   <div class="home">
+    <canvas id="canvas"></canvas>
     <div class="home_nav" ref="nav">
       <div class="home_nav_item" :class="item.id == currentTab ? 'home_nav_item_active' : ''" v-for="(item) in tabs"
         @click="changeNav(item)" :style="'left:' + item.leftPosition + 'px'">
@@ -99,58 +109,49 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+#canvas{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
 .home {
   position: relative;
   height: 100%;
   width: 100%;
   overflow: hidden;
-  background: #9a97aa;
-
+  // background: var(--vt-c-black);
   .home_nav {
-    position: fixed;
-    top: 20px;
+    position: relative;
     z-index: 100;
-    width: calc(100% - 240px);
-    margin: 0 120px;
-    height: 110px;
-    padding-left: 120px;
-    padding: 10px 40px;
-    border-radius: 11px;
-    border-radius: 12px;
-    background: #574f7d;
-    box-shadow: inset 9px 9px 18px #4e4771,
-      inset -9px -9px 18px #60578a;
-
+    width: 100%;
+    height: 100px;
+    padding: 0 120px;
+    background: rgba($color:#23272f, $alpha: 0.5);
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--divider-light);
     .home_nav_item {
       height: 80px;
-      color: white;
-      font-size: 24px;
-      width: 80px;
-      border-radius: 20px;
-      background: linear-gradient(145deg, #5d5586, #4e4771);
-      box-shadow: 5px 5px 10px #443e62,
-        -5px -5px 10px #6a6099;
+      color: #999;
+      font-size: 28px;
+      width: 120px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: 0.3s ease-out;
-      position: absolute;
+      transition: 0.3s ease-in;
       top: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-
+      &.home_nav_item_active{
+        background: rgba(88,175,223,.1);
+        box-shadow: 2px 2px 5px rgba(88,175,223,.2);
+        color: #eee;
+      }
 
       &:hover {
         // text-shadow: 5px 5px 10px #333;
-      }
-
-      &.home_nav_item_active::after {
-        content: "";
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: 100;
-        border: 2px solid #9a97aa;
-        border-radius: 20px;
       }
     }
   }
@@ -158,8 +159,6 @@ onMounted(() => {
   .body {
     width: 100%;
     height: 100%;
-    background: #9a97aa;
-    margin: 120px;
     position: relative;
   }
 }

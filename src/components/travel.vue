@@ -13,7 +13,6 @@
             <div class="notes_lab_item">
                 修猫:fish
             </div>
-
         </div>
         <div class="travel_body" ref="body">
             <div class="travel_list" ref="travel">
@@ -424,9 +423,9 @@ const {
 
 onMounted(async () => {
     lineHeightList = [...Array(Math.floor(travel.value.clientWidth / imgWidth))].map(() => 0);
+    console.log(lineHeightList);
+    
     let elImgList = getElImg(travel.value);
-    console.log(elImgList);
-
     elImgList.map(value => {
         value.onload = () => {
             loadingImg++;
@@ -439,7 +438,7 @@ onMounted(async () => {
 })
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @keyframes swing {
     0% {
         transform: rotate(0);

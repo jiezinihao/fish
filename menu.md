@@ -34,3 +34,8 @@
 2. 背景值的计算方式
 
 先别优化！！
+
+
+- 笔记设置部分，全部通过文件设置，标题设置成文件名称，时间设置成文件时间
+- ID，NAME,TIME,
+- ID.IMG,TITLE,SUBTITLE,TIME,COFFEE

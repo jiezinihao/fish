@@ -54,24 +54,33 @@
     width: 100%;
     // border: 5px solid #3c2a4d;
     border-radius: 10px;
-    padding: 20px 0;
-    height: 100%;
+    padding: 50px 0;
+    // height: 100%;
+    align-items: stretch;
 
     .notes_lab {
-        width: 200px;
+        width: 400px;
         flex-shrink: 0;
+        padding: 20px;
+        margin-left: 120px;
+        background: rgba($color: #23272f, $alpha: 0.5);
+        border-radius: 10px 0 0 10px;
 
         .notes_lab_item {
-            height: 50px;
+            height: 60px;
             width: 100%;
             padding: 0 10px 0 20px;
-            line-height: 50px;
+            line-height: 60px;
             position: relative;
-            margin-bottom: 20px;
-            font-size: 18px;
+            margin-bottom: 30px;
+            font-size: 20px;
             cursor: pointer;
-            background: linear-gradient(to right, #e0f0ea, #e0f0ea);
             transition: .2s ease;
+            // color: white;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border: 1px solid rgba(88, 175, 223, .1);
+            color: #999;
 
             &::after {
                 content: "";
@@ -85,20 +94,24 @@
             &:hover {
                 padding-left: 30px;
                 letter-spacing: 1px;
-                background: linear-gradient(to right, #95adbe, #e0f0ea);
+                background: rgba(88, 175, 223, .1);
+                box-shadow: 2px 2px 5px rgba(88, 175, 223, .1);
+                color: #eee;
 
                 &::after {
-                    background: #503a65;
+                    background: rgba(88, 175, 223, .5);
                 }
             }
 
             &.notes_lab_item_active {
                 padding-left: 30px;
                 letter-spacing: 1px;
-                background: linear-gradient(to right, #95adbe, #e0f0ea);
+                background: rgba(88, 175, 223, .1);
+                box-shadow: 2px 2px 5px rgba(88, 175, 223, .1);
+                color: #eee;
 
                 &::after {
-                    background: #503a65;
+                    background: rgba(88, 175, 223, .5);
                 }
             }
         }
@@ -107,7 +120,10 @@
 
     .notes_body {
         flex: 1;
-        padding-left: 20px;
+        padding: 40px;
+        background: rgba($color: #23272f, $alpha: 0.5);
+        margin-right: 120px;
+        border-radius: 0 10px 10px 0;
 
         .notes_list {
             width: 100%;
@@ -118,12 +134,15 @@
                 margin-bottom: 40px;
                 position: relative;
                 cursor: pointer;
+                border: 2px solid rgba(88, 175, 223, 0);
+                border-bottom: none;
+                border-radius: 5px;
+                padding: 20px 10px;
 
                 p {
                     margin-bottom: 10px;
                     font-size: 18px;
-                    color: #333;
-
+                    color: #999;
                 }
 
                 time {
@@ -131,31 +150,35 @@
                     color: #999;
                 }
 
-                &::after {
-                    content: "";
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    height: 1px;
-                    width: 100%;
-                    background: #95adbe;
-                    z-index: 1;
-                }
+                // &::after {
+                //     content: "";
+                //     position: absolute;
+                //     bottom: 0;
+                //     left: 0;
+                //     height: 2px;
+                //     width: 100%;
+                //     background: #95adbe;
+                //     z-index: 1;
+                // }
 
                 &::before {
                     content: "";
-
                     position: absolute;
                     bottom: 0;
                     left: 0;
-                    height: 1px;
+                    height: 2px;
                     width: 0;
-                    background: #3c2a4d;
+                    background: rgba(88, 175, 223, 0.9);
                     z-index: 2;
                     transition: 0.5s ease-in;
                 }
 
                 &:hover {
+                    border: 2px solid rgba(88, 175, 223, .1);
+                    border-bottom: none;
+                    p{
+                        color: #eee;
+                    }
                     &::before {
                         width: 100%;
                     }

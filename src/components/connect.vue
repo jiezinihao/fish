@@ -1,44 +1,52 @@
 
 <template>
     <div class="connect">
-        <a href="https://space.bilibili.com/73785133" target="_blank" class="bilibili">
-            <div class="bi">
-                <div class="bi_img">
-                    <img src="../assets/img/bi_img.jpg" alt="">
-                    <span></span>
-                </div>
-                <div class="bi_con">
-                    <div class="bi_tit">
-                        <span>BigCat_</span>
+        <div class="container">
+            <div class="connect_other">
+                <p>B站主页：</p>
+                <a href="https://space.bilibili.com/73785133" target="_blank" class="bilibili">
+                <div class="bi">
+                    <div class="bi_img">
+                        <img src="../assets/img/bi_img.jpg" alt="">
                         <span></span>
-                        <span></span>
-                        <span></span>
-                        <span>抱狸龙</span>
-                        <span>12</span>
                     </div>
-                    <div class="bi_span">
-                        一路风雨我在前Dennis
+                    <div class="bi_con">
+                        <div class="bi_tit">
+                            <span>BigCat_</span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span>抱狸龙</span>
+                            <span>12</span>
+                        </div>
+                        <div class="bi_span">
+                            一路风雨我在前Dennis
+                        </div>
                     </div>
                 </div>
+            </a>
             </div>
-        </a>
-        <div class="connect_other">
-            <a href="" target="_blank">github</a>
-        </div>
-        <div class="connect_msg">
-            <h3>
-                留言
-            </h3>
-            <div class="connect_msg_con">
-                <p><em>匿名：</em> 1223</p>
-                <p><em>匿名：</em>你好，作者</p>
-                <p><em>匿名：</em>你好</p>
-                <p><em>匿名：</em>巴拉巴拉</p>
 
+            <div class="connect_other">
+                <p>git平台：</p>
+                <a href="" target="_blank">github</a>
+                <a href="https://gitee.com/jiezinihao/projects">gitee</a>
             </div>
-            <h4>我也写一句:</h4>
-            <input class="input_name" type="text" id="name" value="匿名">
-            <input type="text" id="message" placeholder="想说什么~">
+            <div class="connect_msg">
+                <h3>
+                    网站留言
+                </h3>
+                <div class="connect_msg_con">
+                    <p><em>匿名：</em> 1223</p>
+                    <p><em>匿名：</em>你好，作者</p>
+                    <p><em>匿名：</em>你好</p>
+                    <p><em>匿名：</em>巴拉巴拉</p>
+
+                </div>
+                <h4>我也写一句:</h4>
+                <input class="input_name" type="text" id="name" placeholder="昵称" value="匿名">
+                <input type="text" id="message" placeholder="想说什么~">
+            </div>
         </div>
     </div>
 </template>
@@ -52,6 +60,16 @@ a {
 }
 
 .connect {
+    width: 100%;
+
+    .container {
+        margin: 40px 120px;
+        padding: 40px;
+        background: rgba($color: #23272f, $alpha: 0.8);
+        border-radius: 10px;
+        padding-right: 120px;
+    }
+
     .bilibili {
         width: 1100px;
         height: 185px;
@@ -195,13 +213,20 @@ a {
     }
 
     .connect_other {
-        display: flex;
         padding: 20px 0;
+        line-height: 30px;
+        font-size: 24px;
+        border-bottom: 1px solid #333;
+
+        p {
+            color: #eee;
+            margin-bottom: 20px;
+        }
 
         a {
+
+            color: #999;
             margin-right: 30px;
-            line-height: 30px;
-            font-size: 24px;
 
             &:hover {
                 text-decoration: underline;
@@ -213,14 +238,18 @@ a {
     .connect_msg {
         border-radius: 5px;
         padding: 10px;
-        width: 1100px;
-        margin-top: 30px;
-        h3{
-            font-size: 24px;
+        padding-right: 0;
+        margin-top: 10px;
+
+        h3 {
+            font-size: 28px;
+            color: #eee;
         }
+
         .connect_msg_con {
             margin: 20px 0;
             border-top: 1px solid #333;
+            color: #999;
 
             p {
                 em {
@@ -228,34 +257,38 @@ a {
                 }
 
                 font-size: 18px;
-                color: #333;
+                color: #999;
                 margin: 20px 0;
             }
         }
 
         h4 {
-            font-size: 18px;
-            color: #333;
+            font-size: 20px;
+            color: #eee;
             margin: 30px 0 10px 0;
         }
 
-        .input_name{
+        .input_name {
             width: 100px;
             border-radius: 5px 0 0 5px;
         }
+
         input {
             width: 500px;
-            border: 1px solid #999;
+            border: 1px solid #333;
             border-radius: 0 5px 5px 0;
             line-height: 20px;
             font-size: 16px;
             resize: none;
             padding: 10px;
-            &:focus{
+            background: none;
+            color: #eee;
+
+            &:focus {
                 outline: none;
-                border: 1px solid #333;
+                border: 1px solid #999;
+
             }
         }
     }
-}
-</style>
+}</style>
