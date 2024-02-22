@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 // import menu1 from "../../components/menu.vue"
 import notes from "../../components/notes.vue"
-import travel from "../../components/travel.vue"
+import travel1 from "../../components/travel1.vue"
 import connect from "../../components/connect.vue"
 import initLoginBg from "./init"
 
@@ -29,7 +29,7 @@ const tabs = reactive([
   },
 ]);
 const tabsComponents = [
-  notes, travel, connect
+  notes, travel1, connect
 ]
 const changeNav = (item: any) => {
   currentTab.value = item.id;

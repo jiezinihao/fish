@@ -1,6 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1699157806024') format('truetype');
+  font-family: "iconfont"; /* Project id 4441907 */
+  src: url('iconfont.woff2?t=1708616897783') format('woff2'),
+       url('iconfont.woff?t=1708616897783') format('woff'),
+       url('iconfont.ttf?t=1708616897783') format('truetype');
 }
 
 .iconfont {
@@ -11,15 +13,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-time:before {
-  content: "\e638";
+.icon-right:before {
+  content: "\e62b";
 }
 
-.icon-excel:before {
-  content: "\e624";
+.icon-icon_coffee:before {
+  content: "\e695";
 }
 
-.icon-coffee:before {
-  content: "\ebae";
+.icon-icon_time:before {
+  content: "\e789";
 }
 

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "sass": "^1.68.0",
+    "swiper": "^11.0.6",
     "three": "^0.151.3",
     "vue": "^3.3.4",
     "vue-canvas-nest": "^2.0.0"
