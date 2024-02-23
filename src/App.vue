@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import home from './views/home/home.vue'
-
+import { register } from 'swiper/element/bundle';
+register();
 </script>
 
 <template>
+  
   <home></home>
 </template>
 

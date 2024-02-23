@@ -1,7 +1,7 @@
 <template>
     <div class="travel">
         <div class="container">
-            <div class="travel_nav">
+            <div class="travel_nav" @click="showTravelItem($event)">
                 <div class="thumb">
                     <div class="thumb_img">
                         <img src="/src/assets/img/highView.png" alt="">
@@ -10,7 +10,7 @@
                 </div>
                 <div class="nav_con">
                     <swiper-container scrollbar="true" class="nav_con_swiper" ref="swiper" @swiper="onSwiper"
-                        @slideChange="onSlideChange" :space-between="50" :slides-per-view="4">
+                        @slideChange="onSlideChange" :space-between="50" :slides-per-view="'auto'">
                         <swiper-slide>
                             <div class="nav_item">
                                 <div class="frame">
@@ -38,6 +38,20 @@
                                 </div>
                             </div>
                         </swiper-slide> <swiper-slide>
+                            <div class="nav_item">
+                                <div class="frame">
+                                    <img src="/src/assets/img/wideView.png" alt="">
+                                </div>
+                            </div>
+                        </swiper-slide>
+                        <swiper-slide>
+                            <div class="nav_item">
+                                <div class="frame">
+                                    <img src="/src/assets/img/wideView.png" alt="">
+                                </div>
+                            </div>
+                        </swiper-slide>
+                        <swiper-slide>
                             <div class="nav_item">
                                 <div class="frame">
                                     <img src="/src/assets/img/wideView.png" alt="">
@@ -64,15 +78,15 @@
                 </div>
                 <div class="nav_con">
                     <swiper-container scrollbar="true" class="nav_con_swiper" ref="swiper" @swiper="onSwiper"
-                        @slideChange="onSlideChange" :space-between="50" :slides-per-view="4">
-                        <swiper-slide>
+                        @slideChange="onSlideChange" :space-between="50" :slides-per-view="'auto'">
+                        <swiper-slide class="swiper-slide">
                             <div class="nav_item">
                                 <div class="frame">
                                     <img src="/src/assets/img/highView.png" alt="">
                                 </div>
                             </div>
                         </swiper-slide>
-                        <swiper-slide>
+                        <swiper-slide class="swiper-slide">
                             <div class="nav_item">
                                 <div class="frame">
                                     <img src="/src/assets/img/wideView.png" alt="">
@@ -124,15 +138,33 @@
                 </div>
             </div>
         </div>
+        <TravelDetail :position="boxPostion" :img-msg="imgMsg" :id="id" :is-show="isShowBox"
+            @closeTraveItem="closeTraveItem">
 
+        </TravelDetail>
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { register } from 'swiper/element/bundle';
-register();
-let swiper = ref<any>(null)
+import TravelDetail from './traveldetail.vue'
+import { onMounted, ref, reactive } from 'vue';
 
+let nav = ref<any>(null);
+let swiper = ref<any>(null)
+let boxPostion = reactive({
+    height: '0px',
+    width: '0px',
+    top: '0px',
+    left: '0px',
+})
+let imgMsg = reactive([
+    '/src/assets/img/highView.png',
+    '/src/assets/img/wideView.png',
+    '/src/assets/img/wideView.png',
+    '/src/assets/img/wideView.png',
+    '/src/assets/img/wideView.png',
+])
+let id = ref(0)
+let isShowBox = ref(false)
 // 获取swiper属性s
 const onSwiper = (swiper: any) => {
     swiper = swiper
@@ -142,9 +174,39 @@ const onSlideChange = (swiper: any) => {
 const swiperToNext = () => {
     swiper.value.swiper.slideNext()
 }
+//打开栏目详情
+const showTravelItem = (e: MouseEvent) => {
+    const target = searchTargetElement('travel_nav', e.target)
+    
+    boxPostion = {
+        height: target.offsetHeight + 'px',
+        width: target.offsetWidth + 'px',
+        top: target.getBoundingClientRect().y + 'px',
+        left: target.getBoundingClientRect().x + 'px',
+    }
+    
+    isShowBox.value = true
+
+}
+const closeTraveItem = () => {
+    isShowBox.value = false
+}
+//深度搜索目标父元素
+const searchTargetElement = (str: string, element: any): any => {
+
+    if (element === null || element.parentElement === null || element.parentElement === "" || element === undefined) {
+        return null
+    }
+
+    if (element.classList.contains(str)) {
+        return element
+    } else {
+        return searchTargetElement(str, element.parentElement)
+    }
+
+}
 onMounted(() => {
 
-    console.log();
 
 })
 
@@ -163,6 +225,7 @@ onMounted(() => {
         height: 100%;
         overflow-y: scroll;
         overflow-x: hidden;
+
         .travel_nav {
             width: 100%;
             height: 400px;
@@ -195,6 +258,7 @@ onMounted(() => {
                     justify-content: center;
                     height: 288px;
                     overflow: hidden;
+
                     img {
                         width: 100%;
                     }
@@ -219,6 +283,9 @@ onMounted(() => {
                     height: 100%;
                     width: 100%;
 
+                    swiper-slide {
+                        width: 300px;
+                    }
                 }
 
                 .nav_item {
@@ -279,4 +346,5 @@ onMounted(() => {
     .swiper-scrollbar-drag {
         background: rgba(88, 175, 223, 0.8);
     }
-}</style>
+}
+</style>

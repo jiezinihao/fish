@@ -3,6 +3,8 @@ import { ref, reactive, onMounted } from 'vue'
 // import menu1 from "../../components/menu.vue"
 import notes from "../../components/notes.vue"
 import travel1 from "../../components/travel1.vue"
+import travel from "../../components/travel.vue"
+
 import connect from "../../components/connect.vue"
 import initLoginBg from "./init"
 
@@ -27,9 +29,14 @@ const tabs = reactive([
     name: "联系",
     leftPosition: 250
   },
+  {
+    id: 4,
+    name: "wtesst",
+    leftPosition: 350
+  },
 ]);
 const tabsComponents = [
-  notes, travel1, connect
+  notes, travel1, connect,travel
 ]
 const changeNav = (item: any) => {
   currentTab.value = item.id;
@@ -160,6 +167,7 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     position: relative;
+    z-index: 101;
   }
 }
 
