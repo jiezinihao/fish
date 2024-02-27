@@ -19,13 +19,13 @@
                     <div class="travel_list_opr">
                         <p>
                             <svg class="icon rotate" aria-hidden="true">
-                                <use xlink:href="#icon-time"></use>
+                                <use xlink:href="#icon-icon_time"></use>
                             </svg>
                             <span>2023-5-30</span>
                         </p>
                         <p>
                             <svg class="icon swing" aria-hidden="true">
-                                <use xlink:href="#icon-coffee"></use>
+                                <use xlink:href="#icon-icon_coffee"></use>
                             </svg>
                             <span>给博主点杯咖啡吧！</span>
                         </p>
@@ -165,15 +165,15 @@ const animationFunc = async (sign: string) => {
         await nextTick()
         style.top = "100px"
         style.left = "20vw"
-        if (document.body.clientWidth < 1600) {
-            style.width = "90vw";
+        if (document.body.clientWidth < 1919) {
+            style.width = "89vw";
             style.top = "80px"
             style.left = "5vw"
 
         } else {
-            style.width = "90vw";
+            style.width = "70vw";
             style.top = "80px"
-            style.left = "5vw"
+            style.left = "15vw"
         }
         style.height = document.body.clientHeight * 0.8 + "px";
         style.transition = " 0.5s ease"
@@ -252,13 +252,22 @@ onUpdated(() => {
         background: rgba($color: #23272f, $alpha: 1);
 
     }
+    swiper-container{
+        height: 100%;
+        overflow: hidden;
+
+    }
+    swiper-slide{
+        overflow: hidden;
+        height: 100%;
+    }
 
 
     .travel_swiper {
         position: relative;
         left: 0;
         top: 0;
-        width: 300px;
+        width: 500px;
         flex-shrink: 0;
         transition: .5s ease;
         border-radius: 5px;
@@ -269,9 +278,11 @@ onUpdated(() => {
             display: flex;
             align-items: center;
             justify-content: center;
-
+            width: 100%;
+            height: 100%;
             img {
-                width: 100%;
+                max-width: 100%;
+                max-height: 100%;
             }
         }
 
@@ -284,20 +295,20 @@ onUpdated(() => {
         // opacity: 0;
         transition: 0.4s ease;
         padding-right: 50px;
-        width: 600px;
+        // width: 600px;
+        flex: 1;
         height: 100%;
-        margin-left: 80px;
-        padding-top: 50px;
+        padding: 50px 120px;
         flex: 1;
 
         h4 {
-            font-size: 28px;
-            color: #333;
+            font-size: 32px;
+            color: #eee;
         }
 
         .travel_list_desc {
             font-size: 22px;
-            color: #666;
+            color: #999;
             margin: 30px 0;
 
         }
@@ -332,7 +343,7 @@ onUpdated(() => {
 
                 span {
                     font-size: 16px;
-                    color: #666;
+                    color: #999;
                 }
             }
         }
@@ -343,13 +354,13 @@ onUpdated(() => {
 
             .travel_comment_tit {
                 font-size: 15px;
-                color: #333;
+                color: #eee;
                 margin-bottom: 10px;
             }
 
             .travel_comment_body {
-                border-left: 3px solid #ffc14d;
-                padding-left: 10px;
+                border-left: 3px solid  rgba(88, 175, 223, .1);
+                padding-left: 20px;
                 max-height: 500px;
                 overflow: scroll;
 
@@ -361,7 +372,7 @@ onUpdated(() => {
                 .travel_comment_item {
                     display: flex;
                     align-items: center;
-                    margin-bottom: 15px;
+                    margin-bottom: 30px;
 
                     .travel_comment_left {
                         width: 40px;
@@ -379,14 +390,14 @@ onUpdated(() => {
 
                         h5 {
                             font-size: 16px;
-                            color: #333;
+                            color: #999;
                             margin-bottom: 5px;
                         }
 
                         p {
                             margin: 0;
                             font-size: 14px;
-                            color: #333;
+                            color: #999;
                         }
                     }
                 }
@@ -410,13 +421,14 @@ onUpdated(() => {
                     align-items: center;
                     justify-content: center;
                     transform: translate(0, -50%);
-                    border: 1px solid #8450ff;
+                    border: 1px solid rgba(88, 175, 223, 1);
                     border-radius: 5px;
-                    background: #8450ff;
+                    background: rgba(88, 175, 223, 1);
                     cursor: pointer;
                     opacity: 0;
                     transition: 0.5s ease;
                     color: white;
+                    font-weight: bold;
                 }
 
                 .travel_comment_btn {
@@ -458,6 +470,7 @@ onUpdated(() => {
 
 .travel_mask {
     position: fixed;
+    z-index: 999;
     width: 0;
     height: 0;
     left: 0;
@@ -469,8 +482,8 @@ onUpdated(() => {
     &.travel_mask_active {
         transition: opacity .3s ease, width 0s, height 0s;
         opacity: 0.8;
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
     }
 }
 </style>

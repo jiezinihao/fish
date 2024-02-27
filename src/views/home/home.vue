@@ -36,7 +36,7 @@ const tabs = reactive([
   },
 ]);
 const tabsComponents = [
-  notes, travel1, connect,travel
+  notes, travel1, connect, travel
 ]
 const changeNav = (item: any) => {
   currentTab.value = item.id;
@@ -72,7 +72,7 @@ const listenerFont = () => {
   div.addEventListener("mouseup", (e: any) => {
     if (active) {
 
-      tabs.forEach((item,i) => {
+      tabs.forEach((item, i) => {
         if (index !== i && Math.abs(e.pageX - item.leftPosition - 120) < 90) {
           if (e.pageX - item.leftPosition - 120 < 0) {
             item.leftPosition += 60
@@ -87,10 +87,18 @@ const listenerFont = () => {
   });
 }
 onMounted(() => {
+  let throttle:any = null
+  let clientWidth = document.body.clientWidth
   // listenerFont()
   initLoginBg()
-  window.onresize = ()=>{
-    initLoginBg()
+  window.onresize = () => {
+    if (throttle === null && clientWidth !== document.body.clientWidth) {
+      throttle = setTimeout(() => {
+        initLoginBg()
+        clientWidth = document.body.clientWidth
+        throttle = null
+      }, 1000);
+    }
   }
 })
 
@@ -116,18 +124,21 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-#canvas{
+#canvas {
   width: 100vw;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
+
 }
+
 .home {
   position: relative;
   height: 100%;
   width: 100%;
   overflow: hidden;
+
   // background: var(--vt-c-black);
   .home_nav {
     position: relative;
@@ -135,10 +146,11 @@ onMounted(() => {
     width: 100%;
     height: 100px;
     padding: 0 120px;
-    background: rgba($color:#23272f, $alpha: 0.5);
+    background: rgba($color: #23272f, $alpha: 0.5);
     display: flex;
     align-items: center;
     border-bottom: 2px solid var(--divider-light);
+
     .home_nav_item {
       height: 80px;
       color: #999;
@@ -151,9 +163,10 @@ onMounted(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      &.home_nav_item_active{
-        background: rgba(88,175,223,.1);
-        box-shadow: 2px 2px 5px rgba(88,175,223,.2);
+
+      &.home_nav_item_active {
+        background: rgba(88, 175, 223, .1);
+        box-shadow: 2px 2px 5px rgba(88, 175, 223, .2);
         color: #eee;
       }
 
@@ -191,5 +204,4 @@ onMounted(() => {
   position: absolute;
   top: 0;
   transition: 0.5s ease;
-}
-</style>
+}</style>

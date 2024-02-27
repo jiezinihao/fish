@@ -68,7 +68,7 @@
                     </svg>
                 </div> -->
             </div>
-            <div class="travel_nav">
+            <div class="travel_nav" @click="showTravelItem($event)">
                 <div class="thumb">
                     <div class="thumb_img">
                         <img src="/src/assets/img/wideView.png" alt="">
@@ -219,7 +219,7 @@ onMounted(() => {
     .container {
         margin: 40px 120px;
         padding: 40px;
-        background: rgba($color: #23272f, $alpha: 0.8);
+        // background: rgba($color: #23272f, $alpha: 0.8);
         border-radius: 10px;
         padding-right: 120px;
         height: 100%;

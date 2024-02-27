@@ -336,22 +336,7 @@ const showTravelItem = async (e: any, item: any, index: number) => {
         e.target.style.left = e.target.getBoundingClientRect().x + "px"
         $forceUpdate();
         await nextTick();
-        style.top = "100px"
-        style.left = "20vw"
-        if (document.body.clientWidth < 1600) {
-            style.width = "80vw";
-            style.top = "100px"
-            style.left = "10vw"
 
-        } else {
-            style.width = "60vw";
-            style.top = "100px"
-            style.left = "20vw"
-        }
-        style.height = document.body.clientHeight * 0.8 + "px";
-        // style.left = document.body.clientWidth / 2 - 300 + "px";
-
-        style.transition = " 0.5s ease"
         imgListLocation[index] = style
         maskActive = true;
         $forceUpdate();
