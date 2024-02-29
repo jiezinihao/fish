@@ -1,10 +1,11 @@
 <template>
     <div class="notes">
         <div class="notes_lab">
-            <div class="notes_lab_item notes_lab_item_active">
-                最近
+            <div class="notes_lab_item " :class="index === currentNav ? 'notes_lab_item_active' : ''"
+                v-for="(item, index) in navList" :key="item.nav_id" @click="clickNav(item,index)">
+                {{ item.title }}
             </div>
-            <div class="notes_lab_item">
+            <!-- <div class="notes_lab_item">
                 HTML&CSS
             </div>
             <div class="notes_lab_item">
@@ -18,7 +19,7 @@
             </div>
             <div class="notes_lab_item">
                 编程思想
-            </div>
+            </div> -->
         </div>
         <div class="notes_body">
             <div class="notes_list">
@@ -47,6 +48,25 @@
     </div>
 </template>
 <script setup lang="ts">
+
+import { ref, onMounted } from 'vue';
+import { NotesNavsGetAPI } from "../request/api"
+let navList = ref<NavNotes[]>()
+let currentNav = ref(0)
+//加载栏目
+const getNavList = async () => {
+    const result = await NotesNavsGetAPI().then(data => data)
+    console.log(result);
+    navList.value = result.data
+}
+
+const clickNav = async(item:NavNotes,index:number)=>{
+    currentNav.value = index;
+    
+}
+onMounted(() => {
+    getNavList()
+})
 </script>
 <style lang="scss">
 .notes {
@@ -176,9 +196,11 @@
                 &:hover {
                     border: 2px solid rgba(88, 175, 223, .1);
                     border-bottom: none;
-                    p{
+
+                    p {
                         color: #eee;
                     }
+
                     &::before {
                         width: 100%;
                     }
@@ -187,4 +209,5 @@
         }
     }
 
-}</style>
+}
+</style>
