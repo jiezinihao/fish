@@ -41,7 +41,7 @@
                     <div class="travel_comment_body">
                         <div class="travel_comment_item">
                             <div class="travel_comment_left">
-                                <img src="../assets/img/head.jpg" alt="">
+                                <img src="../../assets/img/head.jpg" alt="">
                             </div>
                             <div class="travel_comment_right">
                                 <h5>落寂的小丑</h5>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="travel_comment_item">
                             <div class="travel_comment_left">
-                                <img src="../assets/img/head.jpg" alt="">
+                                <img src="../../assets/img/head.jpg" alt="">
                             </div>
                             <div class="travel_comment_right">
                                 <h5>落寂的小丑</h5>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="travel_comment_item">
                             <div class="travel_comment_left">
-                                <img src="../assets/img/head.jpg" alt="">
+                                <img src="../../assets/img/head.jpg" alt="">
                             </div>
                             <div class="travel_comment_right">
                                 <h5>落寂的小丑</h5>
@@ -68,7 +68,7 @@
                         </div>
                         <div class="travel_comment_item">
                             <div class="travel_comment_left">
-                                <img src="../assets/img/head.jpg" alt="">
+                                <img src="../../assets/img/head.jpg" alt="">
                             </div>
                             <div class="travel_comment_right">
                                 <h5>落寂的小丑</h5>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="travel_comment_item">
                             <div class="travel_comment_left">
-                                <img src="../assets/img/head.jpg" alt="">
+                                <img src="../../assets/img/head.jpg" alt="">
                             </div>
                             <div class="travel_comment_right">
                                 <h5>落寂的小丑</h5>
@@ -86,7 +86,7 @@
                         </div>
                         <div class="travel_comment_item">
                             <div class="travel_comment_left">
-                                <img src="../assets/img/head.jpg" alt="">
+                                <img src="../../assets/img/head.jpg" alt="">
                             </div>
                             <div class="travel_comment_right">
                                 <h5>落寂的小丑</h5>
@@ -95,7 +95,7 @@
                         </div>
                         <div class="travel_comment_item">
                             <div class="travel_comment_left">
-                                <img src="../assets/img/head.jpg" alt="">
+                                <img src="../../assets/img/head.jpg" alt="">
                             </div>
                             <div class="travel_comment_right">
                                 <h5>落寂的小丑</h5>

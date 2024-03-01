@@ -1,8 +1,8 @@
 <template>
-    <div class="notes">
+    <div class="notes" :class="showDetail ? 'notes-detail' : ''">
         <div class="notes_lab">
-            <div class="notes_lab_item " :class="index === currentNav ? 'notes_lab_item_active' : ''"
-                v-for="(item, index) in navList" :key="item.nav_id" @click="clickNav(item,index)">
+            <div class="notes_lab_item " :class="item.nav_id === currentNav.nav_id ? 'notes_lab_item_active' : ''"
+                v-for="(item) in navList" :key="item.nav_id" @click="clickNav(item)">
                 {{ item.title }}
             </div>
             <!-- <div class="notes_lab_item">
@@ -21,27 +21,19 @@
                 编程思想
             </div> -->
         </div>
+        <div class="main">
+            <NotesDetail :article="currentNotes"></NotesDetail>
+        </div>
         <div class="notes_body">
             <div class="notes_list">
-                <div class="notes_list_item">
-                    <p>js面向对象的创建以及控制</p>
-                    <time> 2023-12-26 </time>
-                </div>
-                <div class="notes_list_item">
-                    <p>js面向对象的创建以及控制</p>
-                    <time> 2023-12-26 </time>
-                </div>
-                <div class="notes_list_item">
-                    <p>js面向对象的创建以及控制</p>
-                    <time> 2023-12-26 </time>
-                </div>
-                <div class="notes_list_item">
-                    <p>js面向对象的创建以及控制</p>
-                    <time> 2023-12-26 </time>
+                <div class="notes_list_item"
+                    :class="currentNotes.article_id === item.article_id ? 'notes_list_item_active' : ''"
+                    v-for="item in notesList" :key="item.article_id" @click="clickNotesItem(item)">
+                    <p>{{ item.title }}</p>
+                    <time>{{ item.time }} </time>
                 </div>
             </div>
             <div class="notes_page">
-
             </div>
         </div>
 
@@ -49,41 +41,95 @@
 </template>
 <script setup lang="ts">
 
-import { ref, onMounted } from 'vue';
-import { NotesNavsGetAPI } from "../request/api"
-let navList = ref<NavNotes[]>()
-let currentNav = ref(0)
+import { ref, onMounted, reactive } from 'vue';
+import { NotesNavsGetAPI, NotesListGetAPI } from "../../request/api"
+import NotesDetail from "../../components/NotesDetail/index.vue"
+
+let navList = ref<NavNotes[]>([])
+let notesList = ref<NotesList[]>([])
+let currentNav = reactive<NavNotes>({ nav_id: '', title: '' })
+let showDetail = ref(true)
+let currentNotes = ref<NotesList>({
+    nav_id: '',
+    title: '',
+    time: '',
+    article_id: '',
+})
 //加载栏目
 const getNavList = async () => {
     const result = await NotesNavsGetAPI().then(data => data)
-    console.log(result);
     navList.value = result.data
+
+    return result.data
+}
+//加载文章列表
+const getNotesList = async (nav_id: string) => {
+    const result = await NotesListGetAPI({ nav_id }).then(data => data)
+    notesList.value = result.data
 }
 
-const clickNav = async(item:NavNotes,index:number)=>{
-    currentNav.value = index;
-    
+//点击栏目
+const clickNav = async (item: NavNotes) => {
+    if (currentNav === item) {
+        return
+    }
+    currentNav = item;
+    getNotesList(currentNav.nav_id)
 }
+
+//第一次进入逻辑
+const initPage = async () => {
+    const data = await getNavList();
+    if (data.length > 0) {
+        currentNav = data[0]
+    }
+    await getNotesList(currentNav.nav_id)
+}
+//点击随记详情
+const clickNotesItem = async (item: NotesList) => {
+    showDetail.value = true
+    currentNotes.value = item
+}
+
+//
 onMounted(() => {
-    getNavList()
+    initPage()
 })
 </script>
 <style lang="scss">
 .notes {
     display: flex;
-    width: 100%;
+    width: calc(100% - 240px);
     // border: 5px solid #3c2a4d;
     border-radius: 10px;
     padding: 50px 0;
+    margin: 0 120px;
     // height: 100%;
     align-items: stretch;
+    background: rgba($color: #23272f, $alpha: 0.5);
+    transition: 1s ease;
+    height: 600px;
+
+    &.notes-detail {
+        // background: rgba($color: #23272f, $alpha: 0.9);
+        background: #23272f;
+        padding: 50px 20px;
+        height: 100%;
+        margin: 0 0;
+        width: 100%;
+
+        .main {
+            width: 100%;
+            overflow: hidden;
+            opacity: 1;
+
+        }
+    }
 
     .notes_lab {
         width: 400px;
         flex-shrink: 0;
         padding: 20px;
-        margin-left: 120px;
-        background: rgba($color: #23272f, $alpha: 0.5);
         border-radius: 10px 0 0 10px;
 
         .notes_lab_item {
@@ -138,15 +184,23 @@ onMounted(() => {
 
     }
 
+    .main {
+        width: 0%;
+        transition: 2s ease;
+        opacity: 0;
+    }
+
+
+
+
     .notes_body {
         flex: 1;
         padding: 40px;
-        background: rgba($color: #23272f, $alpha: 0.5);
-        margin-right: 120px;
         border-radius: 0 10px 10px 0;
 
         .notes_list {
             width: 100%;
+            min-width: 400px;
 
             .notes_list_item {
                 width: 100%;
@@ -158,6 +212,19 @@ onMounted(() => {
                 border-bottom: none;
                 border-radius: 5px;
                 padding: 20px 10px;
+
+                &.notes_list_item_active {
+                    border: 2px solid rgba(88, 175, 223, .1);
+                    border-bottom: none;
+
+                    p {
+                        color: #eee;
+                    }
+
+                    &::before {
+                        width: 100%;
+                    }
+                }
 
                 p {
                     margin-bottom: 10px;

@@ -29,3 +29,14 @@ interface NotesListAPIRes extends APIRes {
 interface NotesListAPIReq {
     nav_id: string
 }
+
+//文章详情
+interface NotesDetail {
+    file:string
+}
+interface NotesDetailGetAPIReq {
+    article_id: string
+}
+interface NotesDetailGetAPIRes extends APIRes {
+data:NotesDetail
+}

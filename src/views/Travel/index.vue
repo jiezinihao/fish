@@ -145,10 +145,10 @@
     </div>
 </template>
 <script setup lang="ts">
-import TravelDetail from './traveldetail.vue'
+import TravelDetail from '../../components/TravelDetail/index.vue'
 import { onMounted, ref, reactive } from 'vue';
 
-let nav = ref<any>(null);
+// let nav = ref<any>(null);
 let swiper = ref<any>(null)
 let boxPostion = reactive({
     height: '0px',
@@ -169,11 +169,11 @@ let isShowBox = ref(false)
 const onSwiper = (swiper: any) => {
     swiper = swiper
 }
-const onSlideChange = (swiper: any) => {
+const onSlideChange = () => {
 }
-const swiperToNext = () => {
-    swiper.value.swiper.slideNext()
-}
+// const swiperToNext = () => {
+//     swiper.value.swiper.slideNext()
+// }
 //打开栏目详情
 const showTravelItem = (e: MouseEvent) => {
     const target = searchTargetElement('travel_nav', e.target)
@@ -304,7 +304,7 @@ onMounted(() => {
                     .frame {
                         width: 100%;
                         height: 100%;
-                        // background: url("../assets/img/background/travel_frame.png");
+                        // background: url("../../assets/img/background/travel_frame.png");
                         background-size: 100% 100%;
                         border-radius: 10px;
                         display: flex;

@@ -7,7 +7,7 @@
                 <a href="https://space.bilibili.com/73785133" target="_blank" class="bilibili">
                 <div class="bi">
                     <div class="bi_img">
-                        <img src="../assets/img/bi_img.jpg" alt="">
+                        <img src="../../assets/img/bi_img.jpg" alt="">
                         <span></span>
                     </div>
                     <div class="bi_con">
@@ -73,7 +73,7 @@ a {
     .bilibili {
         width: 1100px;
         height: 185px;
-        background: url("../assets/img/bi_bg.webp") no-repeat;
+        background: url("../../assets/img/bi_bg.webp") no-repeat;
         background-size: 100% 100%;
         display: flex;
         padding-top: 116px;
@@ -116,7 +116,7 @@ a {
                     bottom: 0;
                     width: 18px;
                     height: 18px;
-                    background: url(../assets/img/bi_icon.png) no-repeat;
+                    background: url(../../assets/img/bi_icon.png) no-repeat;
                     background-size: 100% 100%;
 
                 }
@@ -141,7 +141,7 @@ a {
 
                     &:nth-child(2) {
                         margin-right: 5px;
-                        background: url(../assets/img/bi_icon.png) no-repeat;
+                        background: url(../../assets/img/bi_icon.png) no-repeat;
                         background-size: 100% 100%;
                         height: 18px;
                         width: 18px;
@@ -149,7 +149,7 @@ a {
 
                     &:nth-child(3) {
                         margin-right: 5px;
-                        background: url(../assets/img/bi_lv6.jpg) no-repeat;
+                        background: url(../../assets/img/bi_lv6.jpg) no-repeat;
                         background-size: 100% 100%;
                         width: 25px;
                         height: 11px;
@@ -158,7 +158,7 @@ a {
 
                     &:nth-child(4) {
                         margin-right: 8px;
-                        background: url(../assets/img/bi_vip.webp) no-repeat;
+                        background: url(../../assets/img/bi_vip.webp) no-repeat;
                         background-size: 100% 100%;
                         height: 20px;
                         width: 69px;
