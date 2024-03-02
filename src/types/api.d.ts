@@ -32,11 +32,11 @@ interface NotesListAPIReq {
 
 //文章详情
 interface NotesDetail {
-    file:string
+    file: string
 }
 interface NotesDetailGetAPIReq {
     article_id: string
 }
 interface NotesDetailGetAPIRes extends APIRes {
-data:NotesDetail
+    data: file
 }

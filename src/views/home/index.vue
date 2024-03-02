@@ -189,9 +189,10 @@ onMounted(() => {
 
   .body {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 100px);
     position: relative;
     z-index: 101;
+
   }
 }
 

@@ -5,21 +5,7 @@
                 v-for="(item) in navList" :key="item.nav_id" @click="clickNav(item)">
                 {{ item.title }}
             </div>
-            <!-- <div class="notes_lab_item">
-                HTML&CSS
-            </div>
-            <div class="notes_lab_item">
-                Typescript
-            </div>
-            <div class="notes_lab_item">
-                vue相关
-            </div>
-            <div class="notes_lab_item">
-                THREE相关
-            </div>
-            <div class="notes_lab_item">
-                编程思想
-            </div> -->
+     
         </div>
         <div class="main">
             <NotesDetail :article="currentNotes"></NotesDetail>
@@ -48,7 +34,7 @@ import NotesDetail from "../../components/NotesDetail/index.vue"
 let navList = ref<NavNotes[]>([])
 let notesList = ref<NotesList[]>([])
 let currentNav = reactive<NavNotes>({ nav_id: '', title: '' })
-let showDetail = ref(true)
+let showDetail = ref(false)
 let currentNotes = ref<NotesList>({
     nav_id: '',
     title: '',
@@ -186,8 +172,9 @@ onMounted(() => {
 
     .main {
         width: 0%;
-        transition: 2s ease;
+        transition:opacity 1s .5s ease,width 1.5s ease;
         opacity: 0;
+        overflow-y: scroll;
     }
 
 
