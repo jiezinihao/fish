@@ -5,7 +5,7 @@
                 v-for="(item) in navList" :key="item.nav_id" @click="clickNav(item)">
                 {{ item.title }}
             </div>
-     
+
         </div>
         <div class="main">
             <NotesDetail :article="currentNotes"></NotesDetail>
@@ -20,19 +20,31 @@
                 </div>
             </div>
             <div class="notes_page">
+                <!--  -->
+                <el-pagination hide-on-single-page background layout="prev, pager, next" :total="notesListPage.total"
+                    :page-size="notesListPage.pageSize" v-model:current-page="notesListPage.currentPage" />
             </div>
         </div>
 
     </div>
 </template>
+
 <script setup lang="ts">
 
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import { NotesNavsGetAPI, NotesListGetAPI } from "../../request/api"
 import NotesDetail from "../../components/NotesDetail/index.vue"
-
+import 'element-plus/es/components/pagination/style/css'
+import { ElPagination } from 'element-plus'
+//栏目列表
 let navList = ref<NavNotes[]>([])
+//文章列表
 let notesList = ref<NotesList[]>([])
+let notesListPage = ref({
+    currentPage: 1,
+    total: 0,
+    pageSize: 4
+})
 let currentNav = reactive<NavNotes>({ nav_id: '', title: '' })
 let showDetail = ref(false)
 let currentNotes = ref<NotesList>({
@@ -41,17 +53,31 @@ let currentNotes = ref<NotesList>({
     time: '',
     article_id: '',
 })
+
+watch(() => notesListPage.value.currentPage, (val) => {
+    getNotesList(currentNav.nav_id, val)
+})
+
 //加载栏目
 const getNavList = async () => {
     const result = await NotesNavsGetAPI().then(data => data)
     navList.value = result.data
-
     return result.data
 }
 //加载文章列表
-const getNotesList = async (nav_id: string) => {
-    const result = await NotesListGetAPI({ nav_id }).then(data => data)
+const getNotesList = async (nav_id: string, page: number = 1, pageSize: number = notesListPage.value.pageSize) => {
+    const result = await NotesListGetAPI({ nav_id, page, pageSize }).then(data => data)
     notesList.value = result.data
+    resetPagination(result.maxCount)
+}
+//重置分页参数
+const resetPagination = (maxCount: string) => {
+
+    if (isNaN(Number(maxCount))) {
+        return
+    }
+
+    notesListPage.value.total = Number(maxCount)
 }
 
 //点击栏目
@@ -59,7 +85,9 @@ const clickNav = async (item: NavNotes) => {
     if (currentNav === item) {
         return
     }
+    showDetail.value = false
     currentNav = item;
+    setCurrentNotes('reset')
     getNotesList(currentNav.nav_id)
 }
 
@@ -74,7 +102,27 @@ const initPage = async () => {
 //点击随记详情
 const clickNotesItem = async (item: NotesList) => {
     showDetail.value = true
-    currentNotes.value = item
+    setCurrentNotes(item)
+}
+//更改当前点击的notes(对react的setState拙劣的模范哈哈哈)
+const setCurrentNotes = (param: string | NotesList) => {
+    if (typeof (param) === 'string') {
+        if (param === 'reset') {
+            currentNotes.value = {
+                nav_id: '',
+                title: '',
+                time: '',
+                article_id: '',
+            }
+        }
+        return
+    }
+
+    if ('article_id' in param) {
+        currentNotes.value = param
+    }
+
+
 }
 
 //
@@ -82,6 +130,7 @@ onMounted(() => {
     initPage()
 })
 </script>
+
 <style lang="scss">
 .notes {
     display: flex;
@@ -89,12 +138,12 @@ onMounted(() => {
     // border: 5px solid #3c2a4d;
     border-radius: 10px;
     padding: 50px 0;
-    margin: 0 120px;
+    margin: 60px 120px;
     // height: 100%;
     align-items: stretch;
     background: rgba($color: #23272f, $alpha: 0.5);
     transition: 1s ease;
-    height: 600px;
+    height: 900px;
 
     &.notes-detail {
         // background: rgba($color: #23272f, $alpha: 0.9);
@@ -103,21 +152,22 @@ onMounted(() => {
         height: 100%;
         margin: 0 0;
         width: 100%;
+        // transition:opacity 0.2 ease,width .5s ease;
 
         .main {
             width: 100%;
             overflow: hidden;
             opacity: 1;
+            transition: opacity 1s .5s ease, width 1.5s ease;
 
         }
     }
 
     .notes_lab {
-        width: 400px;
+        min-width: 400px;
         flex-shrink: 0;
         padding: 20px;
         border-radius: 10px 0 0 10px;
-
         .notes_lab_item {
             height: 60px;
             width: 100%;
@@ -172,26 +222,26 @@ onMounted(() => {
 
     .main {
         width: 0%;
-        transition:opacity 1s .5s ease,width 1.5s ease;
         opacity: 0;
         overflow-y: scroll;
+        transition: opacity 0.2 ease, width .5s ease;
+
     }
 
 
 
 
     .notes_body {
-        flex: 1;
-        padding: 40px;
+        flex: 2;
+        padding: 20px;
         border-radius: 0 10px 10px 0;
 
         .notes_list {
             width: 100%;
             min-width: 400px;
-
+            height: 550px;
             .notes_list_item {
                 width: 100%;
-                padding: 10px 0;
                 margin-bottom: 40px;
                 position: relative;
                 cursor: pointer;
@@ -199,6 +249,7 @@ onMounted(() => {
                 border-bottom: none;
                 border-radius: 5px;
                 padding: 20px 10px;
+                padding-left: 30px;
 
                 &.notes_list_item_active {
                     border: 2px solid rgba(88, 175, 223, .1);
@@ -224,16 +275,18 @@ onMounted(() => {
                     color: #999;
                 }
 
-                // &::after {
-                //     content: "";
-                //     position: absolute;
-                //     bottom: 0;
-                //     left: 0;
-                //     height: 2px;
-                //     width: 100%;
-                //     background: #95adbe;
-                //     z-index: 1;
-                // }
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: -2px;
+                    left: -2px;
+                    height: 20px;
+                    width: 20px;
+                    border-radius: 5px 0 0 0;
+                    border-left: 2px solid rgba(88, 175, 223, 0.1);
+                    border-top: 2px solid rgba(88, 175, 223, 0.1);
+                    z-index: 1;
+                }
 
                 &::before {
                     content: "";
@@ -241,7 +294,7 @@ onMounted(() => {
                     bottom: 0;
                     left: 0;
                     height: 2px;
-                    width: 0;
+                    width: 10%;
                     background: rgba(88, 175, 223, 0.9);
                     z-index: 2;
                     transition: 0.5s ease-in;
@@ -260,6 +313,10 @@ onMounted(() => {
                     }
                 }
             }
+        }
+        .notes_page{
+           display: flex;
+           justify-content: center;
         }
     }
 

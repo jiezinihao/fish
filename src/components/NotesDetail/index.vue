@@ -21,7 +21,7 @@ import md from "../../func/md.ts"
 const props = defineProps(['article']);
 const body = ref("")
 watch(props, (val) => {
-    if (val) {
+    if (props.article.article_id !== '') {
         getDetail(props.article.article_id)
     }
 })

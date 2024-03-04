@@ -23,11 +23,14 @@ interface NotesList {
     article_id: string,
 }
 interface NotesListAPIRes extends APIRes {
+    maxCount:string,
     data: NotesList[]
 }
 
 interface NotesListAPIReq {
-    nav_id: string
+    nav_id: string,
+    page:number,
+    pageSize:number
 }
 
 //文章详情
