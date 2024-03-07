@@ -10,7 +10,7 @@ import Connect from "../views/Connect/index.vue"
 
 
 const routes: RouteRecordRaw[] = [
-    { path: '/', redirect: '/Notes' },
+    { path: '/', redirect: '/notes' },
 
     // 动态字段以冒号开始
     { path: '/notes', name: '随记', component: Notes },

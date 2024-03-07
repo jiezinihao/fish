@@ -7,28 +7,34 @@
         </div>
         <!-- <div class="detail" v-html="body" v-if="body">
         </div> -->
-        <div data-v-f020b267="" class="detail markdown-body" v-html="body">
+        <div ref="detail" class="detail markdown-body" v-if="body" v-html="body">
         </div>
     </div>
 </template>
+
 <script setup lang="ts">
 import './tailwind-dark.scss';
 import './heightlight.css';
 
-import {  watch, ref } from 'vue'
+import { watch, ref } from 'vue'
 import { NotesDetailGetAPI } from "../../request/api"
 import md from "../../func/md.ts"
 const props = defineProps(['article']);
-const body = ref("")
+const detail = ref<any>(null)
+const body = ref('')
+
 watch(props, (val) => {
     if (props.article.article_id !== '') {
+        body.value = ""
         getDetail(props.article.article_id)
     }
 })
 
 const getDetail = async (article_id: string) => {
+
     const result = await NotesDetailGetAPI({ article_id }).then(data => data)
     body.value = md.render(result.data.file, 'typesrcipt')
+
 }
 
 </script>

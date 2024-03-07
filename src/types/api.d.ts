@@ -1,3 +1,7 @@
+class DefNull{
+    def:null
+}
+
 interface APIRes {
     code: string,
     msg: string,
@@ -42,4 +46,21 @@ interface NotesDetailGetAPIReq {
 }
 interface NotesDetailGetAPIRes extends APIRes {
     data: file
+}
+
+interface TravelImg {
+    url: string,
+    name: string,
+    uid: string
+}
+interface TravelGetAPIResDataItem {
+    title: string,
+    body: string,
+    travel_id: string,
+    thumb: TravelImg,
+    time: string,
+    imgList: TravelImg[]
+}
+interface TravelListGetAPIRes extends APIRes{
+    data:TravelGetAPIResDataItem[] 
 }

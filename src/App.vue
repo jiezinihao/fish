@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import home from './views/home/index.vue'
-import { register } from 'swiper/element/bundle';
-register();
+
 </script>
 
 <template>

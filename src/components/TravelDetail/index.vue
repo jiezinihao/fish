@@ -2,26 +2,20 @@
     <div>
         <div class="travel_body" :class="isShow ? 'travel_active' : ''" ref="body" :style="animationState">
             <div class="travel_swiper">
-                <swiper-container>
-                    <swiper-slide class="swiper-slide" v-for="(item, index) in imgMsg" :key="index">
-                        <div class="travel_img">
-                            <img :src="item" alt="">
-                        </div>
-                    </swiper-slide>
-                </swiper-container>
+                <Swiper :slideList="imgList"></Swiper>
             </div>
             <div class="travel_list_body">
                 <div>
-                    <h4>金顶</h4>
+                    <h4>{{ currentTravel?.title }}</h4>
                     <div class="travel_list_desc">
-                        到达武功山最高点了，哎呀这不金顶吗？...
+                        {{ currentTravel?.body }}
                     </div>
                     <div class="travel_list_opr">
                         <p>
                             <svg class="icon rotate" aria-hidden="true">
                                 <use xlink:href="#icon-icon_time"></use>
                             </svg>
-                            <span>2023-5-30</span>
+                            <span>{{ currentTravel?.time }}</span>
                         </p>
                         <p>
                             <svg class="icon swing" aria-hidden="true">
@@ -31,9 +25,6 @@
                         </p>
                     </div>
                 </div>
-                <!-- <div class="travel_list_joke">
-                            <i></i><span>给博主点杯咖啡吧！</span>
-                        </div> -->
                 <div class="travel_comment">
                     <div class="travel_comment_tit">
                         一共有x条评论
@@ -104,7 +95,8 @@
                         </div>
                     </div>
                     <div class="travel_comment_input">
-                        <input type="text" @blur="commentBlur()" @focus="commentFocus()" placeholder="留言还没做好，前端一枚，后端还在琢磨~">
+                        <input type="text" @blur="commentBlur()" @focus="commentFocus()"
+                            placeholder="留言还没做好，前端一枚，后端还在琢磨~">
                         <span :class="commentFocusBol ? 'travel_comment_btn' : ''">留言</span>
                     </div>
                 </div>
@@ -115,19 +107,38 @@
             </div>
         </div>
         <div class="travel_mask" :class="maskAnimation ? 'travel_mask_active' : ''" @click.self="closeTraveItemFunc()">
-            <i>×</i>
+            <i @click.self="closeTraveItemFunc()">×</i>
         </div>
     </div>
 </template>
+
+
 <script setup lang="ts">
-import { toRefs, ref, watch, getCurrentInstance, onUpdated, reactive, nextTick } from 'vue'
-const props = defineProps(['position', 'imgMsg', 'id', 'isShow'])
-const { position, imgMsg, id, isShow } = toRefs(props)
+type Props = {
+
+}
+
+import Swiper from "./swiper.vue"
+import { toRefs, ref, watch, getCurrentInstance, onUpdated, reactive, nextTick, computed, onMounted } from 'vue'
+const props = defineProps(['position', 'currentTravel', 'isShow'])
+const { position, currentTravel, isShow } = toRefs(props)
 const emits = defineEmits(['closeTraveItem'])
 //节流,防止频繁点击
 const throttleLock = ref(false)
 //mask动画问题
 const maskAnimation = ref(false)
+
+const imgList = computed(() => {
+    if (typeof (currentTravel.value) !== 'undefined') {
+        return [
+            currentTravel.value.thumb,
+            ...currentTravel.value.imgList
+        ]
+    } else {
+        return []
+    }
+
+})
 
 let animationState = reactive({
     transition: '0s ease',
@@ -141,6 +152,7 @@ let animationState = reactive({
 //监听渲染流程，触发动画方法
 watch(() => isShow?.value, (val) => {
     if (val) {
+
         animationFunc('enter')
     }
 })
@@ -162,18 +174,18 @@ const animationFunc = async (sign: string) => {
             ...position?.value,
             opacity: '0'
         }
+
         await nextTick()
-        style.top = "100px"
-        style.left = "20vw"
+
         if (document.body.clientWidth < 1919) {
             style.width = "89vw";
             style.top = "80px"
             style.left = "5vw"
 
         } else {
-            style.width = "70vw";
+            style.width = "1400px";
             style.top = "80px"
-            style.left = "15vw"
+            style.left = ((document.body.clientWidth - 1400) / 2) + "px"
         }
         style.height = document.body.clientHeight * 0.8 + "px";
         style.transition = " 0.5s ease"
@@ -223,10 +235,11 @@ const commentBlur = () => {
 const commentFocus = () => {
     commentFocusBol.value = true;
 }
-onUpdated(() => {
+onMounted(() => {
 
 })
 </script>
+
 <style lang="scss" scoped>
 .travel_body {
     position: fixed;
@@ -241,50 +254,29 @@ onUpdated(() => {
     /* IE and Edge */
     scrollbar-width: none;
     /* Firefox */
-    border: 3x solid black;
-    background: rgba($color: #23272f, $alpha: 0);
+    border: 3px solid black;
     overflow: hidden;
     display: flex;
     align-items: stretch;
+    justify-content: center;
     border-radius: 10px;
 
     &.travel_active {
         background: rgba($color: #23272f, $alpha: 1);
-
+        max-width: 1400px;
     }
-    swiper-container{
-        height: 100%;
-        overflow: hidden;
-
-    }
-    swiper-slide{
-        overflow: hidden;
-        height: 100%;
-    }
-
 
     .travel_swiper {
+        background: rgba($color: #23272f, $alpha: 0);
         position: relative;
         left: 0;
         top: 0;
-        width: 500px;
+        width: 600px;
         flex-shrink: 0;
         transition: .5s ease;
         border-radius: 5px;
         overflow: hidden;
-        height: 100%;
-        
-        .travel_img {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            img {
-                max-width: 100%;
-                max-height: 100%;
-            }
-        }
+        height: 1023.2px;
 
 
         // height: 100%;
@@ -296,10 +288,10 @@ onUpdated(() => {
         transition: 0.4s ease;
         padding-right: 50px;
         // width: 600px;
-        flex: 1;
         height: 100%;
-        padding: 50px 120px;
-        flex: 1;
+        padding: 50px;
+        width: 700px;
+        background: rgba($color: #23272f, $alpha: 0);
 
         h4 {
             font-size: 32px;
@@ -359,7 +351,7 @@ onUpdated(() => {
             }
 
             .travel_comment_body {
-                border-left: 3px solid  rgba(88, 175, 223, .1);
+                border-left: 3px solid rgba(88, 175, 223, .1);
                 padding-left: 20px;
                 max-height: 500px;
                 overflow: scroll;
@@ -484,6 +476,16 @@ onUpdated(() => {
         opacity: 0.8;
         width: 100%;
         height: 100%;
+    }
+
+    i {
+        position: absolute;
+        right: 50px;
+        top: 50px;
+        font-size: 50px;
+        cursor: pointer;
+        font-style: normal;
+
     }
 }
 </style>

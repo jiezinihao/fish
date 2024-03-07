@@ -34,69 +34,25 @@ const tabs = reactive<NavList[]>([
     path: '/connect'
   },
 ]);
-// const tabsComponents = [
-//   notes, travel1, connect, travel
-// ]
+
 
 watch(() => route.path, newPath =>{
-  currentTab.value = newPath
+  setCurrentNav(newPath)
 })
 const changeNav = (item: NavList) => {
-  currentTab.value = item.path;
+  setCurrentNav(item.path)
   router.push({
     path: item.path
   })
 }
 
-// const listenerFont = () => {
-//   let div = nav.value;
-//   //获取手指初始坐标
-//   let startX = 0;
-//   let index = -1;//选中哪一个tabs，默认值为-1，表示未匹配到
-//   let active = false;//鼠标是否按下
-
-//   div.addEventListener("mousedown", (e: any) => {
-//     active = true
-//     //获取手指初始坐标
-//     startX = e.pageX - 120;
-//     tabs.forEach((item, i) => {
-//       if (startX > item.leftPosition && startX < item.leftPosition + 80) {
-//         index = i;//
-
-//       }
-//     })
-//     e.preventDefault(); //阻止屏幕滚动的默认行为
-
-//   });
-//   div.addEventListener("mousemove", (e: any) => {
-
-//     if (active && index >= 0) {
-//       tabs[index].leftPosition = e.pageX - 120
-//     }
-//   });
-//   div.addEventListener("mouseup", (e: any) => {
-//     if (active) {
-
-//       tabs.forEach((item, i) => {
-//         if (index !== i && Math.abs(e.pageX - item.leftPosition - 120) < 90) {
-//           if (e.pageX - item.leftPosition - 120 < 0) {
-//             item.leftPosition += 60
-//           } else {
-//             item.leftPosition -= 60
-//           }
-//         }
-//       })
-//     }
-//     active = false;
-
-//   });
-// }
 onMounted(() => {
   //节流
   let throttle: any = null;
   let clientWidth = document.body.clientWidth
   // listenerFont()
   initLoginBg()
+
   window.onresize = () => {
     if (throttle === null && clientWidth !== document.body.clientWidth) {
       throttle = setTimeout(() => {
@@ -107,6 +63,11 @@ onMounted(() => {
     }
   }
 })
+
+const setCurrentNav = (path:string)=>{
+  
+  currentTab.value = path
+}
 
 </script>
 <template>
@@ -199,22 +160,27 @@ onMounted(() => {
 .v-leave-from {
   position: absolute;
   top: 0;
+  opacity: 1;
 }
 
 .v-leave-active {
   position: absolute;
   top: 100vh;
   transition: 0.5s ease;
+  opacity: 0;
+
 }
 
 .v-enter-from {
   position: absolute;
   top: -100vh;
+  opacity: 0;
 }
 
 .v-enter-to {
   position: absolute;
   top: 0;
+  opacity: 1;
   transition: 0.5s ease;
 }
 </style>
