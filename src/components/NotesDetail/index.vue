@@ -23,7 +23,7 @@ const props = defineProps(['article']);
 const detail = ref<any>(null)
 const body = ref('')
 
-watch(props, (val) => {
+watch(props, () => {
     if (props.article.article_id !== '') {
         body.value = ""
         getDetail(props.article.article_id)

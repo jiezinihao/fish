@@ -8,5 +8,10 @@ export const NotesListGetAPI = (params:NotesListAPIReq):Promise<NotesListAPIRes>
 export const NotesDetailGetAPI = (params:NotesDetailGetAPIReq):Promise<NotesDetailGetAPIRes> => request.post("/notes/detail-article",params)
 //获取旅行栏目数据
 export const TravelListGetAPI = ():Promise<TravelListGetAPIRes> => request.get("/travel/travel-list")
+//上传旅行栏目的评论
+export const TravelCommentUploadGetAPI = (params:TravelCommentUploadGetAPIReq):Promise<TravelCommentUploadGetAPIRes> => request.post("/travel/travel-comment-upload",params)
+//获取旅行评论
+export const TravelCommentGetAPI = (params:TravelCommentGetAPIAPIReq):Promise<TravelCommentGetAPIAPIRes> => request.post("/travel/travel-comment",params)
+
 
 

@@ -26,113 +26,98 @@
                     </div>
                 </div>
                 <div class="travel_comment">
-                    <div class="travel_comment_tit">
-                        一共有x条评论
+                    <div class="travel_comment_tit" v-if="commentList.length > 0">
+                        一共有{{ commentList.length }}条评论
                     </div>
-                    <div class="travel_comment_body">
-                        <div class="travel_comment_item">
-                            <div class="travel_comment_left">
-                                <img src="../../assets/img/head.jpg" alt="">
-                            </div>
-                            <div class="travel_comment_right">
-                                <h5>落寂的小丑</h5>
-                                <p>落寂的小丑，站在金顶上，不知道可以给谁分享此时开心的心情...</p>
-                            </div>
-                        </div>
-                        <div class="travel_comment_item">
-                            <div class="travel_comment_left">
-                                <img src="../../assets/img/head.jpg" alt="">
-                            </div>
-                            <div class="travel_comment_right">
-                                <h5>落寂的小丑</h5>
-                                <p>落寂的小丑，站在金顶上，不知道可以给谁分享此时开心的心情...</p>
-                            </div>
-                        </div>
-                        <div class="travel_comment_item">
-                            <div class="travel_comment_left">
-                                <img src="../../assets/img/head.jpg" alt="">
-                            </div>
-                            <div class="travel_comment_right">
-                                <h5>落寂的小丑</h5>
-                                <p>落寂的小丑，站在金顶上，不知道可以给谁分享此时开心的心情...</p>
-                            </div>
-                        </div>
-                        <div class="travel_comment_item">
-                            <div class="travel_comment_left">
-                                <img src="../../assets/img/head.jpg" alt="">
-                            </div>
-                            <div class="travel_comment_right">
-                                <h5>落寂的小丑</h5>
-                                <p>落寂的小丑，站在金顶上，不知道可以给谁分享此时开心的心情...</p>
-                            </div>
-                        </div>
-                        <div class="travel_comment_item">
-                            <div class="travel_comment_left">
-                                <img src="../../assets/img/head.jpg" alt="">
-                            </div>
-                            <div class="travel_comment_right">
-                                <h5>落寂的小丑</h5>
-                                <p>落寂的小丑，站在金顶上，不知道可以给谁分享此时开心的心情...</p>
-                            </div>
-                        </div>
-                        <div class="travel_comment_item">
-                            <div class="travel_comment_left">
-                                <img src="../../assets/img/head.jpg" alt="">
-                            </div>
-                            <div class="travel_comment_right">
-                                <h5>落寂的小丑</h5>
-                                <p>落寂的小丑，站在金顶上，不知道可以给谁分享此时开心的心情...</p>
-                            </div>
-                        </div>
-                        <div class="travel_comment_item">
-                            <div class="travel_comment_left">
-                                <img src="../../assets/img/head.jpg" alt="">
-                            </div>
-                            <div class="travel_comment_right">
-                                <h5>落寂的小丑</h5>
-                                <p>落寂的小丑，站在金顶上，不知道可以给谁分享此时开心的心情...</p>
-                            </div>
-                        </div>
+                    <div class="travel_comment_tit" v-else>
+                        暂无评论
                     </div>
+                    <!-- <div class="travel_comment_body"> -->
+                    <el-scrollbar max-height="400px" class="travel_comment_body" v-if="commentList.length > 0">
+                        <div class="travel_comment_con"
+                            :class="item.commentId === commentFrom.commentId ? 'travel_comment_item_active' : ''"
+                            v-for="(item, index) in commentList" :key="index">
+                            <div class="travel_comment_item">
+                                <div class="travel_comment_left">
+                                    <img src="../../assets/img/head.jpg" alt="">
+                                </div>
+                                <div class="travel_comment_right">
+                                    <h5>{{ item.commentName }}</h5>
+                                    <p>{{ item.commentBody }}</p>
+                                </div>
+                                <span @click="replyComment(item.commentId as string)">{{ isReply ? '取消':'回复' }}</span>
+                            </div>
+                            <div class="atravel_comment_reply travel_comment_item" v-for="itemReply in item.commentBack"
+                                :key="itemReply.commentName">
+                                <div class="travel_comment_left">
+                                    <img src="../../assets/img/head.jpg" alt="">
+                                </div>
+                                <div class="travel_comment_right">
+                                    <h5>{{ itemReply.commentName }}</h5>
+                                    <p>{{ itemReply.commentBody }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </el-scrollbar>
+                    <!-- </div> -->
+
+                    <p class="comment_inpput_title" v-if="isReply">回复他：</p>
+                    <p class="comment_inpput_title" v-else>我来评论一条：</p>
+
                     <div class="travel_comment_input">
-                        <input type="text" @blur="commentBlur()" @focus="commentFocus()"
-                            placeholder="留言还没做好，前端一枚，后端还在琢磨~">
-                        <span :class="commentFocusBol ? 'travel_comment_btn' : ''">留言</span>
+                        <input class="input_name" type="text" id="name" placeholder="昵称"
+                            v-model="commentFrom.commentName">
+                        <input type="text" id="message" placeholder="想说什么~" v-model="commentFrom.commentBody"
+                            @focus="commentFocus()" @blur="commentBlur()">
+                        <span :class="commentFocusBol ? 'travel_comment_btn' : ''" @click="comment()">留言</span>
                     </div>
                 </div>
 
-
-            </div>
-            <div class="travel_page">
             </div>
         </div>
         <div class="travel_mask" :class="maskAnimation ? 'travel_mask_active' : ''" @click.self="closeTraveItemFunc()">
             <i @click.self="closeTraveItemFunc()">×</i>
         </div>
+
     </div>
 </template>
 
 
 <script setup lang="ts">
-type Props = {
-
-}
 
 import Swiper from "./swiper.vue"
-import { toRefs, ref, watch, getCurrentInstance, onUpdated, reactive, nextTick, computed, onMounted } from 'vue'
+import { toRefs, ref, watch, getCurrentInstance, reactive, nextTick, computed, onMounted, shallowRef } from 'vue'
+import { TravelCommentUploadGetAPI, TravelCommentGetAPI } from "../../request/api"
+import 'element-plus/es/components/message/style/css'
+import { ElMessage } from 'element-plus'
+
+
 const props = defineProps(['position', 'currentTravel', 'isShow'])
 const { position, currentTravel, isShow } = toRefs(props)
 const emits = defineEmits(['closeTraveItem'])
+//上传评论
+const commentFrom = ref<TravelCommentUploadGetAPIReq>({
+    commentBody: '',
+    commentName: '匿名',
+    commentId: '',
+    travelId: '',
+})
+const isReply = computed(() => {
+    return commentFrom.value.commentId === '' ? false : true
+})
+//显示评论
+const commentList = shallowRef<TravelCommentItemFrist[]>([])
 //节流,防止频繁点击
 const throttleLock = ref(false)
 //mask动画问题
 const maskAnimation = ref(false)
 
 const imgList = computed(() => {
-    if (typeof (currentTravel.value) !== 'undefined') {
+    if (typeof (currentTravel?.value) !== 'undefined') {
         return [
-            currentTravel.value.thumb,
-            ...currentTravel.value.imgList
+            currentTravel?.value.thumb,
+            ...currentTravel?.value.imgList
         ]
     } else {
         return []
@@ -152,11 +137,15 @@ let animationState = reactive({
 //监听渲染流程，触发动画方法
 watch(() => isShow?.value, (val) => {
     if (val) {
-
+        getComment()
         animationFunc('enter')
+    } else {
+        resetData()
     }
 })
-
+watch(() => commentFrom.value, (val) => {
+    console.log(val);
+})
 let commentFocusBol = ref(false);//评论留言点击
 //params:动画进入和消失的流程
 const animationFunc = async (sign: string) => {
@@ -187,7 +176,7 @@ const animationFunc = async (sign: string) => {
             style.top = "80px"
             style.left = ((document.body.clientWidth - 1400) / 2) + "px"
         }
-        style.height = document.body.clientHeight * 0.8 + "px";
+        style.height = document.body.clientHeight * 0.9 + "px";
         style.transition = " 0.5s ease"
         style.opacity = "1"
         animationState = {
@@ -225,15 +214,75 @@ const {
 }: any = getCurrentInstance();
 
 
+const comment = async (commentId?: string) => {
+
+    commentFrom.value.travelId = currentTravel?.value.travel_id;
+    if (commentFrom.value.commentName === '') {
+        ElMessage({
+            message: "评论名称不能为空",
+            type: 'error',
+        })
+        return
+    } else if (commentFrom.value.commentBody === '') {
+        ElMessage({
+            message: "评论不能为空",
+            type: 'error',
+        })
+        return
+    }
+    const result = await TravelCommentUploadGetAPI(commentFrom.value).then(data => data)
+
+    if (result.code !== '0000') {
+        ElMessage({
+            message: result.msg,
+            type: 'error',
+        })
+    } else {
+        ElMessage({
+            message: "评论成功",
+            type: 'success',
+        })
+        getComment()
+    }
+
+}
+const getComment = async () => {
+    if (typeof (currentTravel?.value) === 'undefined') {
+        return
+    }
+
+    const result = await TravelCommentGetAPI({ travelId: currentTravel?.value.travel_id }).then(data => data)
+    commentList.value = [...result.data]
+
+}
+//点击回复
+const replyComment = (commentId: string) => {
+    if(isReply.value){
+        commentFrom.value.commentId = ''
+    }else{
+        commentFrom.value.commentId = commentId
+    }
+}
+
 const closeTraveItemFunc = () => {
     animationFunc('out')
 }
+
 
 const commentBlur = () => {
     commentFocusBol.value = false;
 }
 const commentFocus = () => {
     commentFocusBol.value = true;
+}
+//重置页面数据
+const resetData = () => {
+    commentFrom.value = {
+        commentBody: '',
+        commentName: '匿名',
+        commentId: '',
+        travelId: '',
+    }
 }
 onMounted(() => {
 
@@ -255,10 +304,10 @@ onMounted(() => {
     scrollbar-width: none;
     /* Firefox */
     border: 3px solid black;
-    overflow: hidden;
+    overflow: scroll;
     display: flex;
     align-items: stretch;
-    justify-content: center;
+    // justify-content: center;
     border-radius: 10px;
 
     &.travel_active {
@@ -276,8 +325,8 @@ onMounted(() => {
         transition: .5s ease;
         border-radius: 5px;
         overflow: hidden;
-        height: 1023.2px;
-
+        height: 100%;
+        margin-left: 80px;
 
         // height: 100%;
 
@@ -289,6 +338,7 @@ onMounted(() => {
         padding-right: 50px;
         // width: 600px;
         height: 100%;
+        flex-shrink: 0;
         padding: 50px;
         width: 700px;
         background: rgba($color: #23272f, $alpha: 0);
@@ -352,7 +402,6 @@ onMounted(() => {
 
             .travel_comment_body {
                 border-left: 3px solid rgba(88, 175, 223, .1);
-                padding-left: 20px;
                 max-height: 500px;
                 overflow: scroll;
 
@@ -361,10 +410,80 @@ onMounted(() => {
                     display: none;
                 }
 
+                .travel_comment_con {
+                    position: relative;
+                    margin-right: 20px;
+                    &.travel_comment_item_active {
+                        &::after {
+                            width: 100%;
+                            height: 3px;
+                        }
+
+                        &::before {
+                            height: 80%;
+                        }
+
+                        .travel_comment_item span {
+                            opacity: 1;
+                        }
+                    }
+
+                    &:hover {
+                        &::after {
+                            width: 100%;
+                            height: 3px;
+                        }
+
+                        &::before {
+                            height: 80%;
+                        }
+
+                        .travel_comment_item span {
+                            opacity: 1;
+                        }
+                    }
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        right: 10px;
+                        top: 0;
+                        width: 0;
+                        height: 0;
+                        border-top: 3px solid rgba(88, 175, 223, .1);
+                        transition: .4s ease;
+                    }
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        width: 10px;
+                        height: 10px;
+                        transition: .4s ease;
+                        border-top: 3px solid rgba(88, 175, 223, .1);
+                        border-right: 3px solid rgba(88, 175, 223, .1);
+                        border-radius: 0 4px 0 0;
+                    }
+                }
+
                 .travel_comment_item {
                     display: flex;
                     align-items: center;
-                    margin-bottom: 30px;
+                    padding: 20px 0;
+                    margin: 0 20px;
+                    position: relative;
+                    
+                    span {
+                        margin-right: 10px;
+                        font-size: 16px;
+                        color: #999;
+                        font-weight: bold;
+                        opacity: 0;
+                        cursor: pointer;
+                        margin-bottom: 15px;
+                    }
 
                     .travel_comment_left {
                         width: 40px;
@@ -393,19 +512,60 @@ onMounted(() => {
                         }
                     }
                 }
+
+                .atravel_comment_reply {
+                    margin-left: 30px;
+                    padding: 5px 0;
+                    transform: scale(0.9);
+
+                    &::after {
+                        content: none;
+                    }
+
+                    &::before {
+                        content: none;
+                    }
+                }
+            }
+
+            .comment_inpput_title {
+                margin-top: 40px;
+                font-size: 22px;
+                color: #999;
             }
 
             .travel_comment_input {
                 display: flex;
-                margin-top: 40px;
+                margin-top: 20px;
                 align-items: center;
                 position: relative;
 
+                .input_name {
+                    width: 100px;
+                    border-radius: 5px 0 0 5px;
+                }
 
+                input {
+                    width: 500px;
+                    border: 1px solid #333;
+                    border-radius: 0 5px 5px 0;
+                    line-height: 20px;
+                    font-size: 16px;
+                    resize: none;
+                    padding: 10px;
+                    background: none;
+                    color: #eee;
+
+                    &:focus {
+                        outline: none;
+                        border: 1px solid #999;
+
+                    }
+                }
 
                 span {
                     position: absolute;
-                    left: 420px;
+                    right: 0;
                     top: 50%;
                     width: 80px;
                     height: 99%;
@@ -413,34 +573,22 @@ onMounted(() => {
                     align-items: center;
                     justify-content: center;
                     transform: translate(0, -50%);
-                    border: 1px solid rgba(88, 175, 223, 1);
+                    border: 1px solid #999;
                     border-radius: 5px;
-                    background: rgba(88, 175, 223, 1);
+                    background: #999;
                     cursor: pointer;
                     opacity: 0;
                     transition: 0.5s ease;
                     color: white;
                     font-weight: bold;
+
+                    &:hover {
+                        background: rgba(88, 175, 223, 0.6);
+                    }
                 }
 
                 .travel_comment_btn {
                     opacity: 1;
-                }
-
-                input {
-                    border: 1px solid #b39836;
-                    padding: 10px;
-                    border-radius: 5px;
-                    transition: 0.2s ease;
-                    font-size: 15px;
-                    color: #333;
-                    letter-spacing: 1px;
-                    width: 500px;
-
-                    &:focus {
-                        outline: none;
-                        border: 1px solid #8450ff;
-                    }
                 }
             }
         }

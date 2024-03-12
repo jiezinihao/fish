@@ -16,28 +16,28 @@
 import { toRefs, watch, onMounted, onUnmounted, ref } from 'vue'
 import Swiper from "swiper"
 import 'swiper/css';
-let swiper = ""
+let swiper:Swiper
 
 const props = defineProps(['slideList']);
 const { slideList } = toRefs(props);
 const fristLoading = ref(true)
 
-watch(() => slideList.value, (val) => {
+watch(() => slideList?.value, () => {
 
     if (fristLoading) {
         swiper = new Swiper('.travel-swiper', {
             spaceBetween: 0,
-            slidesPerView: '1',
+            slidesPerView: 1,
         });
         fristLoading.value = false
     }
-    if (swiper !== '') {
+    if (typeof(swiper) !== undefined) {
         swiper.slideTo(0, 0)
     }
 })
 
 const destorySwiper = () => {
-    if (swiper === '') {
+    if (typeof(swiper) !== undefined) {
         return
     }
     if (Array.isArray(swiper)) {

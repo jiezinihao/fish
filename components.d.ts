@@ -7,13 +7,13 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     Menu: typeof import('./src/components/menu.vue')['default']
     NotesDetail: typeof import('./src/components/NotesDetail/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SvgIcon: typeof import('./src/components/SvgIcon/index.vue')['default']
     Swiper: typeof import('./src/components/TravelDetail/swiper.vue')['default']
-    Travel: typeof import('./src/components/travel.vue')['default']
     TravelDetail: typeof import('./src/components/TravelDetail/index.vue')['default']
   }
 }

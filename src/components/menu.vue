@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div ref="menu" class="menu">
         123
     </div>
@@ -104,4 +104,4 @@ onMounted(() => {
 })
 </script>
 <style scoped lang="scss"></style>
-  
+   -->

@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import TravelDetail from '../../components/TravelDetail/index.vue'
-import { onMounted, ref, reactive, computed, shallowRef, watch,nextTick } from 'vue';
+import { onMounted, ref, reactive, shallowRef,nextTick } from 'vue';
 import { TravelListGetAPI } from "../../request/api"
 import SwiperNav from "./swiper.vue"
 let boxPostion = reactive({
@@ -56,16 +56,14 @@ const currentTravel = shallowRef<TravelGetAPIResDataItem>()
 // const travelImgList = computed(()=>{
 //     return 
 // })
-// 获取swiper属性s
-const onSlideChange = () => {
-}
+// 获取swiper属性
 // const swiperToNext = () => {
 //     swiper.value.swiper.slideNext()
 // }
 //打开栏目详情
 const showTravelItem = (e: MouseEvent, item: TravelGetAPIResDataItem) => {
     const target = searchTargetElement('travel_nav', e.target);
-    TravelId.value = item.travel_id
+    TravelId.value = Number(item.travel_id)
     currentTravel.value = item
     boxPostion = {
         height: target.offsetHeight + 'px',
@@ -92,7 +90,7 @@ const searchTargetElement = (str: string, element: any): any => {
     }
 
 }
-const getTravelList = async (ide:string) => {
+const getTravelList = async () => {
     const result = await TravelListGetAPI().then(data => data);
     travelList.value = result.data;
     nextTick(()=>{
@@ -101,7 +99,7 @@ const getTravelList = async (ide:string) => {
 }
 
 onMounted(() => {
-    getTravelList('frist')
+    getTravelList()
     setTimeout(()=>{
         fristLoading.value = false
     },500)

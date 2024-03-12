@@ -1,5 +1,5 @@
-class DefNull{
-    def:null
+class DefNull {
+    def: null
 }
 
 interface APIRes {
@@ -27,14 +27,14 @@ interface NotesList {
     article_id: string,
 }
 interface NotesListAPIRes extends APIRes {
-    maxCount:string,
+    maxCount: string,
     data: NotesList[]
 }
 
 interface NotesListAPIReq {
     nav_id: string,
-    page:number,
-    pageSize:number
+    page: number,
+    pageSize: number
 }
 
 //文章详情
@@ -61,6 +61,41 @@ interface TravelGetAPIResDataItem {
     time: string,
     imgList: TravelImg[]
 }
-interface TravelListGetAPIRes extends APIRes{
-    data:TravelGetAPIResDataItem[] 
+interface TravelListGetAPIRes extends APIRes {
+    data: TravelGetAPIResDataItem[]
+}
+
+
+interface TravelCommentItem {
+    commentBody: string,
+    commentName: string,
+    commentId: string,
+}
+interface TravelCommentItemFrist {
+    commentBody: String,
+    commentName: String,
+    commentId: String,
+    commentBack: [TravelCommentItem],
+}
+
+interface TravelCommentUploadGetAPIRes extends APIRes {
+    data: {
+        travelId: String,
+        commentList: [TravelCommentItemFrist],
+    }[]
+}
+
+
+interface TravelCommentUploadGetAPIReq {
+    commentBody: String,
+    commentName: String,
+    commentId?: String,
+    travelId: String,
+}
+
+interface TravelCommentGetAPIAPIReq {
+    travelId: String,
+}
+interface TravelCommentGetAPIAPIRes extends APIRes {
+    data:TravelCommentItemFrist[]
 }
