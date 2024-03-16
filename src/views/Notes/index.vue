@@ -1,20 +1,19 @@
 <template>
     <div class="notes" :class="showDetail ? 'notes-detail' : ''">
         <div class="notes_lab">
-            <div class="notes_lab_item " :class="item.nav_id === currentNav.nav_id ? 'notes_lab_item_active' : ''"
+            <div class="notes_lab_item " :class="item.nav_id === currentNavId ? 'notes_lab_item_active' : ''"
                 v-for="(item) in navList" :key="item.nav_id" @click="clickNav(item)">
                 {{ item.title }}
             </div>
 
         </div>
         <div class="main">
-            <NotesDetail :article="currentNotes"></NotesDetail>
+            <NotesDetail :articleId="currentNotesId"></NotesDetail>
         </div>
         <div class="notes_body">
             <div class="notes_list">
-                <div class="notes_list_item"
-                    :class="currentNotes.article_id === item.article_id ? 'notes_list_item_active' : ''"
-                    v-for="item in notesList" :key="item.article_id" @click="clickNotesItem(item)">
+                <div class="notes_list_item" :class="currentNotesId === item.article_id ? 'notes_list_item_active' : ''"
+                    v-for="item in notesList" :key="item.article_id" @click="clickNotesItem(item.article_id)">
                     <p>{{ item.title }}</p>
                     <time>{{ item.time }} </time>
                 </div>
@@ -36,27 +35,40 @@ import { NotesNavsGetAPI, NotesListGetAPI } from "../../request/api"
 import NotesDetail from "../../components/NotesDetail/index.vue"
 import 'element-plus/es/components/pagination/style/css'
 import { ElPagination } from 'element-plus'
+import { useRouter, useRoute } from 'vue-router';
+
+type RouteParams = {
+    navId: string, notesId: string, pageNum: number
+}
+
+const router = useRouter()
+const route = useRoute()
+const routeParams = reactive<RouteParams>({
+    navId: route.params.navId as string,
+    pageNum: Number(route.params.pageNum as string || 1),
+    notesId: route.params.notesId as string,
+})
+
 //栏目列表
 let navList = ref<NavNotes[]>([])
 //文章列表
 let notesList = ref<NotesList[]>([])
 let notesListPage = ref({
-    currentPage: 1,
+    currentPage: Number(route.params.pageNum as string || 1),
     total: 0,
     pageSize: 4
 })
-let currentNav = reactive<NavNotes>({ nav_id: '', title: '' })
+let currentNavId = ref('')
 let showDetail = ref(false)
-let currentNotes = ref<NotesList>({
-    nav_id: '',
-    title: '',
-    time: '',
-    article_id: '',
+let currentNotesId = ref<string>('')
+
+watch(() => notesListPage.value.currentPage, (val, oldVal) => {
+    if (val !== oldVal) {
+        routeParams.pageNum = val
+
+    }
 })
 
-watch(() => notesListPage.value.currentPage, (val) => {
-    getNotesList(currentNav.nav_id, val)
-})
 
 //加载栏目
 const getNavList = async () => {
@@ -82,49 +94,74 @@ const resetPagination = (maxCount: string) => {
 
 //点击栏目
 const clickNav = async (item: NavNotes) => {
-    if (currentNav === item) {
+    if (currentNavId.value === item.nav_id) {
         return
     }
     showDetail.value = false
-    currentNav = item;
-    setCurrentNotes('reset')
-    getNotesList(currentNav.nav_id)
+    currentNavId.value = item.nav_id;
+    //赋值且重置页数和随记ID
+    routeParams.navId = item.nav_id
+    routeParams.pageNum = 1
+    routeParams.notesId = ''
+    getNotesList(currentNavId.value)
 }
 
 //第一次进入逻辑
 const initPage = async () => {
     const data = await getNavList();
     if (data.length > 0) {
-        currentNav = data[0]
+        currentNavId.value = data[0].nav_id
     }
-    await getNotesList(currentNav.nav_id)
+    await getNotesList(routeParams.navId || currentNavId.value, routeParams.pageNum || 1);
+
 }
 //点击随记详情
-const clickNotesItem = async (item: NotesList) => {
+const clickNotesItem = async (article_id: string) => {
     showDetail.value = true
-    setCurrentNotes(item)
+    routeParams.pageNum = notesListPage.value.currentPage;
+    routeParams.notesId = article_id;
+    routeParams.navId = currentNavId.value;
+    
 }
 //更改当前点击的notes(对react的setState拙劣的模范哈哈哈)
-const setCurrentNotes = (param: string | NotesList) => {
-    if (typeof (param) === 'string') {
-        if (param === 'reset') {
-            currentNotes.value = {
-                nav_id: '',
-                title: '',
-                time: '',
-                article_id: '',
-            }
-        }
+const setCurrentNotes = (article_id: string) => {
+    if (article_id === '') {
         return
     }
 
-    if ('article_id' in param) {
-        currentNotes.value = param
-    }
-
+    currentNotesId.value = article_id
 
 }
 
+
+watch(routeParams, (newParams, oldParams) => {
+
+    let url = '/notes'
+
+
+    url += '/' + newParams.pageNum;
+
+    if (typeof (oldParams) !== 'undefined') {
+        getNotesList(newParams.navId, newParams.pageNum)
+    }
+
+
+
+    if (newParams.navId !== '') {
+        url += '/' + newParams.navId
+    }
+
+
+    if (newParams.notesId !== '') {
+        url += '/' + newParams.notesId;
+        showDetail.value = true;
+        setCurrentNotes(newParams.notesId);
+    }
+
+    router.push({
+        path: url
+    })
+}, { immediate: true })
 //
 onMounted(() => {
     initPage()
@@ -168,6 +205,7 @@ onMounted(() => {
         flex-shrink: 0;
         padding: 20px;
         border-radius: 10px 0 0 10px;
+
         .notes_lab_item {
             height: 60px;
             width: 100%;
@@ -240,6 +278,7 @@ onMounted(() => {
             width: 100%;
             min-width: 400px;
             height: 550px;
+
             .notes_list_item {
                 width: 100%;
                 margin-bottom: 40px;
@@ -314,9 +353,10 @@ onMounted(() => {
                 }
             }
         }
-        .notes_page{
-           display: flex;
-           justify-content: center;
+
+        .notes_page {
+            display: flex;
+            justify-content: center;
         }
     }
 

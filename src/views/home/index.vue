@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted ,watch} from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import initLoginBg from "./init.ts"
-import { useRouter,useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 interface NavList {
   id: number,
@@ -34,16 +34,29 @@ const tabs = reactive<NavList[]>([
     path: '/connect'
   },
 ]);
-
-
-watch(() => route.path, newPath =>{
-  setCurrentNav(newPath)
-})
 const changeNav = (item: NavList) => {
   setCurrentNav(item.path)
   router.push({
     path: item.path
   })
+}
+
+const setCurrentNav = (path: string) => {
+
+  currentTab.value = path
+}
+
+
+watch(() => route.path, newPath => {
+  setCurrentNav(newPath)
+},{immediate:true})
+
+const str1InStr2 = (str1: string, str2: string) => {
+  if (str1.indexOf(str2) === -1) {
+    return false
+  } else {
+    return true
+  }
 }
 
 onMounted(() => {
@@ -64,18 +77,14 @@ onMounted(() => {
   }
 })
 
-const setCurrentNav = (path:string)=>{
-  
-  currentTab.value = path
-}
 
 </script>
 <template>
   <div class="home">
     <canvas id="canvas"></canvas>
     <div class="home_nav" ref="nav">
-      <div class="home_nav_item" :class="item.path == currentTab ? 'home_nav_item_active' : ''" v-for="(item) in tabs" :key="item.id"
-        @click="changeNav(item)">
+      <div class="home_nav_item" :class="str1InStr2(currentTab,item.path) ? 'home_nav_item_active' : ''" v-for="(item) in tabs"
+        :key="item.id" @click="changeNav(item)">
         {{ item.name }}
       </div>
     </div>
@@ -87,7 +96,7 @@ const setCurrentNav = (path:string)=>{
       <!-- <menu1></menu1> -->
       <!-- <notes></notes> -->
       <router-view v-slot="{ Component }">
-        <transition >
+        <transition>
           <component :is="Component" />
         </transition>
       </router-view>

@@ -2,12 +2,15 @@
     <div class="swiper">
         <div class="travel-swiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" v-for="(item, index) in slideList" :key="index">
+                <div class="swiper-slide" v-for="(item, index) in slideList" :key="index" @click="showDetail(item.url)">
                     <div class="travel_img">
                         <img :src="item.url" alt="">
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="detail" :class="detailControl.show ? 'detail_active' : ''" @click="closeDetail()">
+            <img :src="detailControl.url" alt="">
         </div>
     </div>
 </template>
@@ -16,12 +19,15 @@
 import { toRefs, watch, onMounted, onUnmounted, ref } from 'vue'
 import Swiper from "swiper"
 import 'swiper/css';
-let swiper:Swiper
+let swiper: Swiper
 
 const props = defineProps(['slideList']);
 const { slideList } = toRefs(props);
 const fristLoading = ref(true)
-
+const detailControl = ref({
+    show: false,
+    url: ''
+})
 watch(() => slideList?.value, () => {
 
     if (fristLoading) {
@@ -31,13 +37,15 @@ watch(() => slideList?.value, () => {
         });
         fristLoading.value = false
     }
-    if (typeof(swiper) !== undefined) {
+    //清楚残留页数，滚动到第一页
+
+    if (typeof (swiper) !== undefined) {
         swiper.slideTo(0, 0)
     }
 })
 
 const destorySwiper = () => {
-    if (typeof(swiper) !== undefined) {
+    if (typeof (swiper) !== undefined) {
         return
     }
     if (Array.isArray(swiper)) {
@@ -48,10 +56,16 @@ const destorySwiper = () => {
         swiper.destroy(false)
     }
 }
+const showDetail = (url: string) => {
+    detailControl.value.show = true
+    detailControl.value.url = url;
+}
+const closeDetail = () => {
+    detailControl.value.show = false
+    detailControl.value.url = '';
+}
 
 onMounted(() => {
-
-    console.log(swiper);
 
 })
 onUnmounted(() => {
@@ -99,6 +113,34 @@ onUnmounted(() => {
             max-width: 100%;
             max-height: 100%;
         }
+    }
+}
+
+.detail {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    background: rgba($color: #23272f, $alpha: 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: width 0s .6s, height 0s .6s, opacity .5s ease;
+
+    img {
+        max-width: 90%;
+        max-height: 90%;
+    }
+
+    &.detail_active {
+        z-index: 1000;
+        opacity: 1;
+        transition: width 0s, height 0s, opacity .5s ease;
+        width: 100vw;
+        height: 100vh;
     }
 }
 </style>

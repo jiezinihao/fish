@@ -1,7 +1,7 @@
 <template>
     <div class="travel-list">
-        <el-scrollbar>
-            <div class="travel_list_item">
+        <el-scrollbar >
+            <div class="travel_list_item" :class="(props.isShow ||  show) ? 'travel_list_item_show':''">
                 <div class="nav_item" v-for="itemImg in slideList" :key="itemImg.uid">
                     <div class="frame">
                         <img :src="itemImg.url" alt="">
@@ -13,11 +13,15 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, onMounted, onUnmounted, ref } from 'vue'
-const props = defineProps(['slideList', 'travelId']);
+import { toRefs, onMounted, onUnmounted, ref, computed, watch } from 'vue'
+const props = defineProps(['isShow', 'slideList', 'travelId']);
 const { slideList } = toRefs(props);
-
-
+const show = ref(false)
+watch(()=>props.isShow,(val)=>{
+    if(val){
+        show.value = true
+    }
+})
 onMounted(() => {
 })
 onUnmounted(() => {
@@ -35,7 +39,13 @@ onUnmounted(() => {
         align-items: center;
         height: 390px;
         padding: 20px 0;
+        opacity: 0;
+        transition: .4s ease;
     }
+    .travel_list_item_show{
+        opacity: 1;
+    }
+
     .nav_item {
         // height: 100%;
         overflow: hidden;
@@ -49,6 +59,7 @@ onUnmounted(() => {
         overflow: hidden;
         margin: 20px 10px;
         height: 100%;
+
         .frame {
             height: 100%;
             // background: url("../../assets/img/background/travel_frame.png");

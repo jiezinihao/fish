@@ -25,6 +25,7 @@ interface NotesList {
     title: string,
     time: string,
     article_id: string,
+    watchNum:string
 }
 interface NotesListAPIRes extends APIRes {
     maxCount: string,
@@ -39,13 +40,18 @@ interface NotesListAPIReq {
 
 //文章详情
 interface NotesDetail {
-    file: string
+    nav_id: string,
+    title: string,
+    time: number,
+    article_id: string,
+    file: string,
+    watchNum:string
 }
 interface NotesDetailGetAPIReq {
     article_id: string
 }
 interface NotesDetailGetAPIRes extends APIRes {
-    data: file
+    data: NotesDetail
 }
 
 interface TravelImg {
@@ -59,6 +65,7 @@ interface TravelGetAPIResDataItem {
     travel_id: string,
     thumb: TravelImg,
     time: string,
+    watchNum:string,
     imgList: TravelImg[]
 }
 interface TravelListGetAPIRes extends APIRes {

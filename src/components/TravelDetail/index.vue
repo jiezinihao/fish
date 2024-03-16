@@ -12,13 +12,20 @@
                     </div>
                     <div class="travel_list_opr">
                         <p>
-                            <svg class="icon rotate" aria-hidden="true">
-                                <use xlink:href="#icon-icon_time"></use>
+                            <svg class="icon rotate jump" aria-hidden="true">
+                                <use xlink:href="#icon-time"></use>
                             </svg>
                             <span>{{ currentTravel?.time }}</span>
                         </p>
                         <p>
-                            <svg class="icon swing" aria-hidden="true">
+                            <svg class="icon guankan jump" aria-hidden="true">
+                                <use xlink:href="#icon-guankan"></use>
+                            </svg>
+                            <span v-if="currentTravel?.watchNum > 0">{{ currentTravel?.watchNum }}人看过</span>
+                            <span v-else>第一名!</span>
+                        </p>
+                        <p>
+                            <svg class="icon swing" aria-hidden="true" @click="orderingCoffee()">
                                 <use xlink:href="#icon-icon_coffee"></use>
                             </svg>
                             <span>给博主点杯咖啡吧！</span>
@@ -45,7 +52,7 @@
                                     <h5>{{ item.commentName }}</h5>
                                     <p>{{ item.commentBody }}</p>
                                 </div>
-                                <span @click="replyComment(item.commentId as string)">{{ isReply ? '取消':'回复' }}</span>
+                                <span @click="replyComment(item.commentId as string)">{{ isReply ? '取消' : '回复' }}</span>
                             </div>
                             <div class="atravel_comment_reply travel_comment_item" v-for="itemReply in item.commentBack"
                                 :key="itemReply.commentName">
@@ -213,7 +220,7 @@ const {
     proxy: { $forceUpdate },
 }: any = getCurrentInstance();
 
-
+//评论按钮
 const comment = async (commentId?: string) => {
 
     commentFrom.value.travelId = currentTravel?.value.travel_id;
@@ -242,10 +249,12 @@ const comment = async (commentId?: string) => {
             message: "评论成功",
             type: 'success',
         })
+        resetData()
         getComment()
     }
 
 }
+//获取评论
 const getComment = async () => {
     if (typeof (currentTravel?.value) === 'undefined') {
         return
@@ -257,11 +266,15 @@ const getComment = async () => {
 }
 //点击回复
 const replyComment = (commentId: string) => {
-    if(isReply.value){
+    if (isReply.value) {
         commentFrom.value.commentId = ''
-    }else{
+    } else {
         commentFrom.value.commentId = commentId
     }
+}
+
+const orderingCoffee = () => {
+    ElMessage.success('谢谢宝宝的咖啡')
 }
 
 const closeTraveItemFunc = () => {
@@ -357,7 +370,7 @@ onMounted(() => {
 
         .travel_list_opr {
             display: flex;
-            height: 40px;
+            // height: 40px;
             align-items: center;
 
             p {
@@ -367,15 +380,16 @@ onMounted(() => {
                 align-items: center;
 
                 svg {
-                    width: 30px;
-                    height: 30px;
+                    width: 25px;
+                    height: 25px;
                     margin-right: 10px;
                     cursor: pointer;
                     transition: 0.5s ease;
                     transform: rotate(0);
 
-                    &.rotate:hover {
-                        animation: rotateAni 0.3s ease;
+                    &.jump:hover {
+                        transform-origin: top left;
+                        transform: rotate(20deg) translate(5px, -15px) scale(1.2);
                     }
 
                     &.swing:hover {
@@ -384,6 +398,7 @@ onMounted(() => {
                 }
 
                 span {
+                    line-height: 1.5;
                     font-size: 16px;
                     color: #999;
                 }
@@ -413,6 +428,7 @@ onMounted(() => {
                 .travel_comment_con {
                     position: relative;
                     margin-right: 20px;
+
                     &.travel_comment_item_active {
                         &::after {
                             width: 100%;
@@ -474,7 +490,7 @@ onMounted(() => {
                     padding: 20px 0;
                     margin: 0 20px;
                     position: relative;
-                    
+
                     span {
                         margin-right: 10px;
                         font-size: 16px;

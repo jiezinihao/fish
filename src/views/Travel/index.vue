@@ -1,7 +1,7 @@
 <template>
     <div class="travel">
-        <div class="container">
-            <div class="travel_nav" @click="showTravelItem($event, item)" v-for="item in travelList"
+        <div class="container" ref="container" @scroll="handleScroll()">
+            <div class="travel_nav" @click="showTravelItem($event, item)" v-for="(item, index) in travelList"
                 :key="item.travel_id">
                 <div class="thumb">
                     <div class="thumb_img">
@@ -9,8 +9,9 @@
                     </div>
                     <p>{{ item.title }}</p>
                 </div>
-                <div class="nav_con" :class="!fristLoading ? 'nav_con_show':''" >
-                    <SwiperNav :travelId="item.travel_id" :slideList="item.imgList"></SwiperNav>
+                <div class="nav_con" :class="!fristLoading ? 'nav_con_show' : ''">
+                    <SwiperNav :is-show="isInScreen(item.scorllTop)" :travelId="item.travel_id" :slideList="item.imgList">
+                    </SwiperNav>
                 </div>
 
 
@@ -29,9 +30,15 @@
 
 <script setup lang="ts">
 import TravelDetail from '../../components/TravelDetail/index.vue'
-import { onMounted, ref, reactive, shallowRef,nextTick } from 'vue';
+import { onMounted, ref, reactive, shallowRef, nextTick } from 'vue';
 import { TravelListGetAPI } from "../../request/api"
 import SwiperNav from "./swiper.vue"
+
+interface TravelList extends TravelGetAPIResDataItem {
+    scorllTop: number,
+}
+
+let container = ref<any>(null);
 let boxPostion = reactive({
     height: '0px',
     width: '0px',
@@ -49,9 +56,12 @@ const fristLoading = ref(true)
 
 //点击旅游名称
 let TravelId = ref(-1);
-const travelList = shallowRef<TravelListGetAPIRes['data']>();
+const travelList = shallowRef<TravelList[]>();
 let isShowBox = ref(false);
 const currentTravel = shallowRef<TravelGetAPIResDataItem>()
+
+let throttle = ref(true)
+const containerScroll = ref(0)
 
 // const travelImgList = computed(()=>{
 //     return 
@@ -65,6 +75,7 @@ const showTravelItem = (e: MouseEvent, item: TravelGetAPIResDataItem) => {
     const target = searchTargetElement('travel_nav', e.target);
     TravelId.value = Number(item.travel_id)
     currentTravel.value = item
+    
     boxPostion = {
         height: target.offsetHeight + 'px',
         width: target.offsetWidth + 'px',
@@ -73,8 +84,30 @@ const showTravelItem = (e: MouseEvent, item: TravelGetAPIResDataItem) => {
     }
     isShowBox.value = true
 }
+const isInScreen = (scorllTop: number) => {
+    // console.dir(container.value.clientHeight);
+    
+    if (scorllTop - containerScroll.value - container.value.clientHeight > 0) {
+        return false
+    } else {
+        return true
+    }
+    // if(document.body.clientHeight - scorllTop -  containerScroll.value)
+}
 const closeTraveItem = () => {
     isShowBox.value = false
+}
+const handleScroll = () => {
+    // console.dir(e.srcElement.scrollTop);
+    if (throttle.value) {
+        
+        containerScroll.value = container.value.scrollTop || 0
+        throttle.value = false;
+        setTimeout(() => {
+            throttle.value = true;
+        }, 500)
+    }
+
 }
 //深度搜索目标父元素
 const searchTargetElement = (str: string, element: any): any => {
@@ -92,17 +125,25 @@ const searchTargetElement = (str: string, element: any): any => {
 }
 const getTravelList = async () => {
     const result = await TravelListGetAPI().then(data => data);
-    travelList.value = result.data;
-    nextTick(()=>{
-       
+    travelList.value = result.data.map((item, index) => {
+        let scorllTop = index * 400
+        return {
+            ...item,
+            scorllTop
+        }
+    })
+
+    nextTick(() => {
+
     })
 }
 
 onMounted(() => {
     getTravelList()
-    setTimeout(()=>{
+
+    setTimeout(() => {
         fristLoading.value = false
-    },500)
+    }, 500)
 })
 
 </script>
@@ -110,7 +151,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .travel {
     width: 100%;
-    height: 80%;
+    height: 90%;
 
     .container {
         margin: 40px 120px;
@@ -119,7 +160,7 @@ onMounted(() => {
         border-radius: 10px;
         padding-right: 120px;
         height: 100%;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
 
         .travel_nav {
@@ -176,10 +217,11 @@ onMounted(() => {
                 margin: 0 20px;
                 opacity: 0;
                 transition: .4s ease;
-                &.nav_con_show{
+
+                &.nav_con_show {
                     opacity: 1
                 }
-          
+
             }
 
             .travel_tips {

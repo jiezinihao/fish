@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "5832795",
+      "name": "time",
+      "font_class": "time",
+      "unicode": "e6c4",
+      "unicode_decimal": 59076
+    },
+    {
+      "icon_id": "32537083",
+      "name": "观看",
+      "font_class": "guankan",
+      "unicode": "e875",
+      "unicode_decimal": 59509
+    },
+    {
       "icon_id": "11200991",
       "name": "right",
       "font_class": "right",
