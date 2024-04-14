@@ -1,8 +1,7 @@
 import axios from "axios";
 
-let baseURL = import.meta.env.VITE_BACK_URL ? 'http://localhost:3001' : 'http://47.98.128.173:3001'
+let baseURL = import.meta.env.VITE_BACK_URL
 
-console.log(baseURL);
 
 const instance = axios.create({
     baseURL,

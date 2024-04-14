@@ -6,11 +6,13 @@ import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router"
 import Notes from "../views/Notes/index.vue"
 import Travel from "../views/Travel/index.vue"
 import Connect from "../views/Connect/index.vue"
+import Index from "../views/Index/index.vue"
 
 
 
 const routes: RouteRecordRaw[] = [
-    { path: '/', redirect: '/notes' },
+    { path: '/',redirect: '/index' },
+    { path: '/index',  name: '鱼的博客',component: Index },
 
     // 动态字段以冒号开始
     { path: '/notes/:pageNum?/:navId?/:notesId?', name: '随记', component: Notes },
@@ -20,7 +22,8 @@ const routes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.VITE_BASE_PATH),
+    
     routes, // `routes: routes` 的缩写
 })
 

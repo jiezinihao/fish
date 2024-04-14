@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, onMounted, onUnmounted, ref, computed, watch } from 'vue'
+import { toRefs, onMounted, onUnmounted, ref, watch } from 'vue'
 const props = defineProps(['isShow', 'slideList', 'travelId']);
 const { slideList } = toRefs(props);
 const show = ref(false)

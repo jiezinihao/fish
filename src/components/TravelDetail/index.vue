@@ -221,7 +221,7 @@ const {
 }: any = getCurrentInstance();
 
 //评论按钮
-const comment = async (commentId?: string) => {
+const comment = async (_?: string) => {
 
     commentFrom.value.travelId = currentTravel?.value.travel_id;
     if (commentFrom.value.commentName === '') {

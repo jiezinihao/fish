@@ -38,9 +38,9 @@ watch(() => slideList?.value, () => {
         fristLoading.value = false
     }
     //清楚残留页数，滚动到第一页
-
+    
     if (typeof (swiper) !== undefined) {
-        swiper.slideTo(0, 0)
+        swiper.update()
     }
 })
 

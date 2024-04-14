@@ -2,7 +2,7 @@
     <div class="container">
         <div class="title">{{ detail.title }}</div>
         <div class="sub">
-           
+
             <p>
                 <svg class="icon rotate jump" aria-hidden="true">
                     <use xlink:href="#icon-time"></use>
@@ -25,7 +25,7 @@
 
         <!-- <div class="detail" v-html="body" v-if="body">
         </div> -->
-        <div class="detail markdown-body" v-if="body" v-html="body">
+        <div ref="markdownDetail" class="detail markdown-body" v-html="body">
         </div>
     </div>
 </template>
@@ -47,11 +47,9 @@ const detail = ref<NotesDetail>({
     file: '',
     watchNum: '',
 })
+const markdownDetail = ref<any>(null)
 
 const body = ref('')
-
-
-
 const getDetail = async (article_id: string) => {
     const result = await NotesDetailGetAPI({ article_id }).then(data => data)
     detail.value = result.data;
@@ -61,6 +59,16 @@ watch(props, () => {
 
     if (props.articleId !== '') {
         getDetail(props.articleId)
+        // if (markdownDetail.value !== null) {
+        //     console.dir(markdownDetail.value);
+        //     setTimeout(() => {
+        //         markdownDetail.value.scrollTo({
+        //             top: 0,
+        //             behavior: 'smooth'
+        //         })
+        //     }, 3000)
+
+        // }
     }
 }, { immediate: true })
 
@@ -101,6 +109,7 @@ const orderingCoffee = () => {
         justify-content: center;
         padding: 20px 0;
         border-bottom: 2px solid #666;
+
         p {
             margin-right: 40px;
             line-height: 10px;

@@ -1,0 +1,328 @@
+/* 通用动画 */
+@keyframes rotate{
+	from{transform: rotate(0deg)}
+	to{transform: rotate(359deg)}
+}
+@keyframes opacity {
+	0% {opacity: var(--opci, 0);}
+	100% {opacity: var(--opci-in, 1);}
+}
+@keyframes transform {
+	0% {transform: var(--trfm, translateY(1rem)); transform-origin: var(--trfm-or, top); }
+	100% {transform: var(--trfm-in, none);}
+}
+@keyframes filter {
+	0% {filter: var(--filter, none);}
+	100% {filter: none;}
+}
+@keyframes end {
+	0% {opacity: 1;}
+	100% {opacity: 0;}
+}
+/* 标识动画 */
+@keyframes bg-logo {
+	25% {background-position: 100% 50%;} 
+	75% {background-position: 0% 50%;}
+}
+@keyframes logo-left {
+	30% {transform: translate(0, -50%);} 
+	50% {transform: translate(70%, -50%);opacity: 1;} 
+	60% {transform: translate(130%, -50%);opacity: .2;} 
+	90% {transform: translate(50%, -50%);opacity: 1;} 
+}
+@keyframes logo-right {
+	30% {transform: translate(0, -50%);} 
+	50% {transform: translate(-70%, -50%);opacity: 1;} 
+	60% {transform: translate(-130%, -50%);opacity: .2;} 
+	90% {transform: translate(-50%, -50%);opacity: 1;} 
+}
+:root {
+  font-size: 34px;
+  /* 色调 */
+  //主题色
+  --theme-color: 346deg 100% 72%;
+
+  --color-rgb: 238 77 80;
+  --color-sub-rgb: 251 145 104;
+  --color: rgb(var(--color-rgb));
+  --color-sub: rgb(var(--color-sub-rgb));
+  /* 字块 */
+  --font-color: 0deg 0% 15%;
+  --font-alpha: 100%;
+  --font-weight-normal: 400;
+  --font-weight-title: 600;
+  --font-size-normal: 0.6rem;
+  --font-size-small: 0.45rem;
+  --font-size-toosmall: 0.35rem;
+  --font-size-medium: 0.55rem;
+  --font-size-title: 0.85rem;
+  --font-spacing: 0.01em;
+  --font-family: PingFang SC, -apple-system, Century Gothic,
+    Microsoft YaHei Light, system-ui, sans-serif;
+  --font-family-title: var(--font-family);
+  --font-family-slogn: Smiley Sans Oblique, var(--font-family);
+  --font-family-code: Monaco, Consolas, monospace;
+  --text-shadow: 0 0.04rem 0.2rem rgb(0 0 0 / 30%);
+
+  /* 区块 */
+  --radius: 0.5rem;
+  --icon-size: 0.85rem;
+  --card-size: 15rem;
+  --narrow-size: 1920px;
+  --medium-size: 1152px;
+  --content-size: 1000px;
+  --box-shadow: 0 0.2rem 1rem 0 hsl(var(--font-color) / 10%);
+  --box-shadow-white: 0 0.2rem 1rem 0 hsl(var(--font-color) / 3%);
+  --box-shadow-color: var(--box-shadow),
+    0 2rem 2rem -2rem rgb(var(--color-rgb) / 30%);
+  --bg: hsl(0deg 0% 0% / 5%);
+  --h-dark-bg: hsl(214deg 64% 6% / 40%);
+  --h-bg: hsl(0deg 0% 99%);
+  --w-bg: white;
+  --n-bg: transparent;
+
+  /* 距离 */
+  --nav-height: 2rem;
+  --nav-height-negative:-2rem;
+  --sticky-top: calc(var(--nav-height) + 1rem);
+  --edge-tb: var(--nav-height);
+  --edge-lr: 2rem;
+  --gap-area: 2rem;
+  --gap-divs: 1rem;
+  --gap-span: 0.5rem;
+
+  /* 动画 */
+  --animation-on: cubic-bezier(0.6, 0.1, 0, 1);
+  --animation-in: cubic-bezier(0.6, 0.2, 0.25, 1);
+  --animation: opacity 0.5s var(--animation-in) backwards,
+    transform 1s var(--animation-in) backwards,
+    filter 0.7s var(--animation-in) backwards;
+}
+:root body {
+  --border: thin solid hsl(var(--font-color) / 10%);
+  --theme-border: thin solid hsl(var(-theme-color) / 10%);
+
+  --s-color: hsl(var(--font-color) / var(--font-alpha));
+  --f-color: white;
+  --s-shadow: none;
+}
+body {
+  font: var(--font-weight-normal) var(--font-size-normal) / 2 var(--font-family);
+  color: hsl(var(--font-color));
+}
+@media (max-width: 1152px) {
+  :root {
+    font-size: large;
+    --edge-lr: 1rem;
+  }
+}
+@media (max-width: 641px) {
+  :root {
+    font-size: medium;
+
+    --sticky-top: 1rem;
+  }
+}
+/* 夜间模式 */
+:root[theme="dark"] {
+  --font-color: 214deg 15% 90%;
+  --bg: hsl(0deg 0% 100% / 4%);
+  --h-bg: hsl(214deg 64% 6%);
+  --w-bg: hsl(214deg 64% 10%);
+  --s-bg: hsl(0deg 0% 100% / 20%);
+}
+:root[theme="dark"] body {
+  --f-color: var(--h-bg);
+}
+:root[theme="dark"] img {
+  filter: blur(0) brightness(0.7);
+}
+//reset
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+logo,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+  border: 0;
+  font-family: inherit;
+  font-size: 100%;
+  font-style: inherit;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--font-color) / 10%) #0000;
+}
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--sticky-top);
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  height: 100%;
+  background: var(--h-bg);
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+  -ms-word-wrap: break-all;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+logo,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+nav,
+section {
+  display: block;
+}
+ol,
+ul {
+  list-style: none;
+}
+li li {
+  margin-left: 1.5em;
+}
+table {
+  /* tables still need 'cellspacing="0"' in the markup */
+  border-collapse: collapse;
+  width: 100%;
+}
+caption,
+th,
+td {
+  font-weight: normal;
+  text-align: left;
+}
+td {
+  padding: 0.5em;
+}
+blockquote,
+q {
+  quotes: "" "";
+  hyphens: none;
+}
+blockquote::before,
+q::before {
+  content: "\e65d";
+  font-family: "iconfont";
+  font-size: 1rem;
+  opacity: 0.6;
+  margin: -1rem 0;
+  display: block;
+}
+a > img {
+  border: 0;
+  vertical-align: middle;
+}
+a {
+  color: hsl(var(--font-color) / var(--font-alpha));
+  outline: 0;
+  text-decoration: none;
+  transition: 0.7s;
+}
+
+a:where(:hover, :focus, :active) {
+  color: var(--theme-color);
+}
+
+
+[data-box-hover="detault"]:hover{
+  transform: scale(1.1);
+  transition: .2s ease-in;
+}
+
+.fade-before{
+  --trfm: scale(.98) translateY(1rem);
+  opacity: 0.5;
+  transform: var(--trfm, translateY(1rem));
+  transform-origin: var(--trfm-or, top);
+  transition: transform cubic-bezier(.6, .2, .25, 1) .7s, opacity .3s;
+  &[ani-delay='0.2s']{
+    transition-delay:0.2s;
+  }
+  &[ani-delay='0.4s']{
+    transition-delay:0.4s;
+  }
+  &[ani-delay='0.6s']{
+    transition-delay:0.6s;
+  }
+  &[ani-delay='0.8s']{
+    transition-delay:0.8s;
+  }
+  &[ani-delay='1s']{
+    transition-delay:1s;
+  }
+}
+.fade-after {
+  opacity: 1;
+  transform: var(--trfm-in, none);
+}

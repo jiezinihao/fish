@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4441907 */
-  src: url('iconfont.woff2?t=1710536278432') format('woff2'),
-       url('iconfont.woff?t=1710536278432') format('woff'),
-       url('iconfont.ttf?t=1710536278432') format('truetype');
+  src: url('iconfont.woff2?t=1713129612853') format('woff2'),
+       url('iconfont.woff?t=1713129612853') format('woff'),
+       url('iconfont.ttf?t=1713129612853') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,82 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-GitHub:before {
+  content: "\ea09";
+}
+
+.icon-logo-black:before {
+  content: "\e731";
+}
+
+.icon-bilibili-copy:before {
+  content: "\e601";
+}
+
+.icon-top:before {
+  content: "\e681";
+}
+
+.icon-time1:before {
+  content: "\e638";
+}
+
+.icon-excel:before {
+  content: "\e624";
+}
+
+.icon-coffee:before {
+  content: "\ebae";
+}
+
+.icon-Sunset:before {
+  content: "\e628";
+}
+
+.icon-Moon:before {
+  content: "\e68d";
+}
+
+.icon-head-img1:before {
+  content: "\e660";
+}
+
+.icon-head-img2:before {
+  content: "\e661";
+}
+
+.icon-head-img3:before {
+  content: "\e663";
+}
+
+.icon-head-img4:before {
+  content: "\e664";
+}
+
+.icon-head-img5:before {
+  content: "\e665";
+}
+
+.icon-head-img6:before {
+  content: "\e666";
+}
+
+.icon-head-img7:before {
+  content: "\e667";
+}
+
+.icon-head-img8:before {
+  content: "\e668";
+}
+
+.icon-meow1:before {
+  content: "\e600";
+}
+
+.icon-meow2:before {
+  content: "\e617";
 }
 
 .icon-time:before {

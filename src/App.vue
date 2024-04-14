@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import home from './views/home/index.vue'
 
+
 </script>
 
 <template>
@@ -9,15 +10,11 @@ import home from './views/home/index.vue'
 
 <style>
 :root {
-  --vt-c-black: #23272f;
-  --vt-c-black-pure: #000000;
-  --vt-c-black-soft: #242424;
-  --vt-c-black-mute: #2f2f2f;
-  --divider-black:rgba(84, 84, 84, .68);
-  --divider-light:rgba(60, 60, 60, .29);
+  --divider-black: rgba(84, 84, 84, .68);
+  --divider-light: rgba(60, 60, 60, .29);
 }
 
-* {
+/* * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -28,17 +25,18 @@ html {
   height: 100%;
   overflow: hidden;
 
-}
+} */
 
 body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-
+  background: var(--h-bg);
 }
 
 #app {
   width: 100%;
   height: 100%;
   overflow: hidden;
-}</style>
+}
+</style>

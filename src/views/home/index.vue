@@ -1,94 +1,8 @@
-<script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue'
-import initLoginBg from "./init.ts"
-import { useRouter, useRoute } from 'vue-router';
-
-interface NavList {
-  id: number,
-  name: string,
-  path: string
-}
-
-const router = useRouter()
-const route = useRoute()
-
-let currentTab = ref('');
-let nav = ref<any>(null);
-
-
-//栏目信息
-const tabs = reactive<NavList[]>([
-  {
-    id: 1,
-    name: "随记",
-    path: '/notes'
-  },
-  {
-    id: 2,
-    name: "旅行",
-    path: '/travel'
-  },
-  {
-    id: 3,
-    name: "联系",
-    path: '/connect'
-  },
-]);
-const changeNav = (item: NavList) => {
-  setCurrentNav(item.path)
-  router.push({
-    path: item.path
-  })
-}
-
-const setCurrentNav = (path: string) => {
-
-  currentTab.value = path
-}
-
-
-watch(() => route.path, newPath => {
-  setCurrentNav(newPath)
-},{immediate:true})
-
-const str1InStr2 = (str1: string, str2: string) => {
-  if (str1.indexOf(str2) === -1) {
-    return false
-  } else {
-    return true
-  }
-}
-
-onMounted(() => {
-  //节流
-  let throttle: any = null;
-  let clientWidth = document.body.clientWidth
-  // listenerFont()
-  initLoginBg()
-
-  window.onresize = () => {
-    if (throttle === null && clientWidth !== document.body.clientWidth) {
-      throttle = setTimeout(() => {
-        initLoginBg()
-        clientWidth = document.body.clientWidth
-        throttle = null
-      }, 1000);
-    }
-  }
-})
-
-
-</script>
 <template>
   <div class="home">
     <canvas id="canvas"></canvas>
-    <div class="home_nav" ref="nav">
-      <div class="home_nav_item" :class="str1InStr2(currentTab,item.path) ? 'home_nav_item_active' : ''" v-for="(item) in tabs"
-        :key="item.id" @click="changeNav(item)">
-        {{ item.name }}
-      </div>
-    </div>
-    <div class="body">
+    <Nav :process="process" @toTop="toTop"></Nav>
+    <div class="body" ref="body">
       <!-- <Transition>
         <component :is="tabsComponents[currentTab-1]"></component>
       </Transition> -->
@@ -97,12 +11,55 @@ onMounted(() => {
       <!-- <notes></notes> -->
       <router-view v-slot="{ Component }">
         <transition>
-          <component :is="Component" />
+          <component :is="Component"  />
         </transition>
       </router-view>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted, watch,provide ,readonly } from 'vue'
+// import initLoginBg from "./init.ts"
+import { useRouter, useRoute } from 'vue-router';
+import Nav from "../../components/Nav/index.vue"
+
+const body = ref<any>(null);
+let theme = ref<string | null>();
+let process = ref<number>(0);
+let processOrigin = ref<number>(0)
+
+//滚动监听透传Props
+provide('process',  readonly(processOrigin));
+
+const handleScroll = (event:any) => {
+  const scrollHeight = event.target.scrollHeight
+  const scrollTop = event.target.scrollTop
+  const clientHeight = event.target.clientHeight
+  process.value = Number(Math.ceil((scrollTop / (scrollHeight - clientHeight)) * 100))
+  processOrigin.value = scrollTop
+}
+
+const toTop = () => {
+  body.value.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth",//平滑滚动
+  });
+
+}
+
+onMounted(() => {
+  //初始化主题
+  theme.value = localStorage.getItem('theme');
+
+  //监听body滚动
+  body.value.addEventListener('scroll', handleScroll);
+
+
+})
+
+</script>
 
 <style scoped lang="scss">
 #canvas {
@@ -121,48 +78,18 @@ onMounted(() => {
   overflow: hidden;
 
   // background: var(--vt-c-black);
-  .home_nav {
-    position: relative;
-    z-index: 100;
-    width: 100%;
-    height: 100px;
-    padding: 0 120px;
-    background: rgba($color: #23272f, $alpha: 0.5);
-    display: flex;
-    align-items: center;
-    border-bottom: 2px solid var(--divider-light);
 
-    .home_nav_item {
-      height: 80px;
-      color: #999;
-      font-size: 28px;
-      width: 120px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s ease-in;
-      top: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &.home_nav_item_active {
-        background: rgba(88, 175, 223, .1);
-        box-shadow: 2px 2px 5px rgba(88, 175, 223, .2);
-        color: #eee;
-      }
-
-      &:hover {
-        // text-shadow: 5px 5px 10px #333;
-      }
-    }
-  }
 
   .body {
     width: 100%;
-    height: calc(100% - 100px);
+    height: 100%;
     position: relative;
-    z-index: 101;
+  padding-top: var(--nav-height);
 
+    transition: .2s;
+    z-index: 101;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
 }
 
@@ -170,6 +97,8 @@ onMounted(() => {
   position: absolute;
   top: 0;
   opacity: 1;
+  width: 100%;
+  padding-top: var(--nav-height);
 }
 
 .v-leave-active {
@@ -177,6 +106,8 @@ onMounted(() => {
   top: 100vh;
   transition: 0.5s ease;
   opacity: 0;
+  width: 100%;
+  padding-top: var(--nav-height);
 
 }
 
@@ -184,6 +115,8 @@ onMounted(() => {
   position: absolute;
   top: -100vh;
   opacity: 0;
+  width: 100%;
+  padding-top: var(--nav-height);
 }
 
 .v-enter-to {
@@ -191,5 +124,7 @@ onMounted(() => {
   top: 0;
   opacity: 1;
   transition: 0.5s ease;
+  width: 100%;
+  padding-top: var(--nav-height);
 }
 </style>

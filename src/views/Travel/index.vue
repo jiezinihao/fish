@@ -1,7 +1,7 @@
 <template>
     <div class="travel">
         <div class="container" ref="container" @scroll="handleScroll()">
-            <div class="travel_nav" @click="showTravelItem($event, item)" v-for="(item, index) in travelList"
+            <div class="travel_nav" @click="showTravelItem($event, item)" v-for="(item) in travelList"
                 :key="item.travel_id">
                 <div class="thumb">
                     <div class="thumb_img">
@@ -151,18 +151,14 @@ onMounted(() => {
 <style lang="scss" scoped>
 .travel {
     width: 100%;
-    height: 90%;
-
+    height: 100%;
     .container {
-        margin: 40px 120px;
+        margin: 0 120px;
         padding: 40px;
         // background: rgba($color: #23272f, $alpha: 0.8);
         border-radius: 10px;
         padding-right: 120px;
         height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-
         .travel_nav {
             width: 100%;
             height: 400px;

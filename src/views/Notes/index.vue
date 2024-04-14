@@ -56,7 +56,7 @@ let notesList = ref<NotesList[]>([])
 let notesListPage = ref({
     currentPage: Number(route.params.pageNum as string || 1),
     total: 0,
-    pageSize: 4
+    pageSize: 5
 })
 let currentNavId = ref('')
 let showDetail = ref(false)
@@ -277,7 +277,6 @@ onMounted(() => {
         .notes_list {
             width: 100%;
             min-width: 400px;
-            height: 550px;
 
             .notes_list_item {
                 width: 100%;
