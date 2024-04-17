@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <Fish ></Fish>
+        <Fish></Fish>
         <div class="blog">
 
         </div>
@@ -72,8 +72,8 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 // import ArtText from "../../components/ArtText/index.vue"
-import Foot from "../../components/Foot/index.vue"
 import Fish from "../../components/Fish/index.vue"
+import Foot from "../../components/Foot/index.vue"
 
 
 const showCabinetFish = ref<boolean>(false)
@@ -101,7 +101,29 @@ const downFish = () => {
     }
 }
 
+@keyframes thumbAniMobile {
+    0% {
+        transform: scale(1.05);
 
+    }
+
+    70% {
+        transform: scale(1.09);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fade-in {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
 
 .index {
     font-family: var(--font-family);
@@ -153,15 +175,15 @@ const downFish = () => {
         justify-content: center;
         margin-top: -6rem;
         height: 6rem;
-        background: radial-gradient(at 50% 0, var(--s-bg, rgb(255 255 255 / .5)), #0000 calc(100% - var(--new-size))) no-repeat;
+        background: radial-gradient(at 50% 0, var(--s-bg, rgb(255 255 255 / .9)), #0000 calc(100% - var(--new-size))) no-repeat;
         border-radius: 50% 50% 0 0;
         position: relative;
         z-index: 100;
         animation: var(--animation);
-        animation-delay: 2.5s;
+        animation-delay: 1.5s;
         // box-shadow: 0 -2em 3em -4em rgb(0 0 0 / 5%);
-        -webkit-backdrop-filter: saturate(1.2) blur(10px);
-        backdrop-filter: saturate(1.2) blur(10px);
+        -webkit-backdrop-filter: saturate(1.2) blur(20px);
+        backdrop-filter: saturate(1.2) blur(20px);
         border-bottom: var(--border);
         padding: 1rem 0;
         color: var(--font-color);
@@ -228,5 +250,65 @@ const downFish = () => {
     }
 
 
+}
+
+
+@media (max-width: 1000px) {
+    .index {
+        .thumb {
+            height: auto;
+            animation: thumbAniMobile 2s var(--animation-in);
+
+            img {
+                position: static;
+                height: auto;
+            }
+
+
+            .introduce {
+                left: 1.5rem;
+                top: calc(var(--nav-height) + 1rem);
+
+                h5 {
+                    font-size: 0.6rem;
+                }
+
+                h2 {
+                    font-size: 0.8rem;
+                }
+            }
+        }
+        .new {
+            height: auto;
+            margin-top: 0;
+            flex-wrap: wrap;
+            border-radius: 0;
+            animation-delay: 0s;
+            animation: fade-in 0.5s 1s var(--animation-in) backwards;
+            
+            &:hover {
+                height: auto;
+                margin-top: 0;
+            }
+
+            .new_con {
+                width: 10rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 641px) {
+    .index {
+
+
+        .new {
+            .new_con {
+                width: 100%;
+            }
+        }
+
+
+    }
 }
 </style>

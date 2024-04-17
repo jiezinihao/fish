@@ -116,10 +116,15 @@ body {
     --edge-lr: 1rem;
   }
 }
+@media screen and (max-width: 1200px) {
+  :root {
+    font-size: 30px;
+    --edge-lr: 1rem;
+  }
+}
 @media (max-width: 641px) {
   :root {
-    font-size: medium;
-
+    font-size: 32px;
     --sticky-top: 1rem;
   }
 }
@@ -302,7 +307,7 @@ a:where(:hover, :focus, :active) {
 
 .fade-before{
   --trfm: scale(.98) translateY(1rem);
-  opacity: 0.5;
+  opacity: 0;
   transform: var(--trfm, translateY(1rem));
   transform-origin: var(--trfm-or, top);
   transition: transform cubic-bezier(.6, .2, .25, 1) .7s, opacity .3s;

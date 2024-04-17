@@ -6,9 +6,10 @@
         </div>
         <div class="friend">
             <h4>友链:</h4>
-            <a href="https://yaoliyaoli.com/">
+            <a href="https://yaoliyaoli.com/" target="_blank">
                 瑶哩瑶哩玲！
             </a>
+            <a href=""></a>
         </div>
     </div>
 </template>

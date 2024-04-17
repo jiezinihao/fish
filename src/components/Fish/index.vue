@@ -2,110 +2,106 @@
     <div class="bg" ref="bg">
         <div class="fish" ref="fish">
             <div class="step1 step" ref="step1" data-border-bottom-right-radius="0-100-%" data-bottom="0-120-%">
-                <div class="box_fish" :data-show="showCabinetFish" @click="downFish()">
-                    <img src="../../assets/img/box_fish.jpg" alt="">
-                    <p>{{ showCabinetFish ? '好吧我不回去啦!' : '恭喜你找到了柜子里的fish！' }}</p>
-                </div>
+
                 <img class="step_bg" src="../../assets/img/background/sun.jpeg" alt="">
                 <div class="mb" data-opacity="0.5-1"></div>
-                <div class="comment" ref="comment">
+                <div class="comment">
                     <p class="title">走心评论：</p>
-                    <a class="comment_box fade-before" ani-delay="0.2s">
-                        <div class="head_img">
-                            <svg class="icon icon-meow1" aria-hidden="true">
-                                <use xlink:href="#icon-meow1"></use>
-                            </svg>
-                        </div>
-                        <div class="comment_title">
-                            <p>匿名</p>
-                            <time datetime="2010.1.2">2010.1.2</time>
-                        </div>
-                        <div class="comment_content">
-                            短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
+                    <div class="comment_list" ref="comment">
+                        <a class="comment_box fade-before" ani-delay="0.2s">
+                            <div class="head_img">
+                                <svg class="icon icon-meow1" aria-hidden="true">
+                                    <use xlink:href="#icon-meow1"></use>
+                                </svg>
+                            </div>
+                            <div class="comment_title">
+                                <p>匿名</p>
+                                <time datetime="2010.1.2">2010.1.2</time>
+                            </div>
+                            <div class="comment_content">
+                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
 
-                        </div>
-                        <div class="comment_from">
-                            from “不要因为别人都交卷了，就乱填答案哦”
-                        </div>
-                    </a>
-                    <a class="comment_box fade-before" ani-delay="0.4s">
-                        <div class="head_img">
-                            <svg class="icon icon-meow1" aria-hidden="true">
-                                <use xlink:href="#icon-meow1"></use>
-                            </svg>
-                        </div>
-                        <div class="comment_title">
-                            <p>匿名</p>
-                            <time datetime="2010.1.2">2010.1.2</time>
-                        </div>
-                        <div class="comment_content">
-                            短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
+                            </div>
+                            <div class="comment_from">
+                                from “不要因为别人都交卷了，就乱填答案哦”
+                            </div>
+                        </a>
+                        <a class="comment_box fade-before" ani-delay="0.4s">
+                            <div class="head_img">
+                                <svg class="icon icon-meow1" aria-hidden="true">
+                                    <use xlink:href="#icon-meow1"></use>
+                                </svg>
+                            </div>
+                            <div class="comment_title">
+                                <p>匿名</p>
+                                <time datetime="2010.1.2">2010.1.2</time>
+                            </div>
+                            <div class="comment_content">
+                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
 
-                        </div>
-                        <div class="comment_from">
-                            from “不要因为别人都交卷了，就乱填答案哦”
-                        </div>
-                    </a>
-                    <a class="comment_box fade-before" ani-delay="0.6s">
-                        <div class="head_img">
-                            <svg class="icon icon-meow1" aria-hidden="true">
-                                <use xlink:href="#icon-meow1"></use>
-                            </svg>
-                        </div>
-                        <div class="comment_title">
-                            <p>匿名</p>
-                            <time datetime="2010.1.2">2010.1.2</time>
-                        </div>
-                        <div class="comment_content">
-                            短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
+                            </div>
+                            <div class="comment_from">
+                                from “不要因为别人都交卷了，就乱填答案哦”
+                            </div>
+                        </a>
+                        <a class="comment_box fade-before" ani-delay="0.6s">
+                            <div class="head_img">
+                                <svg class="icon icon-meow1" aria-hidden="true">
+                                    <use xlink:href="#icon-meow1"></use>
+                                </svg>
+                            </div>
+                            <div class="comment_title">
+                                <p>匿名</p>
+                                <time datetime="2010.1.2">2010.1.2</time>
+                            </div>
+                            <div class="comment_content">
+                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
 
-                        </div>
-                        <div class="comment_from">
-                            from “不要因为别人都交卷了，就乱填答案哦”
-                        </div>
-                    </a>
-                    <a class="comment_box fade-before" ani-delay="0.8s">
-                        <div class="head_img">
-                            <svg class="icon icon-meow1" aria-hidden="true">
-                                <use xlink:href="#icon-meow1"></use>
-                            </svg>
-                        </div>
-                        <div class="comment_title">
-                            <p>匿名</p>
-                            <time datetime="2010.1.2">2010.1.2</time>
-                        </div>
-                        <div class="comment_content">
-                            短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
+                            </div>
+                            <div class="comment_from">
+                                from “不要因为别人都交卷了，就乱填答案哦”
+                            </div>
+                        </a>
+                        <a class="comment_box fade-before" ani-delay="0.8s">
+                            <div class="head_img">
+                                <svg class="icon icon-meow1" aria-hidden="true">
+                                    <use xlink:href="#icon-meow1"></use>
+                                </svg>
+                            </div>
+                            <div class="comment_title">
+                                <p>匿名</p>
+                                <time datetime="2010.1.2">2010.1.2</time>
+                            </div>
+                            <div class="comment_content">
+                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
 
-                        </div>
-                        <div class="comment_from">
-                            from “不要因为别人都交卷了，就乱填答案哦”
-                        </div>
-                    </a>
-                    <a class="comment_box fade-before" ani-delay="1s">
-                        <div class="head_img">
-                            <svg class="icon icon-meow1" aria-hidden="true">
-                                <use xlink:href="#icon-meow1"></use>
-                            </svg>
-                        </div>
-                        <div class="comment_title">
-                            <p>匿名</p>
-                            <time datetime="2010.1.2">2010.1.2</time>
-                        </div>
-                        <div class="comment_content">
-                            短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
+                            </div>
+                            <div class="comment_from">
+                                from “不要因为别人都交卷了，就乱填答案哦”
+                            </div>
+                        </a>
+                        <a class="comment_box fade-before" ani-delay="1s">
+                            <div class="head_img">
+                                <svg class="icon icon-meow1" aria-hidden="true">
+                                    <use xlink:href="#icon-meow1"></use>
+                                </svg>
+                            </div>
+                            <div class="comment_title">
+                                <p>匿名</p>
+                                <time datetime="2010.1.2">2010.1.2</time>
+                            </div>
+                            <div class="comment_content">
+                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
 
-                        </div>
-                        <div class="comment_from">
-                            from “不要因为别人都交卷了，就乱填答案哦”
-                        </div>
-                    </a>
+                            </div>
+                            <div class="comment_from">
+                                from “不要因为别人都交卷了，就乱填答案哦”
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="fish_introduce" data-top="50-10-%" ref="introduce">
-                <img src="../../assets/img/fish_introduce.jpg" alt="">
-                <p>一直帅帅的喵</p>
-            </div>
+
             <div class="step step2" ref="step2" data-border-bottom-right-radius="0-100-%" data-bottom="0-120-%">
                 <img class="step_bg" src="../../assets/img/fish_bg.jpg" alt="">
                 <div class="mb" data-opacity="0.5-1"></div>
@@ -257,6 +253,14 @@
 
 
             </div>
+            <div class="box_fish" :data-show="showCabinetFish" @click="downFish()">
+                <img src="../../assets/img/box_fish.jpg" alt="">
+                <p>{{ showCabinetFish ? '好吧我不回去啦!' : '恭喜你找到了柜子里的fish！' }}</p>
+            </div>
+            <div class="fish_introduce" data-top="80-10-%" data-opacity="0.7-1" ref="introduce">
+                <img src="../../assets/img/fish_introduce.jpg" alt="">
+                <p>一直帅帅的喵</p>
+            </div>
             <!-- <div class="step step3">
                 <p>more</p>
             </div> -->
@@ -296,7 +300,7 @@ watch(process, (newValue) => {
 const scrollIntoView = (process: number) => {
     const precentObj: PrecentObj = initPrecent()
 
-    if (process > precentObj.precentStart / 2) {
+    if (process > precentObj.precentStart / 3) {
         for (let dom of comment.value.children) {
             dom.classList.add('fade-after')
         }
@@ -308,7 +312,7 @@ const initPrecent = () => {
     const scrollStart = Number(BGRect.top + process.value);
     const scrollEnd = Number(BGRect.bottom + process.value - window.innerHeight);
 
-    const precent = (scrollEnd - scrollStart) / 4
+    const precent = (scrollEnd - scrollStart) / 3
     const precentObj: PrecentObj = {
         precentStart: scrollStart,
         precent1: scrollStart + precent,
@@ -321,7 +325,7 @@ const initPrecent = () => {
 
 
 const downFish = () => {
-    showCabinetFish.value = true
+    showCabinetFish.value = !showCabinetFish.value
 }
 //dom动画映射
 const animationMap = new Map();
@@ -444,7 +448,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .bg {
-    height: 300vh;
+    height: 200vh;
     position: relative;
 
     .fish {
@@ -462,7 +466,6 @@ onMounted(() => {
             position: relative;
             align-items: center;
             height: 100%;
-            transition: .2s;
             padding-top: var(--nav-height);
 
             .step_bg {
@@ -489,46 +492,7 @@ onMounted(() => {
 
 
 
-            .box_fish {
-                width: 5rem;
-                height: auto;
-                left: -8rem;
-                top: 50%;
-                transform: rotate(60deg) translateY(-50%);
-                padding: 0.2rem;
-                position: absolute;
-                transition: .3s 2s var(--animation-in);
-                box-sizing: var(--box-shadow-white);
-                cursor: pointer;
-                z-index: 3;
 
-
-                p {
-                    opacity: 0;
-                    font-size: var(--font-size-small);
-                }
-
-                img {
-                    display: block;
-                    width: 100%;
-                    border-radius: 0.3rem;
-                }
-
-                &:hover,
-                &[data-show="true"] {
-                    left: 0rem;
-                    transform: rotate(0) translateY(-50%);
-                    background: radial-gradient(at 50% 0, var(--s-bg, rgb(255 255 255 / .5)), #0000 calc(100% - var(--new-size))) no-repeat;
-                    box-sizing: var(--box-shadow);
-                    border: var(--border);
-                    border-radius: 0.2rem;
-                    transition: .3s var(--animation-in);
-
-                    p {
-                        opacity: 1;
-                    }
-                }
-            }
 
 
         }
@@ -543,20 +507,25 @@ onMounted(() => {
             overflow: hidden;
 
             .comment {
-                gap: 1em;
-                break-inside: avoid;
-                columns: 15rem auto;
                 padding: var(--edge-lr);
+
+                padding: 0 var(--edge-lr);
                 position: relative;
                 height: 100%;
+
+                .comment_list {
+                    gap: 1em;
+                    break-inside: avoid;
+                    columns: 15rem auto;
+                    height: 100%;
+
+                }
 
                 .title {
                     font-size: var(--font-size-medium);
                     font-weight: var(--font-weight-title);
                     color: var(--font-color);
-                    position: absolute;
-                    left: var(--edge-lr);
-                    top: calc(var(--edge-lr) /3);
+                    margin: 0.8rem 0 0.4rem 0;
 
                 }
 
@@ -573,7 +542,7 @@ onMounted(() => {
                     position: relative;
                     font-size: var(--font-size-small);
                     color: var(--font-color);
-                    transition: .2s;
+                    transition-duration: 0.8s;
 
                     &:hover {
                         color: hsl(var(--theme-color));
@@ -613,6 +582,15 @@ onMounted(() => {
                     .comment_content {
                         text-align: justify;
                         word-break: break-all;
+                        overflow: hidden;
+                        /* 文本溢出时省略号显示 */
+                        text-overflow: ellipsis;
+                        /* 将对象作为弹性伸缩盒子模型显示  */
+                        display: -webkit-box;
+                        /*第几行裁剪*/
+                        -webkit-line-clamp: 3;
+                        /* 设置或检索伸缩盒对象的子元素的排列方式 */
+                        -webkit-box-orient: vertical;
                     }
 
                     .comment_from {
@@ -638,20 +616,20 @@ onMounted(() => {
             padding-left: 4rem;
 
             .about {
-                .box {
-                    margin: 1rem 0.5rem;
+                width: calc(min(18rem, 50%));
+                margin: 0 0.5rem;
 
-                }
             }
 
             // overflow: hidden;
             .box {
-                margin-left: 1rem;
+                margin-bottom: 1rem;
+
                 padding: var(--gap-divs);
                 border: thin solid transparent;
                 border-radius: var(--radius);
                 box-shadow: var(--box-shadow-white);
-                width: 18rem;
+                width: 100%;
                 height: 12rem;
                 font-size: var(--font-size-small);
                 transition: .2s;
@@ -660,13 +638,15 @@ onMounted(() => {
                 --temper: 1%;
                 --character: 90%;
                 --distory: 80%;
+                --temper-color: #ffff00;
+                --character-color: #54b5b7;
+                --distory-color: #947bd8;
 
                 &:hover {
                     // box-shadow: var(--box-shadow-white), 0 0 0 2px rgb(255 255 255 / 40%);
                     // background: rgb(255 255 255 / 50%);
                     // color: hsl(var(--theme-color));
                     border-color: hsl(var(--theme-color));
-                    ;
                 }
 
                 .title {
@@ -720,7 +700,6 @@ onMounted(() => {
 
                         i {
                             display: block;
-                            background: rgb(51 164 116);
                             border-radius: 0.25rem;
                             height: 100%;
                         }
@@ -732,18 +711,23 @@ onMounted(() => {
                 .temper {
                     i {
                         width: var(--temper);
+                        background: var(--temper-color);
                     }
                 }
 
                 .character {
                     i {
                         width: var(--character);
+                        background: var(--character-color);
+
                     }
                 }
 
                 .distory {
                     i {
                         width: var(--distory);
+                        background: var(--distory-color);
+
                     }
                 }
 
@@ -754,7 +738,8 @@ onMounted(() => {
             .aboutme {
                 --energy: 37%;
                 --jugment: 47%;
-
+                --energy-color: #a9f995;
+                --jugment-color: #b38136;
 
                 .connect {
                     display: flex;
@@ -797,12 +782,15 @@ onMounted(() => {
                 .energy {
                     i {
                         width: var(--energy);
+                        background: var(--energy-color);
                     }
                 }
 
                 .jugment {
                     i {
                         width: var(--jugment);
+                        background: var(--jugment-color);
+
                     }
                 }
             }
@@ -819,11 +807,13 @@ onMounted(() => {
             .game {
                 --lol: 80%;
                 --lol-text: '超凡大师520分';
+                --lol-color: #002db3;
                 --valorant: 60%;
                 --valorant-text: '超凡2';
+                --valorant-color: #00ffff;
                 --yjwj: 40%;
                 --yjwj-text: '蚀月';
-
+                --yjwj-color: #ff0000;
 
             }
 
@@ -835,6 +825,7 @@ onMounted(() => {
 
                 i {
                     width: var(--lol);
+                    background: var(--lol-color);
                 }
             }
 
@@ -846,6 +837,7 @@ onMounted(() => {
 
                 i {
                     width: var(--valorant);
+                    background: var(--valorant-color);
                 }
             }
 
@@ -857,7 +849,9 @@ onMounted(() => {
 
                 i {
                     width: var(--yjwj);
+                    background: var(--yjwj-color);
                 }
+
             }
 
 
@@ -870,7 +864,7 @@ onMounted(() => {
             position: absolute;
             right: 0;
             z-index: 10;
-            top: 50%;
+            top: 80%;
 
             img {
                 width: 9rem;
@@ -885,6 +879,88 @@ onMounted(() => {
             }
         }
 
+        .box_fish {
+            width: 5rem;
+            height: auto;
+            left: -8rem;
+            top: 50%;
+            transform: rotate(60deg) translateY(-50%);
+            padding: 0.2rem;
+            position: absolute;
+            transition: .3s 2s var(--animation-in);
+            cursor: pointer;
+            z-index: 3;
+            border-radius: 0.2rem;
+
+
+            p {
+                opacity: 1;
+                font-size: var(--font-size-small);
+            }
+
+            img {
+                display: block;
+                width: 100%;
+                border-radius: 0.3rem;
+            }
+
+            &:hover,
+            &[data-show="true"] {
+                left: 0rem;
+                transform: rotate(0) translateY(-50%);
+                // border: var(--border);
+                background: var(--s-bg, rgba(255, 255, 255, 0.5));
+                transition: .3s var(--animation-in);
+
+                p {
+                    opacity: 1;
+                }
+            }
+        }
     }
 }
+
+@media screen and (max-width: 1750px) {
+    .fish_introduce {
+        display: none;
+    }
+
+    .bg {
+        .fish {
+            .step2 {
+                padding-left: 0;
+                justify-content: center;
+            }
+        }
+
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .bg {
+        height: auto;
+
+        .fish {
+            height: auto;
+            position: relative;
+
+            .step {
+                position: static;
+                height: auto;
+                margin-bottom: 1rem;
+            }
+
+            .step2 {
+                flex-wrap: wrap;
+                padding: 0;
+                .about{
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+}
 </style>
+
+<style lang="scss"></style>

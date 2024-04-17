@@ -11,7 +11,7 @@
       <!-- <notes></notes> -->
       <router-view v-slot="{ Component }">
         <transition>
-          <component :is="Component"  />
+          <component :is="Component" />
         </transition>
       </router-view>
     </div>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch,provide ,readonly } from 'vue'
+import { ref, reactive, onMounted, watch, provide, readonly } from 'vue'
 // import initLoginBg from "./init.ts"
 import { useRouter, useRoute } from 'vue-router';
 import Nav from "../../components/Nav/index.vue"
@@ -30,9 +30,9 @@ let process = ref<number>(0);
 let processOrigin = ref<number>(0)
 
 //滚动监听透传Props
-provide('process',  readonly(processOrigin));
+provide('process', readonly(processOrigin));
 
-const handleScroll = (event:any) => {
+const handleScroll = (event: any) => {
   const scrollHeight = event.target.scrollHeight
   const scrollTop = event.target.scrollTop
   const clientHeight = event.target.clientHeight
@@ -46,17 +46,23 @@ const toTop = () => {
     left: 0,
     behavior: "smooth",//平滑滚动
   });
+}
 
+const resize = ()=>{
+  window.onresize = () => {
+    // console.log('resize');
+    // initLoginBg();
+  }
 }
 
 onMounted(() => {
   //初始化主题
   theme.value = localStorage.getItem('theme');
-
   //监听body滚动
   body.value.addEventListener('scroll', handleScroll);
 
 
+  resize()
 })
 
 </script>
@@ -84,8 +90,7 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     position: relative;
-  padding-top: var(--nav-height);
-
+    padding-top: var(--nav-height);
     transition: .2s;
     z-index: 101;
     overflow-y: scroll;
@@ -127,4 +132,13 @@ onMounted(() => {
   width: 100%;
   padding-top: var(--nav-height);
 }
-</style>
+
+// .fade-enter-active,
+// .fade-leave-active {
+//   transition: opacity 0.5s ease;
+// }
+
+// .fade-enter-from,
+// .fade-leave-to {
+//   opacity: 0;
+// }</style>

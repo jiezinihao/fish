@@ -1,12 +1,18 @@
 <template>
     <nav class="home_nav" :class="process > 0 ? 'home_nav_active' : ''" ref="nav">
-        <div class="home_nav_list">
-            <div class="home_nav_item" :class="str1InStr2(currentTab, item.path) ? 'home_nav_item_active' : ''"
-                v-for="(item) in tabs" :key="item.id" @click="changeNav(item)">
-                {{ item.name }}
+        <div class="home_nav_list" ref="navListRef">
+            <div class="home_nav_mobile" @click="mobileNavClick()">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-Sunset"></use>
+                </svg>
+            </div>
+            <div class="home_nav_con">
+                <div class="home_nav_item" :class="str1InStr2(currentTab, item.path) ? 'home_nav_item_active' : ''"
+                    v-for="(item) in tabs" :key="item.id" @click="changeNav(item)">
+                    {{ item.name }}
+                </div>
             </div>
         </div>
-
         <h2 :data-active="process">
             {{ randomPoetry }}
         </h2>
@@ -54,6 +60,7 @@ console.log(randomPoetry);
 let currentTab = ref('');
 let nav = ref<any>(null);
 let theme = ref<string | null>(null);
+let navListRef = ref<any>(null);
 //栏目信息
 const tabs = reactive<NavList[]>([
     {
@@ -124,6 +131,10 @@ const str1InStr2 = (str1: string, str2: string) => {
 
 }
 
+const mobileNavClick = () => {
+    navListRef.value.classList.toggle('home_nav_list_active')
+}
+
 onMounted(() => {
     theme.value = localStorage.getItem('theme')
 })
@@ -139,7 +150,7 @@ onMounted(() => {
     z-index: 1000;
     width: 100%;
     height: var(--nav-height);
-    padding: 0 120px;
+    padding: 0 1.6rem;
     display: flex;
     align-items: center;
     // border-bottom: 2px solid var(--divider-light);
@@ -147,19 +158,48 @@ onMounted(() => {
     align-items: center;
     background: transparent;
     transition: backdrop-filter .2s var(--animation-in);
+
+
+
     .home_nav_list {
         display: flex;
-        align-items: center;
+        align-items: stretch;
         color: hsl(var(--font-color) / 100%);
+        height: 100%;
+
+        .home_nav_mobile {
+            display: none;
+            width: 0.8rem;
+            cursor: pointer;
+            position: relative;
+            align-items: center;
+
+            svg {
+                width: 100%;
+                height: 100%;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+
+        .home_nav_con {
+            display: flex;
+            align-content: stretch;
+        }
 
         .home_nav_item {
             // color: hsl(var(--font-color) / 100%);
             font-size: var(--font-size-medium);
             font-weight: var(--font-weight-title);
-            margin: 0 20px;
+            line-height: var(--nav-height);
+            padding: 0 20px;
             border-radius: 10px;
             cursor: pointer;
             transition: 0.3s var(--animation-in);
+            flex-shrink: 0;
 
             &.home_nav_item_active {
                 // box-shadow: 2px 2px 5px rgba(88, 175, 223, .2);
@@ -186,13 +226,14 @@ onMounted(() => {
         position: absolute;
         left: 50%;
         top: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
         font-size: var(--font-size-toosmall);
         color: hsl(var(--font-color) / 50%);
         letter-spacing: 0.02rem;
         margin-top: 0;
         opacity: 1;
         transition: .3s var(--animation-in);
+
         &[data-active="0"] {
             margin-top: 0.5rem;
             opacity: 0;
@@ -302,5 +343,47 @@ onMounted(() => {
 
     }
 
+}
+
+@media (max-width:1000px) {
+    .home_nav {
+        h2 {
+            display: none;
+        }
+    }
+}
+
+@media (max-width:640px) {
+    .home_nav {
+        .home_nav_list {
+            max-width: 0.8rem;
+            transition: max-width .2s var(--animation-in);
+            border-radius: 0.3rem;
+
+            .home_nav_con {
+                position: absolute;
+                top: var(--nav-height);
+                left: 0;
+                transition: .2s;
+                height: 0;
+                width: 100vw;
+                z-index: 1000;
+                overflow: hidden;
+                background: var(--h-bg);
+            }
+
+            .home_nav_mobile {
+                display: flex;
+                flex-shrink: 0;
+            }
+        }
+
+        .home_nav_list_active {
+
+            .home_nav_con {
+                height: var(--nav-height);
+            }
+        }
+    }
 }
 </style>
