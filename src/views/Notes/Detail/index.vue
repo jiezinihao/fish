@@ -23,7 +23,7 @@
             </p>
         </div>
 
-        <div ref="markdownDetail" class="detail markdown-body" v-html="body">
+        <div ref="markdownDetail" class="detail markdown-body" :class="theme"  v-html="body">
         </div>
         <Foot></Foot>
 
@@ -31,20 +31,28 @@
 </template>
 
 <script setup lang="ts">
-// import './tailwind-dark.scss';
+import './tailwind-dark.scss';
 import "./tailwind.scss";
 import './heightlight.css';
 import 'element-plus/es/components/message/style/css'
 import Foot from "@/components/Foot/index.vue"
 
 import { ElMessage } from 'element-plus'
-import { watch, ref, onMounted } from 'vue'
+import { watch, ref, onMounted,inject } from 'vue'
 import { NotesDetailGetAPI } from "@/request/api.ts"
 import { useRoute } from 'vue-router';
 import md from "@/func/md.ts"
 const route = useRoute()
 const body = ref('')
 const article_id = route.params.id
+
+//reject对象是非响应式
+const themeOrigin = inject('theme', ref(''));
+const theme = ref(themeOrigin.value);
+
+watch(themeOrigin, (newValue, oldValue) => {
+    theme.value = newValue
+})
 
 
 const detail = ref<NotesDetail>({
@@ -84,9 +92,9 @@ onMounted(() => {
 <style lang="scss" scoped>
 .container {
     width: 100%;
-    padding: 0.4rem;
+    // padding: 0.4rem;
     color: hsl(var(--font-color));
-    margin-top: 0.3rem;
+    // margin-top: 0.3rem;
     height: 100%;
 
     &::-webkit-scrollbar {

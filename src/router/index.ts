@@ -12,7 +12,7 @@ import Index from "../views/Index/index.vue"
 
 
 const routes: RouteRecordRaw[] = [
-    { path: '/', redirect: '/index' },
+    { path: '/', name:"鱼的博客", redirect: '/index' },
     { path: '/index', name: '鱼的博客', component: Index },
 
     // 动态字段以冒号开始

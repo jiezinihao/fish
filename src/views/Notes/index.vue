@@ -1,13 +1,25 @@
 <template>
     <div class="notes" ref="notes">
-        <div class="main" ref="main">
+        <div class="main" :class="showMobileNav ? 'main_mobile' : ''" ref="main">
             <div class="notes_lab">
-                <div class="notes_lab_item " :class="item.nav_id === currentNavId ? 'notes_lab_item_active' : ''"
-                    v-for="(item) in navList" :key="item.nav_id" @click="clickNav(item)">
-                    {{ item.title }}
+                <div class="notes_lab_list">
+                    <div class="notes_lab_item" :class="item.nav_id === currentNavId ? 'notes_lab_item_active' : ''"
+                        v-for="(item) in navList" :key="item.nav_id" @click="clickNav(item)">
+                        {{ item.title }}
+                    </div>
+                    <div class="notes_lab_item lab_mobile"
+                        :class="item.nav_id === currentNavId ? 'notes_lab_item_active' : ''" v-for="(item) in navList"
+                        :key="item.nav_id + '1'" @click="clickMobileNav(item)">
+                        {{ item.title }}
+                    </div>
                 </div>
-
+                <div class="notes_mobile_click" @click="showClickMobileNav()">
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#icon-right-left"></use>
+                    </svg>
+                </div>
             </div>
+
             <div class="notes_body">
                 <div class="notes_list">
                     <div v-for="item in notesList" :key="item.article_id">
@@ -24,9 +36,8 @@
                 </div>
                 <div class="notes_page">
                     <!--  -->
-                    <el-pagination hide-on-single-page background layout="prev, pager, next"
-                        :total="notesListPage.total" :page-size="notesListPage.pageSize"
-                        v-model:current-page="notesListPage.currentPage" />
+                    <el-pagination background layout="prev, pager, next" :total="notesListPage.total"
+                        :page-size="notesListPage.pageSize" v-model:current-page="notesListPage.currentPage" />
                 </div>
             </div>
         </div>
@@ -63,11 +74,18 @@ let notesList = ref<NotesList[]>([])
 let notesListPage = ref({
     currentPage: Number(route.params.pageNum as string || 1),
     total: 0,
-    pageSize: 8
+    pageSize: 5
 })
 let currentNavId = ref('')
 // let showDetail = ref(false)
-let currentNotesId = ref<string>('')
+let currentNotesId = ref<string>('');
+
+//移动端显示栏目列表
+let showMobileNav = ref(false)
+
+onMounted(() => {
+    initPage()
+})
 
 watch(() => notesListPage.value.currentPage, (val, oldVal) => {
     if (val !== oldVal) {
@@ -99,6 +117,15 @@ const resetPagination = (maxCount: string) => {
     notesListPage.value.total = Number(maxCount)
 }
 
+
+const showClickMobileNav = () => {
+    showMobileNav.value = !showMobileNav.value
+}
+
+const clickMobileNav = (item: NavNotes) => {
+    showMobileNav.value = !showMobileNav.value
+    clickNav(item)
+}
 //点击栏目
 const clickNav = async (item: NavNotes) => {
     if (currentNavId.value === item.nav_id) {
@@ -186,7 +213,6 @@ onMounted(() => {
         position: relative;
 
         width: 100%;
-        padding: 20px 0;
         min-height: 100%;
         display: flex;
         justify-content: space-between;
@@ -222,6 +248,10 @@ onMounted(() => {
             border: var(--border);
             color: hsl(var(--font-color)/0.8);
 
+            &.lab_mobile {
+                display: none;
+            }
+
             &::after {
                 content: "";
                 position: absolute;
@@ -256,6 +286,10 @@ onMounted(() => {
 
                 }
             }
+        }
+
+        .notes_mobile_click{
+            display: none
         }
 
     }
@@ -353,15 +387,116 @@ onMounted(() => {
 
 }
 
+@media screen and (max-width: 1200px) {
+    .notes {
+        .main {
+            padding: 1rem;
 
+            .notes_lab {
+                min-width: 200px;
+
+                .notes_lab_item {
+                    height: 55px;
+                    line-height: 55px;
+                }
+            }
+        }
+    }
+
+}
+
+@media screen and (max-width: 900px) {
+    .notes {
+        .main {
+            padding: 1rem;
+            position: relative;
+            display: block;
+            overflow: hidden;
+
+            &.main_mobile {
+                .notes_lab {
+                    left: -85%;
+                }
+
+                .notes_body {
+                    left: 15%;
+                }
+            }
+
+            .notes_lab {
+                position: absolute;
+                left: 0;
+                top: 1rem;
+                width: 100%;
+                display: flex;
+                align-items: stretch;
+                padding: 0;
+                transition: .2s linear;
+
+                .notes_lab_list {
+                    flex: 1;
+                    padding-left: 0.5rem;
+                }
+
+                .notes_lab_item {
+                    display: none;
+                    width: 100%;
+                    height: 55px;
+                    
+                    line-height: 55px;
+                }
+
+                .lab_mobile {
+                    display: block;
+                }
+
+                .notes_mobile_click {
+                    width: 15%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    
+                    svg {
+                        width: 1rem;
+                        height: 1rem;
+                    }
+                }
+            }
+
+
+
+            .notes_body {
+                position: absolute;
+                left: 100%;
+                top: 1rem;
+
+                width: 90%;
+                height: 100%;
+                padding-right: 1rem;
+                transition: .2s linear;
+                .notes_list{
+                    width: 100%;
+                    min-width: 0;
+                    time{
+                        display: block;
+                    }
+                }
+
+            }
+        }
+    }
+
+}
 </style>
 <style>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-  opacity: 0;
-}</style>
+    opacity: 0;
+}
+</style>

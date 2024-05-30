@@ -1,11 +1,15 @@
 <template>
-    <nav class="home_nav" :class="process > 0 ? 'home_nav_active' : ''" ref="nav">
-        <div class="home_nav_list" ref="navListRef">
-            <div class="home_nav_mobile" @click="mobileNavClick()">
-                <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-Sunset"></use>
-                </svg>
-            </div>
+    <nav class="home_nav" onselectstart="return false" :class="[process > 0 ? 'home_nav_active' : '', mobileMenu ? 'mobile_nav' : '']" ref="nav">
+        <div class="home_nav_icon">
+            <svg class="icon moon" aria-hidden="true" @click="troggleMobileMenu()">
+                <use xlink:href="#icon-caidanbuju"></use>
+            </svg>
+            <router-link :to="{ name: '鱼的博客' }">
+                FISH
+            </router-link>
+        </div>
+
+        <div class="home_nav_list">
             <div class="home_nav_con">
                 <div class="home_nav_item" :class="str1InStr2(currentTab, item.path) ? 'home_nav_item_active' : ''"
                     v-for="(item) in tabs" :key="item.id" @click="changeNav(item)">
@@ -38,9 +42,23 @@
 
             <!-- <i>BLA</i> -->
         </div>
+
+        <div class="home_nav_mobile">
+            <div class="home_nav_mobile_item" :class="str1InStr2(currentTab, item.path) ? 'home_nav_item_active' : ''"
+                v-for="(item) in tabs" :key="item.id + '1'" @click="changeMobileNav(item)">
+                {{ item.name }}
+            </div>
+        </div>
     </nav>
 </template>
 <script setup lang="ts">
+
+interface NavList {
+    id: number,
+    name: string,
+    path: string
+}
+
 import { useRouter, useRoute } from 'vue-router';
 import { ref, reactive, onMounted, watch } from 'vue'
 import { RandomPoetry } from "../../func/randomJson.ts"
@@ -52,29 +70,19 @@ const isDark = useDark()
 const toggleDark = useToggle(isDark)
 
 const { process } = defineProps(['process']);
-const emit = defineEmits(['toTop'])
-interface NavList {
-    id: number,
-    name: string,
-    path: string
-}
+const emit = defineEmits(['toTop', 'updateTheme'])
+
 
 const router = useRouter()
 const route = useRoute()
 const randomPoetry = RandomPoetry();
-console.log(randomPoetry);
 
 let currentTab = ref('');
 let nav = ref<any>(null);
 let theme = ref<string | null>(null);
-let navListRef = ref<any>(null);
+let mobileMenu = ref<boolean>(false);
 //栏目信息
 const tabs = reactive<NavList[]>([
-    {
-        id: 4,
-        name: "FISH",
-        path: '/index'
-    },
     {
         id: 2,
         name: "旅行",
@@ -109,8 +117,16 @@ watch(() => theme.value, newValue => {
     toggleDark(r === 'dark')
     localStorage.setItem('theme', r);
     document.getElementsByTagName('html')[0].setAttribute('theme', r);
+    emit('updateTheme')
 
 })
+
+//手机端切换栏目
+
+const changeMobileNav = (item: NavList) => {
+    mobileMenu.value = false
+    changeNav(item)
+}
 
 const changeNav = (item: NavList) => {
     setCurrentNav(item.path)
@@ -126,7 +142,6 @@ const toTop = () => {
 //改变主题颜色
 const changeTheme = () => {
     theme.value = theme.value === 'dark' ? 'light' : 'dark'
-
 }
 
 
@@ -139,8 +154,11 @@ const str1InStr2 = (str1: string, str2: string) => {
 
 }
 
-const mobileNavClick = () => {
-    navListRef.value.classList.toggle('home_nav_list_active')
+
+
+//移动端显示栏目
+const troggleMobileMenu = () => {
+    mobileMenu.value = !mobileMenu.value
 }
 
 onMounted(() => {
@@ -163,33 +181,45 @@ onMounted(() => {
     align-items: center;
     // border-bottom: 2px solid var(--divider-light);
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     background: transparent;
     transition: backdrop-filter .2s var(--animation-in);
     transition: height .2s;
+
+    .home_nav_icon {
+        font-size: var(--font-size-medium);
+        font-weight: var(--font-weight-title);
+        line-height: calc(var(--nav-height) / 1.2);
+        padding: 0 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        max-height: calc(var(--nav-height) / 1);
+        height: 100%;
+        svg {
+            display: none;
+        }
+        a{
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &.router-link-active{
+                color: var(--color);
+            }
+        }
+    }
 
     .home_nav_list {
         display: flex;
         align-items: center;
         color: hsl(var(--font-color) / 100%);
         height: 100%;
-        .home_nav_mobile {
-            display: none;
-            width: 0.8rem;
-            cursor: pointer;
-            position: relative;
-            align-items: center;
+        justify-content: flex-start;
+        flex-grow: 1;
 
-            svg {
-                width: 100%;
-                height: 100%;
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                left: 0;
-                top: 0;
-            }
-        }
+
 
         .home_nav_con {
             display: flex;
@@ -227,7 +257,7 @@ onMounted(() => {
         -webkit-backdrop-filter: saturate(1.8) blur(20px);
         backdrop-filter: saturate(1.8) blur(20px);
         height: calc(var(--nav-height) / 1.2);
-        
+
     }
 
     h2 {
@@ -251,6 +281,7 @@ onMounted(() => {
     .home_nav_opr {
         display: flex;
         align-items: center;
+        height: calc(var(--nav-height) / 1.2);
 
         i.theme {
             width: 0.8rem;
@@ -351,6 +382,11 @@ onMounted(() => {
 
     }
 
+    .home_nav_mobile{
+        display: none;
+    }
+
+
 }
 
 @media (max-width:1000px) {
@@ -363,6 +399,29 @@ onMounted(() => {
 
 @media (max-width:640px) {
     .home_nav {
+        padding: 0 0.8rem 0 0.4rem;
+        &.mobile_nav {
+            height: 100vh;
+            -webkit-backdrop-filter: saturate(1.8) blur(20px);
+            backdrop-filter: saturate(1.8) blur(20px);
+            .home_nav_icon{
+                filter: grayscale(80%);
+            }
+            .home_nav_mobile {
+                display: block;
+            }
+        }
+
+        .home_nav_icon {
+            svg {
+                display: block;
+                height: 0.7rem;
+                width: 0.7rem;
+                margin-right: 0.4rem;
+                
+            }
+        }
+
         .home_nav_list {
             max-width: 0.8rem;
             transition: max-width .2s var(--animation-in);
@@ -380,16 +439,34 @@ onMounted(() => {
                 background: var(--h-bg);
             }
 
-            .home_nav_mobile {
-                display: flex;
-                flex-shrink: 0;
-            }
         }
 
         .home_nav_list_active {
 
             .home_nav_con {
                 height: var(--nav-height);
+            }
+        }
+
+        .home_nav_mobile {
+            position: absolute;
+            top: var(--nav-height);
+            left: 0;
+            width: 100vw;
+            z-index: 1000;
+            overflow: hidden;
+            transition: .2s;
+            display: none;
+
+            .home_nav_mobile_item {
+                height: 2rem;
+                display: block;
+                padding-left: 1rem;
+                line-height: 2rem;
+                font-size: var(--font-size-medium);
+                color: var(--theme-color);
+                border-bottom: var(--border);
+                cursor: pointer;
             }
         }
     }

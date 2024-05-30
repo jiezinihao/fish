@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <canvas id="canvas"></canvas>
-    <Nav :process="process" @toTop="toTop"></Nav>
+    <Nav :process="process" @toTop="toTop" @updateTheme="updateTheme"></Nav>
     <div class="body" ref="body">
       <!-- <Transition>
         <component :is="tabsComponents[currentTab-1]"></component>
@@ -31,12 +31,15 @@ let processOrigin = ref<number>(0)
 
 //滚动监听透传Props
 provide('process', readonly(processOrigin));
+provide('theme', readonly(theme));
 
 const handleScroll = (event: any) => {
   const scrollHeight = event.target.scrollHeight
   const scrollTop = event.target.scrollTop
   const clientHeight = event.target.clientHeight
-  process.value = Number(Math.ceil((scrollTop / (scrollHeight - clientHeight)) * 100))
+
+  const value = Number(Math.ceil((scrollTop / (scrollHeight - clientHeight)) * 100))
+  process.value = isNaN(value) ? 0 : value
   processOrigin.value = scrollTop
 }
 
@@ -46,6 +49,12 @@ const toTop = () => {
     left: 0,
     behavior: "smooth",//平滑滚动
   });
+}
+//主动更新主题
+const updateTheme = ()=>{
+  theme.value = localStorage.getItem('theme');
+  console.log(localStorage.getItem('theme'));
+  
 }
 
 const resize = ()=>{
@@ -57,7 +66,7 @@ const resize = ()=>{
 
 onMounted(() => {
   //初始化主题
-  theme.value = localStorage.getItem('theme');
+  updateTheme();
   //监听body滚动
   body.value.addEventListener('scroll', handleScroll);
 
