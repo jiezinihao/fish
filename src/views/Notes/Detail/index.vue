@@ -23,22 +23,30 @@
             </p>
         </div>
 
-        <!-- <div class="detail" v-html="body" v-if="body">
-        </div> -->
         <div ref="markdownDetail" class="detail markdown-body" v-html="body">
         </div>
+        <Foot></Foot>
+
     </div>
 </template>
 
 <script setup lang="ts">
-import './tailwind-dark.scss';
+// import './tailwind-dark.scss';
+import "./tailwind.scss";
 import './heightlight.css';
 import 'element-plus/es/components/message/style/css'
+import Foot from "@/components/Foot/index.vue"
+
 import { ElMessage } from 'element-plus'
-import { watch, ref } from 'vue'
-import { NotesDetailGetAPI } from "../../request/api"
-import md from "../../func/md.ts"
-const props = defineProps(['articleId']);
+import { watch, ref, onMounted } from 'vue'
+import { NotesDetailGetAPI } from "@/request/api.ts"
+import { useRoute } from 'vue-router';
+import md from "@/func/md.ts"
+const route = useRoute()
+const body = ref('')
+const article_id = route.params.id
+
+
 const detail = ref<NotesDetail>({
     nav_id: '',
     title: '',
@@ -47,45 +55,39 @@ const detail = ref<NotesDetail>({
     file: '',
     watchNum: '',
 })
-const markdownDetail = ref<any>(null)
+const markdownDetail = ref<any>(null);
 
-const body = ref('')
-const getDetail = async (article_id: string) => {
-    const result = await NotesDetailGetAPI({ article_id }).then(data => data)
+
+const getDetail = async (article_id: string | string[]) => {
+    let id = article_id
+    //转化string[] 为 string
+    if (typeof (id) === 'object') {
+        id = id[0]
+    }
+    console.log(id);
+    
+    const result = await NotesDetailGetAPI({ article_id:id }).then(data => data)
     detail.value = result.data;
     body.value = md.render(result.data.file, 'typesrcipt')
 }
-watch(props, () => {
-
-    if (props.articleId !== '') {
-        getDetail(props.articleId)
-        // if (markdownDetail.value !== null) {
-        //     console.dir(markdownDetail.value);
-        //     setTimeout(() => {
-        //         markdownDetail.value.scrollTo({
-        //             top: 0,
-        //             behavior: 'smooth'
-        //         })
-        //     }, 3000)
-
-        // }
-    }
-}, { immediate: true })
 
 const orderingCoffee = () => {
     ElMessage.success('谢谢宝宝的咖啡')
 }
+
+onMounted(() => {
+    getDetail(article_id)
+})
+
 </script>
 
 <style lang="scss" scoped>
 .container {
     width: 100%;
-    padding: 20px;
-    color: #eee;
-    margin-top: 20px;
-    border-radius: 10px;
+    padding: 0.4rem;
+    color: hsl(var(--font-color));
+    margin-top: 0.3rem;
     height: 100%;
-    overflow-y: scroll;
 
     &::-webkit-scrollbar {
         background: none
@@ -97,9 +99,8 @@ const orderingCoffee = () => {
     }
 
     .title {
-        font-size: 28px;
+        font-size: var(--font-size-title);
         text-align: center;
-
     }
 
     .sub {
@@ -107,12 +108,11 @@ const orderingCoffee = () => {
         // height: 40px;
         align-items: center;
         justify-content: center;
-        padding: 20px 0;
-        border-bottom: 2px solid #666;
+        padding: 0.4rem 0;
+        border-bottom: var(--border);
 
         p {
-            margin-right: 40px;
-            line-height: 10px;
+            margin-right: 1rem;
             display: flex;
             align-items: center;
 
@@ -140,6 +140,12 @@ const orderingCoffee = () => {
                 color: #999;
             }
         }
+    }
+
+    .detail{
+        min-height: 100%;
+        font-size: var(--font-size-medium);
+        padding: 1rem 2rem;
     }
 
 

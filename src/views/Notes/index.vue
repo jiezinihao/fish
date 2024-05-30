@@ -1,30 +1,36 @@
 <template>
-    <div class="notes" :class="showDetail ? 'notes-detail' : ''">
-        <div class="notes_lab">
-            <div class="notes_lab_item " :class="item.nav_id === currentNavId ? 'notes_lab_item_active' : ''"
-                v-for="(item) in navList" :key="item.nav_id" @click="clickNav(item)">
-                {{ item.title }}
-            </div>
+    <div class="notes" ref="notes">
+        <div class="main" ref="main">
+            <div class="notes_lab">
+                <div class="notes_lab_item " :class="item.nav_id === currentNavId ? 'notes_lab_item_active' : ''"
+                    v-for="(item) in navList" :key="item.nav_id" @click="clickNav(item)">
+                    {{ item.title }}
+                </div>
 
-        </div>
-        <div class="main">
-            <NotesDetail :articleId="currentNotesId"></NotesDetail>
-        </div>
-        <div class="notes_body">
-            <div class="notes_list">
-                <div class="notes_list_item" :class="currentNotesId === item.article_id ? 'notes_list_item_active' : ''"
-                    v-for="item in notesList" :key="item.article_id" @click="clickNotesItem(item.article_id)">
-                    <p>{{ item.title }}</p>
-                    <time>{{ item.time }} </time>
+            </div>
+            <div class="notes_body">
+                <div class="notes_list">
+                    <div v-for="item in notesList" :key="item.article_id">
+                        <transition name="fade">
+                            <div class="notes_list_item"
+                                :class="currentNotesId === item.article_id ? 'notes_list_item_active' : ''"
+                                @click="clickNotesItem(item.article_id)">
+                                <p>{{ item.title }}</p>
+                                <time>{{ item.time }} </time>
+                            </div>
+                        </transition>
+                    </div>
+
+                </div>
+                <div class="notes_page">
+                    <!--  -->
+                    <el-pagination hide-on-single-page background layout="prev, pager, next"
+                        :total="notesListPage.total" :page-size="notesListPage.pageSize"
+                        v-model:current-page="notesListPage.currentPage" />
                 </div>
             </div>
-            <div class="notes_page">
-                <!--  -->
-                <el-pagination hide-on-single-page background layout="prev, pager, next" :total="notesListPage.total"
-                    :page-size="notesListPage.pageSize" v-model:current-page="notesListPage.currentPage" />
-            </div>
         </div>
-
+        <Foot></Foot>
     </div>
 </template>
 
@@ -32,13 +38,13 @@
 
 import { ref, onMounted, reactive, watch } from 'vue';
 import { NotesNavsGetAPI, NotesListGetAPI } from "../../request/api"
-import NotesDetail from "../../components/NotesDetail/index.vue"
 import 'element-plus/es/components/pagination/style/css'
 import { ElPagination } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router';
+import Foot from "../../components/Foot/index.vue"
 
 type RouteParams = {
-    navId: string, notesId: string, pageNum: number
+    navId: string, pageNum: number
 }
 
 const router = useRouter()
@@ -46,8 +52,9 @@ const route = useRoute()
 const routeParams = reactive<RouteParams>({
     navId: route.params.navId as string,
     pageNum: Number(route.params.pageNum as string || 1),
-    notesId: route.params.notesId as string,
 })
+
+const notes = ref<any>(null)
 
 //栏目列表
 let navList = ref<NavNotes[]>([])
@@ -56,10 +63,10 @@ let notesList = ref<NotesList[]>([])
 let notesListPage = ref({
     currentPage: Number(route.params.pageNum as string || 1),
     total: 0,
-    pageSize: 5
+    pageSize: 8
 })
 let currentNavId = ref('')
-let showDetail = ref(false)
+// let showDetail = ref(false)
 let currentNotesId = ref<string>('')
 
 watch(() => notesListPage.value.currentPage, (val, oldVal) => {
@@ -97,12 +104,11 @@ const clickNav = async (item: NavNotes) => {
     if (currentNavId.value === item.nav_id) {
         return
     }
-    showDetail.value = false
+    // showDetail.value = false
     currentNavId.value = item.nav_id;
     //赋值且重置页数和随记ID
     routeParams.navId = item.nav_id
     routeParams.pageNum = 1
-    routeParams.notesId = ''
     getNotesList(currentNavId.value)
 }
 
@@ -117,51 +123,40 @@ const initPage = async () => {
 }
 //点击随记详情
 const clickNotesItem = async (article_id: string) => {
-    showDetail.value = true
-    routeParams.pageNum = notesListPage.value.currentPage;
-    routeParams.notesId = article_id;
-    routeParams.navId = currentNavId.value;
-    
+    // showDetail.value = true
+    const url = `/notes/detail/${article_id}`
+    router.push({
+        path: url,
+    })
+
 }
-//更改当前点击的notes(对react的setState拙劣的模范哈哈哈)
-const setCurrentNotes = (article_id: string) => {
-    if (article_id === '') {
-        return
-    }
 
-    currentNotesId.value = article_id
+const toScrollTop = () => {
+    console.log(notes.value);
 
+    notes.value.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",//平滑滚动
+    });
 }
 
 
 watch(routeParams, (newParams, oldParams) => {
-
     let url = '/notes'
-
-
     url += '/' + newParams.pageNum;
 
     if (typeof (oldParams) !== 'undefined') {
-        getNotesList(newParams.navId, newParams.pageNum)
+        getNotesList(currentNavId.value, newParams.pageNum)
     }
 
-
-
-    if (newParams.navId !== '') {
-        url += '/' + newParams.navId
-    }
-
-
-    if (newParams.notesId !== '') {
-        url += '/' + newParams.notesId;
-        showDetail.value = true;
-        setCurrentNotes(newParams.notesId);
-    }
+    url += '/' + currentNavId.value
 
     router.push({
         path: url
     })
-}, { immediate: true })
+    toScrollTop()
+})
 //
 onMounted(() => {
     initPage()
@@ -169,42 +164,47 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.notes {
-    display: flex;
-    width: calc(100% - 240px);
-    // border: 5px solid #3c2a4d;
-    border-radius: 10px;
-    padding: 50px 0;
-    margin: 60px 120px;
-    // height: 100%;
-    align-items: stretch;
-    background: rgba($color: #23272f, $alpha: 0.5);
-    transition: 1s ease;
-    height: 900px;
-
-    &.notes-detail {
-        // background: rgba($color: #23272f, $alpha: 0.9);
-        background: #23272f;
-        padding: 50px 20px;
-        height: 100%;
-        margin: 0 0;
-        width: 100%;
-        // transition:opacity 0.2 ease,width .5s ease;
-
-        .main {
-            width: 100%;
-            overflow: hidden;
-            opacity: 1;
-            transition: opacity 1s .5s ease, width 1.5s ease;
-
-        }
+@keyframes fade-in {
+    0% {
+        transform: translateY(-50px);
     }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.notes {
+    width: 100%;
+    // border: 5px solid #3c2a4d;
+    // height: 100%;
+    // transition: 1s ease;
+    height: 100%;
+    overflow: scroll;
+
+    .main {
+        position: relative;
+
+        width: 100%;
+        padding: 20px 0;
+        min-height: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        align-items: flex-start;
+    }
+
 
     .notes_lab {
         min-width: 400px;
         flex-shrink: 0;
-        padding: 20px;
+        padding: 0.5rem;
         border-radius: 10px 0 0 10px;
+        position: sticky;
+        position: -webkit-sticky;
+        top: 0;
+        left: 0;
+        height: auto;
 
         .notes_lab_item {
             height: 60px;
@@ -213,14 +213,14 @@ onMounted(() => {
             line-height: 60px;
             position: relative;
             margin-bottom: 30px;
-            font-size: 20px;
+            font-size: var(--font-size-medium);
             cursor: pointer;
             transition: .2s ease;
             // color: white;
             font-weight: bold;
             letter-spacing: 1px;
-            border: 1px solid rgba(88, 175, 223, .1);
-            color: #999;
+            border: var(--border);
+            color: hsl(var(--font-color)/0.8);
 
             &::after {
                 content: "";
@@ -228,7 +228,7 @@ onMounted(() => {
                 left: 0;
                 width: 10px;
                 height: 100%;
-                background: #95adbe;
+                background: hsl(var(--theme-color)/0.7);
             }
 
             &:hover {
@@ -236,10 +236,11 @@ onMounted(() => {
                 letter-spacing: 1px;
                 background: rgba(88, 175, 223, .1);
                 box-shadow: 2px 2px 5px rgba(88, 175, 223, .1);
-                color: #eee;
+                color: hsl(var(--font-color));
+
 
                 &::after {
-                    background: rgba(88, 175, 223, .5);
+                    background: hsl(var(--theme-color));
                 }
             }
 
@@ -248,31 +249,24 @@ onMounted(() => {
                 letter-spacing: 1px;
                 background: rgba(88, 175, 223, .1);
                 box-shadow: 2px 2px 5px rgba(88, 175, 223, .1);
-                color: #eee;
+                color: hsl(var(--font-color)/1.2);
 
                 &::after {
-                    background: rgba(88, 175, 223, .5);
+                    background: hsl(var(--theme-color));
+
                 }
             }
         }
 
     }
 
-    .main {
-        width: 0%;
-        opacity: 0;
-        overflow-y: scroll;
-        transition: opacity 0.2 ease, width .5s ease;
-
-    }
 
 
 
 
     .notes_body {
         flex: 2;
-        padding: 20px;
-        border-radius: 0 10px 10px 0;
+        padding: 0.2rem;
 
         .notes_list {
             width: 100%;
@@ -280,22 +274,20 @@ onMounted(() => {
 
             .notes_list_item {
                 width: 100%;
-                margin-bottom: 40px;
+                margin-bottom: 0.5rem;
                 position: relative;
                 cursor: pointer;
-                border: 2px solid rgba(88, 175, 223, 0);
+                border: var(--border);
                 border-bottom: none;
                 border-radius: 5px;
-                padding: 20px 10px;
-                padding-left: 30px;
+                padding: 0.6rem 0.4rem;
+                padding-left: 0.8rem;
+                animation: fade-in 0.4s;
 
                 &.notes_list_item_active {
-                    border: 2px solid rgba(88, 175, 223, .1);
-                    border-bottom: none;
+                    border: var(--border);
 
-                    p {
-                        color: #eee;
-                    }
+                    border-bottom: none;
 
                     &::before {
                         width: 100%;
@@ -305,12 +297,12 @@ onMounted(() => {
                 p {
                     margin-bottom: 10px;
                     font-size: 18px;
-                    color: #999;
+                    color: hsl(var(--font-color));
                 }
 
                 time {
                     font-size: 14px;
-                    color: #999;
+                    color: hsl(var(--font-color)/0.7);
                 }
 
                 &::after {
@@ -318,11 +310,11 @@ onMounted(() => {
                     position: absolute;
                     top: -2px;
                     left: -2px;
-                    height: 20px;
-                    width: 20px;
+                    height: 30px;
+                    width: 30px;
                     border-radius: 5px 0 0 0;
-                    border-left: 2px solid rgba(88, 175, 223, 0.1);
-                    border-top: 2px solid rgba(88, 175, 223, 0.1);
+                    border-left: 2px solid hsl(var(--theme-color)/0.4);
+                    border-top: 2px solid hsl(var(--theme-color)/0.4);
                     z-index: 1;
                 }
 
@@ -333,17 +325,17 @@ onMounted(() => {
                     left: 0;
                     height: 2px;
                     width: 10%;
-                    background: rgba(88, 175, 223, 0.9);
+                    background: hsl(var(--theme-color)/0.4);
                     z-index: 2;
                     transition: 0.5s ease-in;
                 }
 
                 &:hover {
-                    border: 2px solid rgba(88, 175, 223, .1);
+                    border: var(--border);
                     border-bottom: none;
 
                     p {
-                        color: #eee;
+                        color: hsl(var(--theme-color));
                     }
 
                     &::before {
@@ -360,4 +352,16 @@ onMounted(() => {
     }
 
 }
+
+
 </style>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}</style>

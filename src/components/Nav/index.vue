@@ -44,6 +44,13 @@
 import { useRouter, useRoute } from 'vue-router';
 import { ref, reactive, onMounted, watch } from 'vue'
 import { RandomPoetry } from "../../func/randomJson.ts"
+
+
+import { useDark, useToggle } from '@vueuse/core'
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
+
 const { process } = defineProps(['process']);
 const emit = defineEmits(['toTop'])
 interface NavList {
@@ -99,6 +106,7 @@ watch(() => theme.value, newValue => {
     if (newValue === null) {
         r = 'light'
     }
+    toggleDark(r === 'dark')
     localStorage.setItem('theme', r);
     document.getElementsByTagName('html')[0].setAttribute('theme', r);
 
@@ -158,15 +166,13 @@ onMounted(() => {
     align-items: center;
     background: transparent;
     transition: backdrop-filter .2s var(--animation-in);
-
-
+    transition: height .2s;
 
     .home_nav_list {
         display: flex;
-        align-items: stretch;
+        align-items: center;
         color: hsl(var(--font-color) / 100%);
         height: 100%;
-
         .home_nav_mobile {
             display: none;
             width: 0.8rem;
@@ -194,7 +200,7 @@ onMounted(() => {
             // color: hsl(var(--font-color) / 100%);
             font-size: var(--font-size-medium);
             font-weight: var(--font-weight-title);
-            line-height: var(--nav-height);
+            line-height: calc(var(--nav-height) / 1.2);
             padding: 0 20px;
             border-radius: 10px;
             cursor: pointer;
@@ -220,6 +226,8 @@ onMounted(() => {
         border-bottom: var(--border);
         -webkit-backdrop-filter: saturate(1.8) blur(20px);
         backdrop-filter: saturate(1.8) blur(20px);
+        height: calc(var(--nav-height) / 1.2);
+        
     }
 
     h2 {

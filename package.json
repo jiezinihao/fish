@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
-    "dev-proback": "vite --mode production",
+    "prod": "vite --mode production",
     "build": "tsc --noEmit && vite build --mode production",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/core": "^10.9.0",
     "axios": "^1.6.7",
     "element-plus": "^2.6.0",
     "github-markdown-css": "^5.5.1",

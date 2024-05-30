@@ -13,18 +13,13 @@
                     <SwiperNav :is-show="isInScreen(item.scorllTop)" :travelId="item.travel_id" :slideList="item.imgList">
                     </SwiperNav>
                 </div>
-
-
-                <!-- <div class="travel_tips" >
-                    <svg class="icon rotate" aria-hidden="true">
-                        <use xlink:href="#icon-right"></use>
-                    </svg>
-                </div> -->
             </div>
         </div>
         <TravelDetail :position="boxPostion" :currentTravel="currentTravel" :is-show="isShowBox"
             @closeTraveItem="closeTraveItem">
         </TravelDetail>
+        <Foot></Foot>
+
     </div>
 </template>
 
@@ -33,6 +28,7 @@ import TravelDetail from '../../components/TravelDetail/index.vue'
 import { onMounted, ref, reactive, shallowRef, nextTick } from 'vue';
 import { TravelListGetAPI } from "../../request/api"
 import SwiperNav from "./swiper.vue"
+import Foot from "../../components/Foot/index.vue"
 
 interface TravelList extends TravelGetAPIResDataItem {
     scorllTop: number,
@@ -158,7 +154,7 @@ onMounted(() => {
         // background: rgba($color: #23272f, $alpha: 0.8);
         border-radius: 10px;
         padding-right: 120px;
-        height: 100%;
+        // height: 100%;
         .travel_nav {
             width: 100%;
             height: 400px;
