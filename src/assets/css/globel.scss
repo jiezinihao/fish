@@ -80,6 +80,7 @@
   --h-bg: hsl(0deg 0% 99%);
   --w-bg: white;
   --n-bg: transparent;
+  --fancybox-bg: var(--s-bg, hsl(0 0% 100% / .8));
 
   /* 距离 */
   --nav-height: 2rem;
@@ -90,7 +91,6 @@
   --gap-area: 2rem;
   --gap-divs: 1rem;
   --gap-span: 0.5rem;
-
   /* 动画 */
   --animation-on: cubic-bezier(0.6, 0.1, 0, 1);
   --animation-in: cubic-bezier(0.6, 0.2, 0.25, 1);

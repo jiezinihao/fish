@@ -1,6 +1,6 @@
 <template>
     <div class="swiper">
-        <div class="travel-swiper">
+        <div class="travel-swiper" :style="{'width':swiperWidth+'px'}">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" v-for="(item, index) in slideList" :key="index" @click="showDetail(item.url)">
                     <div class="travel_img">
@@ -21,15 +21,19 @@ import Swiper from "swiper"
 import 'swiper/css';
 let swiper: Swiper
 
-const props = defineProps(['slideList']);
-const { slideList } = toRefs(props);
+const props = defineProps(['slideList','swiperWidth']);
+const { slideList,swiperWidth } = toRefs(props);
 const fristLoading = ref(true)
 const detailControl = ref({
     show: false,
     url: ''
 })
-watch(() => slideList?.value, () => {
+// watch(() => slideList?.value, () => {
 
+ 
+// })
+//通过监听width更新swiper
+watch(() => swiperWidth?.value, () => {
     if (fristLoading) {
         swiper = new Swiper('.travel-swiper', {
             spaceBetween: 0,
@@ -77,6 +81,8 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .swiper {
     height: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 

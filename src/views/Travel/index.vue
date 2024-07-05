@@ -1,17 +1,33 @@
 <template>
     <div class="travel">
+        <h2 class="title">
+            记录身边的人物、风景、故事、还有我和我的猫
+        </h2>
         <div class="container" ref="container" @scroll="handleScroll()">
-            <div class="travel_nav" @click="showTravelItem($event, item)" v-for="(item) in travelList"
-                :key="item.travel_id">
+            <div class="travel_nav" v-for="(item) in travelList" :key="item.travel_id">
                 <div class="thumb">
-                    <div class="thumb_img">
-                        <img :src="item.thumb.url" alt="">
-                    </div>
-                    <p>{{ item.title }}</p>
+                    <img :src="item.thumb.url" alt="">
                 </div>
-                <div class="nav_con" :class="!fristLoading ? 'nav_con_show' : ''">
-                    <SwiperNav :is-show="isInScreen(item.scorllTop)" :travelId="item.travel_id" :slideList="item.imgList">
-                    </SwiperNav>
+                <div class="travel_con" @click="showTravelItem($event, item)">
+                    <h2> {{ item.title }}</h2>
+                    <div class="travel_opr">
+                        <div class="lab">
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#icon-rili"></use>
+                            </svg>
+                            <span>
+                                {{ item.time }}
+                            </span>
+                        </div>
+                        <div class="lab">
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#icon-chakan"></use>
+                            </svg>
+                            <span>
+                                {{ item.watchNum }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -27,7 +43,7 @@
 import TravelDetail from '../../components/TravelDetail/index.vue'
 import { onMounted, ref, reactive, shallowRef, nextTick } from 'vue';
 import { TravelListGetAPI } from "../../request/api"
-import SwiperNav from "./swiper.vue"
+// import SwiperNav from "./swiper.vue"
 import Foot from "../../components/Foot/index.vue"
 
 interface TravelList extends TravelGetAPIResDataItem {
@@ -35,12 +51,14 @@ interface TravelList extends TravelGetAPIResDataItem {
 }
 
 let container = ref<any>(null);
+//打开详情定位
 let boxPostion = reactive({
     height: '0px',
     width: '0px',
     top: '0px',
     left: '0px',
 })
+
 const fristLoading = ref(true)
 
 // const navSwiper = new Swiper('.travel-nav', {
@@ -71,7 +89,7 @@ const showTravelItem = (e: MouseEvent, item: TravelGetAPIResDataItem) => {
     const target = searchTargetElement('travel_nav', e.target);
     TravelId.value = Number(item.travel_id)
     currentTravel.value = item
-    
+
     boxPostion = {
         height: target.offsetHeight + 'px',
         width: target.offsetWidth + 'px',
@@ -80,23 +98,23 @@ const showTravelItem = (e: MouseEvent, item: TravelGetAPIResDataItem) => {
     }
     isShowBox.value = true
 }
-const isInScreen = (scorllTop: number) => {
-    // console.dir(container.value.clientHeight);
-    
-    if (scorllTop - containerScroll.value - container.value.clientHeight > 0) {
-        return false
-    } else {
-        return true
-    }
-    // if(document.body.clientHeight - scorllTop -  containerScroll.value)
-}
+// const isInScreen = (scorllTop: number) => {
+//     // console.dir(container.value.clientHeight);
+
+//     if (scorllTop - containerScroll.value - container.value.clientHeight > 0) {
+//         return false
+//     } else {
+//         return true
+//     }
+//     // if(document.body.clientHeight - scorllTop -  containerScroll.value)
+// }
 const closeTraveItem = () => {
     isShowBox.value = false
 }
 const handleScroll = () => {
     // console.dir(e.srcElement.scrollTop);
     if (throttle.value) {
-        
+
         containerScroll.value = container.value.scrollTop || 0
         throttle.value = false;
         setTimeout(() => {
@@ -128,6 +146,7 @@ const getTravelList = async () => {
             scorllTop
         }
     })
+    console.log(travelList.value)
 
     nextTick(() => {
 
@@ -148,89 +167,104 @@ onMounted(() => {
 .travel {
     width: 100%;
     height: 100%;
+   
+    .title {
+        font-size: var(--font-size-title);
+        font-weight: 700;
+        margin: 1rem;
+    }
+
     .container {
-        margin: 0 120px;
-        padding: 40px;
+        margin: 0 1rem;
         // background: rgba($color: #23272f, $alpha: 0.8);
         border-radius: 10px;
-        padding-right: 120px;
-        // height: 100%;
+        display: grid;
+        gap: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        margin-bottom: 4rem;
+
+        // min-height: 100vh;
         .travel_nav {
-            width: 100%;
-            height: 400px;
-            margin: 40px 80px;
             border-radius: 10px;
-            border: 3px solid rgba(88, 175, 223, .6);
             padding: 0;
-            display: flex;
-            align-items: center;
-            align-items: stretch;
-            cursor: pointer;
-            position: relative;
+            overflow: hidden;
+            transition: .2s;
+            border: 1px solid hsl(var(--theme-color)/0);
+            height: 410px;
 
-            .thumb {
-                height: 100%;
-                border-radius: 10px 0 0 10px;
-                width: 240px;
-                display: flex;
-                flex-direction: column;
-                padding: 20px 30px;
-                background: rgba(88, 175, 223, 0.1);
-                box-shadow: 0 4px 5px rgba(88, 175, 223, 0.4);
-                flex-shrink: 0;
+            &:hover {
+                border: 1px solid hsl(var(--theme-color)/0.5);
 
-                .thumb_img {
-                    width: 100%;
-                    flex: 1;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    height: 288px;
-                    overflow: hidden;
+                .thumb {
+                    transform: scale(1);
+                }
 
-                    img {
-                        width: 100%;
+                .travel_con {
+                    margin-top: 0px;
+                    border-radius: 0;
+
+                    h2 {
+                        color: hsl(var(--theme-color)/0.8);
+                        padding: 10px;
                     }
                 }
 
-                p {
-                    margin: 20px;
-                    font-size: 20px;
-                    font-weight: bold;
-                    text-align: center;
-                    color: #eee;
-                }
+                box-shadow: var(--box-shadow);
             }
 
-            .nav_con {
+            .thumb {
                 height: 100%;
-                width: calc(100% - 20px);
+                width: 100%;
+                height: 300px;
                 overflow: hidden;
-                margin: 0 20px;
-                opacity: 0;
-                transition: .4s ease;
+                transform: scale(1.1);
+                transition: .2s;
 
-                &.nav_con_show {
-                    opacity: 1
+                img {
+                    width: 100%;
                 }
-
             }
 
-            .travel_tips {
-                position: absolute;
-                right: 0;
-                top: 0;
-                width: 100px;
-                height: 100%;
-                z-index: 2;
-                background: linear-gradient(to right, rgba(0, 0, 0, 0.1) 0%, rgba(255, 255, 255, 0.5) 100%);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 10px;
+            .travel_con {
+                width: 100%;
+                overflow: hidden;
+                transition: 0.2s;
+                background: var(--s-bg, hsl(0 0% 100% / .9));
+                -webkit-backdrop-filter: blur(10px) saturate(1.5);
+                backdrop-filter: blur(10px) saturate(1.5);
+                border-radius: 15px 15px 0 0;
+                margin-top: -15px;
+                cursor: pointer;
+                height: 110px;
 
-                svg {
-                    width: 40px;
+                h2 {
+                    transition: 0.2s;
+                    padding: 15px 10px;
+                    font-weight: var(--font-weight-title);
+                    font-size: var(--font-size-normal);
+                }
+
+                .travel_opr {
+                    padding: 0 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    height: 40px;
+
+                    .lab {
+                        display: flex;
+                        align-items: center;
+
+                        svg {
+                            width: 20px;
+                            height: 20px;
+                            margin-right: 10px;
+                            fill: #000;
+                        }
+
+                        span {
+                            font-size: var(--font-size-small);
+                        }
+                    }
 
                 }
             }
@@ -241,4 +275,20 @@ onMounted(() => {
         background: rgba(88, 175, 223, 0.8);
     }
 }
+
+@media screen and (max-width: 900px) {
+    .travel {
+        .title{
+            font-size: var(--font-size-small);
+            margin: 0.4rem;
+        }
+        .container {
+            margin: 0 1%;
+            margin-bottom: 4rem;
+            gap: 1%;
+            grid-template-columns: repeat(auto-fill, minmax(46%, 1fr));
+        }
+    }
+}
+
 </style>
