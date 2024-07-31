@@ -8,9 +8,13 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ArtText: typeof import('./src/components/ArtText/index.vue')['default']
+    Comment: typeof import('./src/components/Comment/index.vue')['default']
+    ElInput: typeof import('element-plus/es')['ElInput']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     Fish: typeof import('./src/components/Fish/index.vue')['default']
+    Flip: typeof import('./src/components/Flip/index.vue')['default']
     Foot: typeof import('./src/components/Foot/index.vue')['default']
+    Loading: typeof import('./src/components/Loading/index.vue')['default']
     Menu: typeof import('./src/components/menu.vue')['default']
     Nav: typeof import('./src/components/Nav/index.vue')['default']
     NotesDetail: typeof import('./src/components/NotesDetail/index.vue')['default']

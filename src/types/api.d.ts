@@ -1,3 +1,4 @@
+type mark = 'a' | 't' | 'm'
 class DefNull {
     def: null
 }
@@ -73,36 +74,38 @@ interface TravelListGetAPIRes extends APIRes {
 }
 
 
-interface TravelCommentItem {
+interface CommentItem {
     commentBody: string,
     commentName: string,
-    commentId: string,
+    cid: string,
 }
-interface TravelCommentItemFrist {
+interface CommentItemFrist {
     commentBody: String,
     commentName: String,
-    commentId: String,
-    commentBack: [TravelCommentItem],
+    cid: String,
+    commentBack: [CommentItem],
 }
 
-interface TravelCommentUploadGetAPIRes extends APIRes {
+interface CommentUploadGetAPIRes extends APIRes {
     data: {
-        travelId: String,
-        commentList: [TravelCommentItemFrist],
+        id: String,
+        commentList: [CommentItemFrist],
     }[]
 }
 
 
-interface TravelCommentUploadGetAPIReq {
+interface CommentUploadGetAPIReq {
     commentBody: String,
     commentName: String,
-    commentId?: String,
-    travelId: String,
+    cid?: String,
+    id: String,
+    mark:mark,
 }
 
-interface TravelCommentGetAPIAPIReq {
-    travelId: String,
+interface CommentGetAPIAPIReq {
+    id: String,
+    mark:mark,
 }
-interface TravelCommentGetAPIAPIRes extends APIRes {
-    data:TravelCommentItemFrist[]
+interface CommentGetAPIAPIRes extends APIRes {
+    data:CommentItemFrist[]
 }

@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <TravelDetail :position="boxPostion" :currentTravel="currentTravel" :is-show="isShowBox"
+        <TravelDetail  :position="boxPostion" :currentTravel="currentTravel" :is-show="isShowBox"
             @closeTraveItem="closeTraveItem">
         </TravelDetail>
         <Foot></Foot>
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import TravelDetail from '../../components/TravelDetail/index.vue'
-import { onMounted, ref, reactive, shallowRef, nextTick } from 'vue';
+import { onMounted, ref, reactive, shallowRef } from 'vue';
 import { TravelListGetAPI } from "../../request/api"
 // import SwiperNav from "./swiper.vue"
 import Foot from "../../components/Foot/index.vue"
@@ -146,11 +146,7 @@ const getTravelList = async () => {
             scorllTop
         }
     })
-    console.log(travelList.value)
 
-    nextTick(() => {
-
-    })
 }
 
 onMounted(() => {

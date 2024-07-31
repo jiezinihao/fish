@@ -1,30 +1,29 @@
-
 <template>
     <div class="connect">
         <div class="container">
             <div class="connect_other">
                 <p>B站主页：</p>
                 <a href="https://space.bilibili.com/73785133" target="_blank" class="bilibili">
-                <div class="bi">
-                    <div class="bi_img">
-                        <img src="../../assets/img/bi_img.jpg" alt="">
-                        <span></span>
-                    </div>
-                    <div class="bi_con">
-                        <div class="bi_tit">
-                            <span>BigCat_</span>
+                    <div class="bi">
+                        <div class="bi_img">
+                            <img src="../../assets/img/bi_img.jpg" alt="">
                             <span></span>
-                            <span></span>
-                            <span></span>
-                            <span>抱狸龙</span>
-                            <span>12</span>
                         </div>
-                        <div class="bi_span">
-                            一路风雨我在前Dennis
+                        <div class="bi_con">
+                            <div class="bi_tit">
+                                <span>BigCat_</span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span>抱狸龙</span>
+                                <span>12</span>
+                            </div>
+                            <div class="bi_span">
+                                一路风雨我在前Dennis
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
+                </a>
             </div>
 
             <div class="connect_other">
@@ -34,25 +33,19 @@
             </div>
             <div class="connect_msg">
                 <h3>
-                    网站留言
+                    Say to Fish
                 </h3>
-                <div class="connect_msg_con">
-                    <p><em>匿名：</em> 1223</p>
-                    <p><em>匿名：</em>你好，作者</p>
-                    <p><em>匿名：</em>你好</p>
-                    <p><em>匿名：</em>巴拉巴拉</p>
-
-                </div>
-                <h4>我也写一句:</h4>
-                <input class="input_name" type="text" id="name" placeholder="昵称" value="匿名">
-                <input type="text" id="message" placeholder="想说什么~">
+                <Comment :commentId="99"></Comment>
             </div>
         </div>
+        <Foot></Foot>
+
     </div>
+
 </template>
 <script setup lang="ts">
-
-
+import Foot from "@/components/Foot/index.vue"
+import Comment from "@/components/Comment/index.vue"
 </script>
 <style scoped lang="scss">
 a {
@@ -63,11 +56,9 @@ a {
     width: 100%;
 
     .container {
-        margin: 40px 120px;
-        padding: 40px;
-        background: rgba($color: #23272f, $alpha: 0.8);
         border-radius: 10px;
-        padding-right: 120px;
+        padding-left: 3rem;
+        min-height: 90vh;
     }
 
     .bilibili {
@@ -216,10 +207,9 @@ a {
         padding: 20px 0;
         line-height: 30px;
         font-size: 24px;
-        border-bottom: 1px solid #333;
+        border-bottom: var(--border);
 
         p {
-            color: #eee;
             margin-bottom: 20px;
         }
 
@@ -237,19 +227,16 @@ a {
 
     .connect_msg {
         border-radius: 5px;
-        padding: 10px;
         padding-right: 0;
         margin-top: 10px;
 
         h3 {
             font-size: 28px;
-            color: #eee;
         }
 
         .connect_msg_con {
             margin: 20px 0;
             border-top: 1px solid #333;
-            color: #999;
 
             p {
                 em {
@@ -257,38 +244,36 @@ a {
                 }
 
                 font-size: 18px;
-                color: #999;
                 margin: 20px 0;
             }
         }
 
         h4 {
             font-size: 20px;
-            color: #eee;
             margin: 30px 0 10px 0;
         }
 
-        .input_name {
-            width: 100px;
-            border-radius: 5px 0 0 5px;
-        }
 
-        input {
-            width: 500px;
-            border: 1px solid #333;
-            border-radius: 0 5px 5px 0;
-            line-height: 20px;
-            font-size: 16px;
-            resize: none;
-            padding: 10px;
-            background: none;
-            color: #eee;
+    }
+}
 
-            &:focus {
-                outline: none;
-                border: 1px solid #999;
+@media (max-width:1200px) {
+    .connect {
+        width: 100%;
 
+        .container {
+            padding-left: 1rem;
+            width: 100%;
+            .connect_other{
+                font-size: var(--font-size-medium);
+                p{
+                    font-size: var(--font-size-title);
+                }
+                .bilibili{
+                    background-size: auto 100%;
+                }
             }
         }
     }
-}</style>
+}
+</style>

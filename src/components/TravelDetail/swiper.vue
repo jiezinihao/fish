@@ -1,6 +1,6 @@
 <template>
     <div class="swiper">
-        <div class="travel-swiper" :style="{'width':swiperWidth+'px'}">
+        <div class="travel-swiper" :style="{ 'width': suffixSwiperWidth }">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" v-for="(item, index) in slideList" :key="index" @click="showDetail(item.url)">
                     <div class="travel_img">
@@ -8,7 +8,10 @@
                     </div>
                 </div>
             </div>
+            <div class="travel-swiper-pagination">
+            </div>
         </div>
+
         <div class="detail" :class="detailControl.show ? 'detail_active' : ''" @click="closeDetail()">
             <img :src="detailControl.url" alt="">
         </div>
@@ -16,40 +19,39 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, watch, onMounted, onUnmounted, ref } from 'vue'
+import { toRefs, watch, onMounted, onUnmounted, ref, computed } from 'vue'
 import Swiper from "swiper"
+import { Pagination } from 'swiper/modules';
 import 'swiper/css';
+import { fillSuffix } from '@/func/functions'
 let swiper: Swiper
 
-const props = defineProps(['slideList','swiperWidth']);
-const { slideList,swiperWidth } = toRefs(props);
-const fristLoading = ref(true)
+const props = defineProps(['slideList', 'swiperWidth']);
+const { slideList, swiperWidth } = toRefs(props);
+
+const suffixSwiperWidth = computed(() => {
+    return fillSuffix(String(swiperWidth?.value), 'px')
+})
 const detailControl = ref({
     show: false,
     url: ''
 })
-// watch(() => slideList?.value, () => {
 
- 
-// })
+
+watch(() => slideList?.value, () => {
+    swiper.update()
+})
 //通过监听width更新swiper
-watch(() => swiperWidth?.value, () => {
-    if (fristLoading) {
-        swiper = new Swiper('.travel-swiper', {
-            spaceBetween: 0,
-            slidesPerView: 1,
-        });
-        fristLoading.value = false
-    }
-    //清楚残留页数，滚动到第一页
-    
-    if (typeof (swiper) !== undefined) {
+watch(() => suffixSwiperWidth?.value, (val) => {
+
+
+    if (typeof (swiper) !== 'undefined') {
         swiper.update()
     }
 })
 
 const destorySwiper = () => {
-    if (typeof (swiper) !== undefined) {
+    if (typeof (swiper) === 'undefined') {
         return
     }
     if (Array.isArray(swiper)) {
@@ -70,7 +72,14 @@ const closeDetail = () => {
 }
 
 onMounted(() => {
-
+    swiper = new Swiper('.travel-swiper', {
+        spaceBetween: 0,
+        slidesPerView: 1,
+        pagination: {
+            el: '.travel-swiper-pagination',
+        },
+        modules: [Pagination],
+    });
 })
 onUnmounted(() => {
     destorySwiper()
@@ -147,6 +156,34 @@ onUnmounted(() => {
         transition: width 0s, height 0s, opacity .5s ease;
         width: 100vw;
         height: 100vh;
+    }
+}
+</style>
+
+
+<style lang="scss">
+.travel-swiper {
+    .travel-swiper-pagination {
+        position: absolute;
+        left: 50%;
+        bottom: 0.3rem;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 99;
+        .swiper-pagination-bullet {
+            width: 0.15rem;
+            height: 0.15rem;
+            background: hsl(var(--font-color)/0.5);
+            border-radius: 50%;
+            margin: 0 5px
+        }
+        .swiper-pagination-bullet-active{
+            width: 0.2rem;
+            height: 0.2rem;
+            background: hsl(var(--font-color));
+        }
     }
 }
 </style>

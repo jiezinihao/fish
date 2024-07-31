@@ -23,8 +23,13 @@
             </p>
         </div>
 
-        <div ref="markdownDetail" class="detail markdown-body" :class="theme"  v-html="body">
+        <div ref="markdownDetail" class="detail markdown-body" :class="theme" v-html="body">
         </div>
+        <div class="comment">
+            <Comment :commentId="article_id" :mark="mark"></Comment>
+
+        </div>
+
         <Foot></Foot>
 
     </div>
@@ -36,15 +41,17 @@ import "./tailwind.scss";
 import './heightlight.css';
 import 'element-plus/es/components/message/style/css'
 import Foot from "@/components/Foot/index.vue"
+import Comment from '@/components/Comment/index.vue'
 
 import { ElMessage } from 'element-plus'
-import { watch, ref, onMounted,inject } from 'vue'
+import { watch, ref, onMounted, inject } from 'vue'
 import { NotesDetailGetAPI } from "@/request/api.ts"
 import { useRoute } from 'vue-router';
 import md from "@/func/md.ts"
 const route = useRoute()
 const body = ref('')
 const article_id = route.params.id
+const mark = 'a'
 
 //reject对象是非响应式
 const themeOrigin = inject('theme', ref(''));
@@ -73,8 +80,8 @@ const getDetail = async (article_id: string | string[]) => {
         id = id[0]
     }
     console.log(id);
-    
-    const result = await NotesDetailGetAPI({ article_id:id }).then(data => data)
+
+    const result = await NotesDetailGetAPI({ article_id: id }).then(data => data)
     detail.value = result.data;
     body.value = md.render(result.data.file, 'typesrcipt')
 }
@@ -150,12 +157,26 @@ onMounted(() => {
         }
     }
 
-    .detail{
-        min-height: 100%;
+    .comment {
+        padding: 1rem;
+        padding-top: 0;
+    }
+
+    .detail {
+        min-height: 60%;
         font-size: var(--font-size-medium);
         padding: 1rem 2rem;
     }
+}
 
+@media screen and (max-width: 900px) {
+    .container {
+        .comment {
+            padding:0.3rem;
+            padding-top: 0;
+        }
+
+    }
 
 }
 </style>

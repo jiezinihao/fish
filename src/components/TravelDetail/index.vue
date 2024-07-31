@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="travel_body" :class="isShow ? 'travel_active' : ''" ref="body" :style="animationState">
-            <div class="travel_swiper">
+            <div class="travel_swiper" v-if='isShow'>
                 <Swiper :slideList="imgList" :swiperWidth="swiperWidth"></Swiper>
             </div>
             <div class="travel_list_body">
@@ -32,55 +32,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="travel_comment">
-                    <div class="travel_comment_tit" v-if="commentList.length > 0">
-                        一共有{{ commentList.length }}条评论
-                    </div>
-                    <div class="travel_comment_tit" v-else>
-                        暂无评论
-                    </div>
-                    <!-- <div class="travel_comment_body"> -->
-                    <el-scrollbar min-height="400px" max-height="400px" class="travel_comment_body"
-                        v-if="commentList.length > 0">
-                        <div class="travel_comment_con"
-                            :class="item.commentId === commentFrom.commentId ? 'travel_comment_item_active' : ''"
-                            v-for="(item, index) in commentList" :key="index">
-                            <div class="travel_comment_item">
-                                <div class="travel_comment_left">
-                                    <img src="../../assets/img/head.jpg" alt="">
-                                </div>
-                                <div class="travel_comment_right">
-                                    <h5>{{ item.commentName }}</h5>
-                                    <p>{{ item.commentBody }}</p>
-                                </div>
-                                <span @click="replyComment(item.commentId as string)">{{ isReply ? '取消' : '回复' }}</span>
-                            </div>
-                            <div class="atravel_comment_reply travel_comment_item" v-for="itemReply in item.commentBack"
-                                :key="itemReply.commentName">
-                                <div class="travel_comment_left">
-                                    <img src="../../assets/img/head.jpg" alt="">
-                                </div>
-                                <div class="travel_comment_right">
-                                    <h5>{{ itemReply.commentName }}</h5>
-                                    <p>{{ itemReply.commentBody }}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </el-scrollbar>
-                    <!-- </div> -->
-
-                    <p class="comment_inpput_title" v-if="isReply">回复他：</p>
-                    <p class="comment_inpput_title" v-else>我来评论一条：</p>
-
-                    <div class="travel_comment_input">
-                        <input class="input_name" type="text" id="name" placeholder="昵称"
-                            v-model="commentFrom.commentName">
-                        <input type="text" id="message" placeholder="想说什么~" v-model="commentFrom.commentBody"
-                            @focus="commentFocus()" @blur="commentBlur()">
-                        <span :class="commentFocusBol ? 'travel_comment_btn' : ''" @click="comment()">留言</span>
-                    </div>
-                </div>
+                <Comment :commentId="currentTravel?.travel_id" :mark="'t'"></Comment>
 
             </div>
             <i @click.self="closeTraveItemFunc()" class="exit">×</i>
@@ -96,30 +48,20 @@
 <script setup lang="ts">
 
 import { toRefs, ref, watch, getCurrentInstance, reactive, nextTick, computed, onMounted, shallowRef } from 'vue'
-import { TravelCommentUploadGetAPI, TravelCommentGetAPI } from "../../request/api"
 import 'element-plus/es/components/message/style/css'
 import { ElMessage } from 'element-plus'
+import Comment from '@/components/Comment/index.vue'
 
 
 const props = defineProps(['position', 'currentTravel', 'isShow'])
 const { position, currentTravel, isShow } = toRefs(props)
 const emits = defineEmits(['closeTraveItem'])
-//上传评论
-const commentFrom = ref<TravelCommentUploadGetAPIReq>({
-    commentBody: '',
-    commentName: '匿名',
-    commentId: '',
-    travelId: '',
-})
+
 //组件高度
 const Height = document.body.clientHeight * 0.9;
 //swiper的宽度
 const swiperWidth = ref(0);
-const isReply = computed(() => {
-    return commentFrom.value.commentId === '' ? false : true
-})
-//显示评论
-const commentList = shallowRef<TravelCommentItemFrist[]>([])
+
 //节流,防止频繁点击
 const throttleLock = ref(false)
 //mask动画问题
@@ -149,16 +91,9 @@ let animationState = reactive({
 //监听渲染流程，触发动画方法
 watch(() => isShow?.value, (val) => {
     if (val) {
-        getComment()
         animationFunc('enter')
-    } else {
-        resetData()
     }
 })
-watch(() => commentFrom.value, (val) => {
-    console.log(val);
-})
-let commentFocusBol = ref(false);//评论留言点击
 
 //判断图片宽高
 const judgeImg = async (url: string) => {
@@ -180,8 +115,8 @@ const judgeImg = async (url: string) => {
         return width || 0;
     }
 }
-//params:动画进入和消失的流程
-const animationFunc = async (sign: string) => {
+//计算swiper宽度
+const calSwiperWidth = async () => {
 
     //获得图片的宽度
     let imgWidth = await judgeImg(currentTravel?.value.thumb.url) || 0;
@@ -189,10 +124,14 @@ const animationFunc = async (sign: string) => {
     if (imgWidth > document.body.clientWidth / 2) {
         imgWidth = document.body.clientWidth / 2
     }
-    if(document.body.clientWidth < 900){
-        imgWidth = (document.body.clientWidth /5) * 4
+    if (document.body.clientWidth < 900) {
+        imgWidth = (document.body.clientWidth / 5) * 4
     }
     swiperWidth.value = imgWidth
+}
+//params:动画进入和消失的流程
+const animationFunc = async (sign: string) => {
+
     maskAnimation.value = true
     if (throttleLock.value) {
         return
@@ -201,14 +140,15 @@ const animationFunc = async (sign: string) => {
     }
     let style = { ...animationState }
     if (sign === 'enter') {
-
+        swiperWidth.value = position?.value.width;
         animationState = {
             transition: '0s ease',
             ...position?.value,
-            opacity: '0'
+            opacity: '1'
         }
 
         await nextTick()
+        await calSwiperWidth()
         style.top = "80px"
 
         if (document.body.clientWidth - swiperWidth.value - 700 < 0) {
@@ -234,6 +174,7 @@ const animationFunc = async (sign: string) => {
             opacity: "0"
         }
         $forceUpdate()
+
         setTimeout(() => {
             throttleLock.value = false
             animationState = {
@@ -245,6 +186,7 @@ const animationFunc = async (sign: string) => {
             }
             $forceUpdate()
             emits('closeTraveItem')
+
         }, 600)
     }
 
@@ -253,58 +195,7 @@ const {
     proxy: { $forceUpdate },
 }: any = getCurrentInstance();
 
-//评论按钮
-const comment = async (_?: string) => {
 
-    commentFrom.value.travelId = currentTravel?.value.travel_id;
-    if (commentFrom.value.commentName === '') {
-        ElMessage({
-            message: "评论名称不能为空",
-            type: 'error',
-        })
-        return
-    } else if (commentFrom.value.commentBody === '') {
-        ElMessage({
-            message: "评论不能为空",
-            type: 'error',
-        })
-        return
-    }
-    const result = await TravelCommentUploadGetAPI(commentFrom.value).then(data => data)
-
-    if (result.code !== '0000') {
-        ElMessage({
-            message: result.msg,
-            type: 'error',
-        })
-    } else {
-        ElMessage({
-            message: "评论成功",
-            type: 'success',
-        })
-        resetData()
-        getComment()
-    }
-
-}
-//获取评论
-const getComment = async () => {
-    if (typeof (currentTravel?.value) === 'undefined') {
-        return
-    }
-
-    const result = await TravelCommentGetAPI({ travelId: currentTravel?.value.travel_id }).then(data => data)
-    commentList.value = [...result.data]
-
-}
-//点击回复
-const replyComment = (commentId: string) => {
-    if (isReply.value) {
-        commentFrom.value.commentId = ''
-    } else {
-        commentFrom.value.commentId = commentId
-    }
-}
 
 const orderingCoffee = () => {
     ElMessage.success('谢谢宝宝的咖啡')
@@ -315,21 +206,6 @@ const closeTraveItemFunc = () => {
 }
 
 
-const commentBlur = () => {
-    commentFocusBol.value = false;
-}
-const commentFocus = () => {
-    commentFocusBol.value = true;
-}
-//重置页面数据
-const resetData = () => {
-    commentFrom.value = {
-        commentBody: '',
-        commentName: '匿名',
-        commentId: '',
-        travelId: '',
-    }
-}
 onMounted(() => {
 
 })
@@ -445,212 +321,6 @@ onMounted(() => {
             }
         }
 
-        .travel_comment {
-            width: 100%;
-            margin-top: 20px;
-
-            .travel_comment_tit {
-                font-size: 15px;
-                margin-bottom: 10px;
-                border: var(--border);
-                padding: 0.4rem;
-            }
-
-            .travel_comment_body {
-                border-left: 3px solid hsl(var(--theme-color)/0.4);
-
-                &::-webkit-scrollbar {
-                    width: 0;
-                    display: none;
-                }
-
-                .travel_comment_con {
-                    position: relative;
-
-                    &.travel_comment_item_active {
-                        background: hsl(var(--theme-color)/0.1);
-
-                        &::after {
-                            width: 100%;
-                            height: 3px;
-                        }
-
-                        &::before {
-                            height: 80%;
-                        }
-
-                        .travel_comment_item span {
-                            opacity: 1;
-                        }
-                    }
-
-                    &:hover {
-                        background: hsl(var(--theme-color)/0.1);
-
-                        &::after {
-                            width: 100%;
-                            height: 3px;
-                        }
-
-                        &::before {
-                            height: 80%;
-                        }
-
-                        .travel_comment_item span {
-                            opacity: 1;
-                        }
-                    }
-
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        right: 10px;
-                        top: 0;
-                        width: 0;
-                        height: 0;
-                        border-top: 3px solid hsl(var(--theme-color)/0.1);
-                        transition: .4s ease;
-                    }
-
-                    &::before {
-                        content: "";
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                        width: 10px;
-                        height: 10px;
-                        transition: .4s ease;
-                        border-top: 3px solid hsl(var(--theme-color)/0.1);
-                        border-right: 3px solid hsl(var(--theme-color)/0.1);
-                        border-radius: 0 4px 0 0;
-                    }
-                }
-
-                .travel_comment_item {
-                    display: flex;
-                    // align-items: center;
-                    padding: 0.2rem 0;
-                    margin: 0 0.4rem;
-                    position: relative;
-
-                    span {
-                        margin-right: 10px;
-                        font-size: 16px;
-                        font-weight: bold;
-                        opacity: 0;
-                        cursor: pointer;
-                        margin-bottom: 0.2rem;
-                    }
-
-                    .travel_comment_left {
-                        width: 40px;
-                        height: 40px;
-                        margin-top: 0.3rem;
-                        overflow: hidden;
-                        border-radius: 50%;
-                        margin-right: 10px;
-                    }
-
-                    .travel_comment_right {
-                        flex: 1;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-between;
-                        overflow: hidden;
-
-                        h5 {
-                            font-size: var(--font-size-normal);
-                            line-height: 1rem;
-                        }
-
-                        p {
-                            margin: 0;
-                            font-size: var(--font-size-small);
-                            width: 100%;
-
-                        }
-                    }
-                }
-
-                .atravel_comment_reply {
-                    margin-left: 30px;
-                    padding: 5px 0;
-                    transform: scale(0.9);
-
-                    &::after {
-                        content: none;
-                    }
-
-                    &::before {
-                        content: none;
-                    }
-                }
-            }
-
-            .comment_inpput_title {
-                margin-top: 40px;
-                font-size: 22px;
-                font-weight: var(--font-weight-title);
-            }
-
-            .travel_comment_input {
-                display: flex;
-                margin-top: 0.4rem;
-                align-items: center;
-                position: relative;
-
-                .input_name {
-                    width: 100px;
-                    border-radius: 0.1rem 0 0 0.1rem;
-                    color: var(--font-color);
-                    padding: 10px;
-                }
-
-                input {
-                    width: 500px;
-                    border: 1px solid #333;
-                    border-radius: 0 0.2rem 0.2rem 0;
-                    line-height: 20px;
-                    font-size: 16px;
-                    resize: none;
-                    padding: 10px;
-                    background: none;
-                    padding-right: 90px;
-
-                    &:focus {
-                        outline: none;
-                        border: 1px solid hsl(var(--theme-color));
-                        color: hsl(var(--theme-color));
-                    }
-                }
-
-                span {
-                    position: absolute;
-                    right: 0;
-                    top: 50%;
-                    width: 80px;
-                    height: 99%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transform: translate(0, -50%);
-                    border-radius: 5px;
-                    background: hsl(var(--theme-color)/0.1);
-                    cursor: pointer;
-                    opacity: 0;
-                    transition: 0.2s ease;
-                    font-size: var(--font-size-normal);
-
-                    &:hover {
-                        background: hsl(var(--theme-color)/0.2);
-                    }
-                }
-
-                .travel_comment_btn {
-                    opacity: 1;
-                }
-            }
-        }
 
         // &:hover {
         //     box-shadow: 0 0 20px 5px #95adbe;
@@ -713,10 +383,11 @@ onMounted(() => {
         flex-direction: column;
         width: 100%;
         align-items: center;
-        margin: 0 ;
+        margin: 0;
+
         .exit {
             position: fixed;
-            right: 0.4rem ;
+            right: 0.4rem;
             top: 2.5rem;
             z-index: 10;
             font-size: 40px;

@@ -106,8 +106,24 @@
                 <img class="step_bg" src="../../assets/img/fish_bg.jpg" alt="">
                 <div class="mb" data-opacity="0.5-1"></div>
                 <div class="about">
-
-                    <div class="box peoty">
+                    <Flip class=" peoty">
+                        <template #front>
+                            <p class="title">
+                                给读者一封信
+                            </p>
+                        </template>
+                        <template #back>
+                            <div class="box_peoty">
+                                <p>我们在这里相遇，不计从前不计以后</p>
+                                <p>这一秒你属于这里，将这段时间交给这里</p>
+                                <p>这里纪录着很多关于我的故事和我的猫！</p>
+                                <p>我觉得，青春总需要记录，原来听过一句话：“写日记的都不是什么好人”；我并不认同，我觉得，写日记或者记录生活的人都是还能折腾的人，还能记录下当下，然后给以后的自己做路标。
+                                </p>
+                                <p>如果某一天，这个博客很久不更新了，或许那时候我就已经很懒了吧，不愿意在去折腾了。</p>
+                            </div>
+                        </template>
+                    </Flip>
+                    <!-- <div class="box peoty">
                         <p class="title">
                             给读者一封信：
                         </p>
@@ -116,7 +132,7 @@
                         <p>这里纪录着很多关于我的故事和我的猫！</p>
                         <p>我觉得，青春总需要记录，原来听过一句话：“写日记的都不是什么好人”；我并不认同，我觉得，写日记或者记录生活的人都是还能折腾的人，还能记录下当下，然后给以后的自己做路标。</p>
                         <p>如果某一天，这个博客很久不更新了，或许那时候我就已经很懒了吧，不愿意在去折腾了。</p>
-                    </div>
+                    </div> -->
                     <div class="box aboutme">
                         <p class="title">关于我自己</p>
 
@@ -227,7 +243,7 @@
                         <div class="box_item valorant">
                             <p class="rank_title">无畏契约</p>
                             <div class="rank ">
-                                <span>黑铁</span>
+                                <span>青铜</span>
                                 <div class="line">
                                     <i></i>
                                 </div>
@@ -239,11 +255,11 @@
                         <div class="box_item yjwj">
                             <p class="rank_title">永劫无间</p>
                             <div class="rank ">
-                                <span>黑铁</span>
+                                <span>未知</span>
                                 <div class="line">
                                     <i></i>
                                 </div>
-                                <span>王者</span>
+                                <span>无间修罗</span>
 
                             </div>
                         </div>
@@ -279,6 +295,7 @@ interface PrecentObj {
 }
 
 import { ref, onMounted, inject, watch } from 'vue'
+import Flip from '@/components/Flip/index.vue'
 const showCabinetFish = ref<boolean>(false);
 
 const bg = ref<any>(null);
@@ -796,9 +813,17 @@ onMounted(() => {
             }
 
             .peoty {
+                .front {
+                    padding: 1rem;
+                }
+
                 p {
 
                     padding: 0.15rem 0.1rem;
+                }
+                .box_peoty{
+                    padding-top: 0.5rem;
+                    font-size: var(--font-size-small);
                 }
 
             }
@@ -806,13 +831,13 @@ onMounted(() => {
 
             .game {
                 --lol: 80%;
-                --lol-text: '超凡大师520分';
+                --lol-text: '超凡大师387分';
                 --lol-color: #002db3;
                 --valorant: 60%;
-                --valorant-text: '超凡2';
+                --valorant-text: '神话3000';
                 --valorant-color: #00ffff;
                 --yjwj: 40%;
-                --yjwj-text: '蚀月';
+                --yjwj-text: '坠日';
                 --yjwj-color: #ff0000;
 
             }
@@ -953,7 +978,8 @@ onMounted(() => {
             .step2 {
                 flex-wrap: wrap;
                 padding: 0;
-                .about{
+
+                .about {
                     width: 100%;
                 }
             }
