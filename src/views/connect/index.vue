@@ -27,15 +27,17 @@
             </div>
 
             <div class="connect_other">
-                <p>git平台：</p>
+                <p>其他平台</p>
                 <a href="" target="_blank">github</a>
                 <a href="https://gitee.com/jiezinihao/projects">gitee</a>
+                <a href="mailto:1275401327@QQ.com">QQ邮箱</a>
+                <a href="mailto:g1275401327@gmail.com">谷歌邮箱</a>
             </div>
             <div class="connect_msg">
                 <h3>
                     Say to Fish
                 </h3>
-                <Comment :commentId="99"></Comment>
+                <Comment :commentId="99" :mark="'m'"></Comment>
             </div>
         </div>
         <Foot></Foot>
@@ -59,6 +61,7 @@ a {
         border-radius: 10px;
         padding-left: 3rem;
         min-height: 90vh;
+        margin-bottom: 2rem;
     }
 
     .bilibili {
@@ -263,6 +266,25 @@ a {
 
         .container {
             padding-left: 1rem;
+            width: 100%;
+            .connect_other{
+                font-size: var(--font-size-medium);
+                p{
+                    font-size: var(--font-size-title);
+                }
+                .bilibili{
+                    background-size: auto 100%;
+                }
+            }
+        }
+    }
+}
+@media (max-width:500px) {
+    .connect {
+        width: 100%;
+
+        .container {
+            padding-left: 0.2rem;
             width: 100%;
             .connect_other{
                 font-size: var(--font-size-medium);

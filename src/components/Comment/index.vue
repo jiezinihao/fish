@@ -11,9 +11,9 @@
             <div class="comment_con" :class="item.cid === commentFrom.cid ? 'comment_item_active' : ''"
                 v-for="(item, index) in commentList" :key="index">
                 <div class="comment_item">
-                    <div class="comment_left">
+                    <!-- <div class="comment_left">
                         <img src="../../assets/img/head.jpg" alt="">
-                    </div>
+                    </div> -->
                     <div class="comment_right">
                         <h5>{{ item.commentName }}</h5>
                         <p>{{ item.commentBody }}</p>
@@ -76,7 +76,8 @@ const resetData = () => {
         commentName: '匿名',
         cid: '',
         id:'',
-        mark:mark?.value
+        mark:mark?.value,
+        icon:''
     }
 }
 
@@ -90,7 +91,8 @@ const commentFrom = ref<CommentUploadGetAPIReq>({
     commentName: '匿名',
     cid: '',
     id:"",
-    mark:mark?.value
+    mark:mark?.value,
+    icon:''
 })
 const commentFocusBol = ref(false);//评论留言点击
 

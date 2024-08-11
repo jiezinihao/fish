@@ -8,94 +8,21 @@
                 <div class="comment">
                     <p class="title">走心评论：</p>
                     <div class="comment_list" ref="comment">
-                        <a class="comment_box fade-before" ani-delay="0.2s">
+                        <a class="comment_box fade-before" :ani-delay="(index * 0.2) + 's'"
+                        @click="hotCommentsClick(item)"
+                            v-for="(item, index) in hotCommentsList" :key="index" href="javascript:">
                             <div class="head_img">
-                                <svg class="icon icon-meow1" aria-hidden="true">
-                                    <use xlink:href="#icon-meow1"></use>
-                                </svg>
+                                <img :src="item.icon" alt="">
                             </div>
                             <div class="comment_title">
-                                <p>匿名</p>
-                                <time datetime="2010.1.2">2010.1.2</time>
+                                <p>{{ item.commentName }}</p>
+                                <time :datetime="item.createTime">{{ item.createTime }}</time>
                             </div>
                             <div class="comment_content">
-                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
-
+                                {{ item.commentBody }}
                             </div>
                             <div class="comment_from">
-                                from “不要因为别人都交卷了，就乱填答案哦”
-                            </div>
-                        </a>
-                        <a class="comment_box fade-before" ani-delay="0.4s">
-                            <div class="head_img">
-                                <svg class="icon icon-meow1" aria-hidden="true">
-                                    <use xlink:href="#icon-meow1"></use>
-                                </svg>
-                            </div>
-                            <div class="comment_title">
-                                <p>匿名</p>
-                                <time datetime="2010.1.2">2010.1.2</time>
-                            </div>
-                            <div class="comment_content">
-                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
-
-                            </div>
-                            <div class="comment_from">
-                                from “不要因为别人都交卷了，就乱填答案哦”
-                            </div>
-                        </a>
-                        <a class="comment_box fade-before" ani-delay="0.6s">
-                            <div class="head_img">
-                                <svg class="icon icon-meow1" aria-hidden="true">
-                                    <use xlink:href="#icon-meow1"></use>
-                                </svg>
-                            </div>
-                            <div class="comment_title">
-                                <p>匿名</p>
-                                <time datetime="2010.1.2">2010.1.2</time>
-                            </div>
-                            <div class="comment_content">
-                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
-
-                            </div>
-                            <div class="comment_from">
-                                from “不要因为别人都交卷了，就乱填答案哦”
-                            </div>
-                        </a>
-                        <a class="comment_box fade-before" ani-delay="0.8s">
-                            <div class="head_img">
-                                <svg class="icon icon-meow1" aria-hidden="true">
-                                    <use xlink:href="#icon-meow1"></use>
-                                </svg>
-                            </div>
-                            <div class="comment_title">
-                                <p>匿名</p>
-                                <time datetime="2010.1.2">2010.1.2</time>
-                            </div>
-                            <div class="comment_content">
-                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
-
-                            </div>
-                            <div class="comment_from">
-                                from “不要因为别人都交卷了，就乱填答案哦”
-                            </div>
-                        </a>
-                        <a class="comment_box fade-before" ani-delay="1s">
-                            <div class="head_img">
-                                <svg class="icon icon-meow1" aria-hidden="true">
-                                    <use xlink:href="#icon-meow1"></use>
-                                </svg>
-                            </div>
-                            <div class="comment_title">
-                                <p>匿名</p>
-                                <time datetime="2010.1.2">2010.1.2</time>
-                            </div>
-                            <div class="comment_content">
-                                短期快乐并不是真正的快乐，真正的快乐源于帮助别人后的一句谢谢，源于自己解决一个问题后的成就感。短期快乐确实可以带来短暂的兴奋，但刺激过后，是更大的空虚感，这时需要更大的短期快乐才能满足，犹如成瘾。我们需要找到让自己真正快乐的东西，可以是一项运动，可以是一件手工，也可以是一本书，总之让自己自律、坚持。
-
-                            </div>
-                            <div class="comment_from">
-                                from “不要因为别人都交卷了，就乱填答案哦”
+                                from “{{ item.title }}”
                             </div>
                         </a>
                     </div>
@@ -296,6 +223,10 @@ interface PrecentObj {
 
 import { ref, onMounted, inject, watch } from 'vue'
 import Flip from '@/components/Flip/index.vue'
+import { useRouter, useRoute } from 'vue-router';
+import { GetHotCommentListAPI } from '@/request/api'
+
+const router = useRouter()
 const showCabinetFish = ref<boolean>(false);
 
 const bg = ref<any>(null);
@@ -306,8 +237,30 @@ const step3 = ref<any>();
 
 const introduce = ref<any>();
 const comment = ref<any>();
-const process = inject('process', ref(0));
+const process = inject('processOrigin', ref(0));
 
+//评论
+const hotCommentsList = ref<GetHotCommentListAPIRes['data']>([]);
+
+
+const getHotComments = async () => {
+    const result = await GetHotCommentListAPI().then((data) => data);
+    hotCommentsList.value = result.data
+}
+
+const hotCommentsClick = (item:GetHotCommentListAPIRes['data'][0])=>{
+    let url = '';
+    let markMap = {
+        a:'/notes/detail/',
+        t:"/travel?id=",
+        m:'/connect'
+    }
+
+    url = markMap[item.mark] + item.aid
+    console.log(url);
+    
+    router.replace(url)
+}
 
 watch(process, (newValue) => {
     updateStyles(newValue)
@@ -456,7 +409,8 @@ const createAnimation = (scrollStart: number, scrollEnd: number, valueStart: any
 
 
 onMounted(() => {
-    updateStyles(process.value)
+    updateStyles(process.value);
+    getHotComments();
 })
 
 
@@ -821,7 +775,8 @@ onMounted(() => {
 
                     padding: 0.15rem 0.1rem;
                 }
-                .box_peoty{
+
+                .box_peoty {
                     padding-top: 0.5rem;
                     font-size: var(--font-size-small);
                 }

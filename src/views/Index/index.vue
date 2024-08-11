@@ -14,49 +14,20 @@
         <div class="new">
             <h1>最新动态</h1>
             <div class="new_con">
-                <h2>评论：</h2>
-                <div>
-                    <span>3周前</span>
-                    <p>如何评价这个问题</p>
-                    <time datetime="">2021.1.1</time>
+                <h2>旅行</h2>
+                <div v-for="item in travelList" :key="item.travel_id" @click="goTravel(item.travel_id)">
+                    <span>{{ item.title }}</span>
+                    <p>{{ item.body }}</p>
+                    <time :datetime="item.time">{{ item.time }}</time>
                 </div>
-                <div>
-                    <span>3周前</span>
-                    <p>如何评价这个问题</p>
-                    <time datetime="">2021.1.1</time>
-                </div>
-                <div>
-                    <span>3周前</span>
-                    <p>如何评价这个问题</p>
-                    <time datetime="">2021.1.1</time>
-                </div>
-                <div>
-                    <span>3周前</span>
-                    <p>如何评价这个问题</p>
-                    <time datetime="">2021.1.1</time>
-                </div>
+
             </div>
             <div class="new_con">
                 <h2>文章：</h2>
-                <div>
-                    <span>css&html</span>
-                    <p>如何评价这个问题</p>
-                    <time datetime="">2021.1.1</time>
-                </div>
-                <div>
-                    <span>css&html</span>
-                    <p>如何评价这个问题</p>
-                    <time datetime="">2021.1.1</time>
-                </div>
-                <div>
-                    <span>css&html</span>
-                    <p>如何评价这个问题</p>
-                    <time datetime="">2021.1.1</time>
-                </div>
-                <div>
-                    <span>css&html</span>
-                    <p>如何评价这个问题</p>
-                    <time datetime="">2021.1.1</time>
+                <div v-for="item in notesList" :key="item.nav_id" @click="goNotes(item.article_id)">
+                    <span></span>
+                    <p>{{ item.title }}</p>
+                    <time :datetime="item.time">{{ item.time }}</time>
                 </div>
             </div>
         </div>
@@ -70,17 +41,37 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router'
 // import ArtText from "../../components/ArtText/index.vue"
 import Fish from "../../components/Fish/index.vue"
 import Foot from "../../components/Foot/index.vue"
+import { TravelListGetAPI, NotesListGetAPI } from "../../request/api"
+
+const router = useRouter();
+const travelList = ref<TravelGetAPIResDataItem[]>([])
+const notesList = ref<NotesList[]>([])
 
 
-const showCabinetFish = ref<boolean>(false)
-
-const downFish = () => {
-    showCabinetFish.value = true
+const getTravelList = async () => {
+    const result = await TravelListGetAPI({ page: 1, pageSize: 4, sort: 'proportion' }).then(data => data);
+    console.log(result);
+    travelList.value = [...result.data];
 }
+const getNotesList = async () => {
+    const result = await NotesListGetAPI({ page: 1, pageSize: 4, sort: 'proportion' }).then(data => data);
+    console.log(result);
+    notesList.value = [...result.data];
+}
+const goTravel = (id: string) => {
+    router.push({ path: '/travel', query: { id } })
+}
+const goNotes = (id: string) => {
+    router.push({ path: '/notes/detail/' + id })
+}
+onMounted(() => {
+    getTravelList()
+    getNotesList()
+})
 </script>
 
 
@@ -117,10 +108,11 @@ const downFish = () => {
 }
 
 @keyframes fade-in {
-    0%{
+    0% {
         opacity: 0;
     }
-    100%{
+
+    100% {
         opacity: 1;
     }
 }
@@ -278,6 +270,7 @@ const downFish = () => {
                 }
             }
         }
+
         .new {
             height: auto;
             margin-top: 0;
@@ -285,7 +278,7 @@ const downFish = () => {
             border-radius: 0;
             animation-delay: 0s;
             animation: fade-in 0.5s 1s var(--animation-in) backwards;
-            
+
             &:hover {
                 height: auto;
                 margin-top: 0;

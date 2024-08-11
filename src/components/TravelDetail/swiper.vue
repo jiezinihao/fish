@@ -112,7 +112,6 @@ onUnmounted(() => {
     top: 0;
     width: 600px;
     flex-shrink: 0;
-    transition: .5s ease;
     border-radius: 5px;
     overflow: hidden;
     height: 100%;

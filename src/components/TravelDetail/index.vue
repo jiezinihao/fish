@@ -1,27 +1,27 @@
 <template>
     <div>
-        <div class="travel_body" :class="isShow ? 'travel_active' : ''" ref="body" :style="animationState">
-            <div class="travel_swiper" v-if='isShow'>
-                <Swiper :slideList="imgList" :swiperWidth="swiperWidth"></Swiper>
+        <div class="travel_body travel_active" ref="body" :class="isSpa ? '' : 'travel_spa'" :style="animationState">
+            <div class="travel_swiper">
+                <Swiper v-if="swiperList.length > 0" :slideList="swiperList" :swiperWidth="swiperWidth"></Swiper>
             </div>
             <div class="travel_list_body">
                 <div>
-                    <h4>{{ currentTravel?.title }}</h4>
+                    <h4>{{ travelDetail?.title }}</h4>
                     <div class="travel_list_desc">
-                        {{ currentTravel?.body }}
+                        {{ travelDetail?.body }}
                     </div>
                     <div class="travel_list_opr">
                         <p>
                             <svg class="icon rotate jump" aria-hidden="true">
                                 <use xlink:href="#icon-time"></use>
                             </svg>
-                            <span>{{ currentTravel?.time }}</span>
+                            <span>{{ travelDetail?.time }}</span>
                         </p>
                         <p>
                             <svg class="icon guankan jump" aria-hidden="true">
                                 <use xlink:href="#icon-guankan"></use>
                             </svg>
-                            <span v-if="currentTravel?.watchNum > 0">{{ currentTravel?.watchNum }}人看过</span>
+                            <span v-if="travelDetail?.watchNum > 0">{{ travelDetail?.watchNum }}人看过</span>
                             <span v-else>第一名!</span>
                         </p>
                         <p>
@@ -32,31 +32,33 @@
                         </p>
                     </div>
                 </div>
-                <Comment :commentId="currentTravel?.travel_id" :mark="'t'"></Comment>
+                <Comment :commentId="travelDetail?.travel_id" :mark="'t'"></Comment>
 
             </div>
-            <i @click.self="closeTraveItemFunc()" class="exit">×</i>
+            <i @click.self="closeTraveItemFunc()" class="exit" v-show="!isSpa">×</i>
         </div>
-        <div class="travel_mask" :class="maskAnimation ? 'travel_mask_active' : ''" @click.self="closeTraveItemFunc()">
-
+        <div class="travel_mask" v-show="!isSpa" :class="maskAnimation ? 'travel_mask_active' : ''"
+            @click.self="closeTraveItemFunc()">
         </div>
-
     </div>
 </template>
 
 
 <script setup lang="ts">
 
-import { toRefs, ref, watch, getCurrentInstance, reactive, nextTick, computed, onMounted, shallowRef } from 'vue'
+import { toRefs, ref, onMounted, onBeforeMount } from 'vue'
 import 'element-plus/es/components/message/style/css'
 import { ElMessage } from 'element-plus'
 import Comment from '@/components/Comment/index.vue'
+import { GetTravelDetail } from "@/request/api"
 
 
-const props = defineProps(['position', 'currentTravel', 'isShow'])
-const { position, currentTravel, isShow } = toRefs(props)
+const props = defineProps(['beforePosition', 'travelId'])
+const { beforePosition, travelId } = toRefs(props)
 const emits = defineEmits(['closeTraveItem'])
 
+//是否为详情单页面
+const isSpa = ref(false)
 //组件高度
 const Height = document.body.clientHeight * 0.9;
 //swiper的宽度
@@ -65,38 +67,37 @@ const swiperWidth = ref(0);
 //节流,防止频繁点击
 const throttleLock = ref(false)
 //mask动画问题
-const maskAnimation = ref(false)
+const maskAnimation = ref(false);
 
-const imgList = computed(() => {
-    if (typeof (currentTravel?.value) !== 'undefined') {
-        return [
-            currentTravel?.value.thumb,
-            ...currentTravel?.value.imgList
-        ]
-    } else {
-        return []
-    }
+const travelDetail = ref<any>()
+const swiperList = ref<any>([])
+//如果图片没加载出来给予默认宽度
+const fnLength = ref(0)
 
-})
-
-let animationState = reactive({
-    transition: '0s ease',
+const animationState = ref({
     height: '0px',
-    // width: '0px',
-    top: '0px',
-    left: '0px',
-    opacity: '0'
+    width: '0px',
+    transform: '',
+    opacity: '0',
+    transition: 'transform 0s'
 })
+//初始box位置
+const initTransform = ref('')
+const boxPosition = ref<any>()
 
-//监听渲染流程，触发动画方法
-watch(() => isShow?.value, (val) => {
-    if (val) {
-        animationFunc('enter')
-    }
-})
+
+const getTravelDetail = async () => {
+    const result = await GetTravelDetail({ id: travelId?.value }).then(data => data)
+    travelDetail.value = result.data
+    swiperList.value = [
+        travelDetail?.value.thumb,
+        ...travelDetail?.value.imgList
+    ]
+    return
+}
 
 //判断图片宽高
-const judgeImg = async (url: string) => {
+const judgeImg = async (url: string, fn: Function) => {
     //Swiper的宽度
     let width = 0;
     let imgObj = new Image();
@@ -108,94 +109,111 @@ const judgeImg = async (url: string) => {
     //这个之后要做延迟处理
 
     if (imgObj.width === 0) {
-        await judgeImg(url)
+        fnLength.value++
+        if (fnLength.value > 10) {
+            fn(500)
+            fnLength.value = 0
+            return
+        }
+        setTimeout(async () => {
+            judgeImg(url, fn)
+        }, 50)
+
     } else {
         width = (imgObj.width * Height) / imgObj.height
-
-        return width || 0;
+        fn(width)
     }
 }
 //计算swiper宽度
-const calSwiperWidth = async () => {
-
+const calSwiperWidth = async (fn: Function) => {
     //获得图片的宽度
-    let imgWidth = await judgeImg(currentTravel?.value.thumb.url) || 0;
+    await judgeImg(travelDetail?.value.thumb.url, (width: number) => {
+        let imgWidth = width;
+        if (imgWidth > document.body.clientWidth / 2) {
+            imgWidth = document.body.clientWidth / 2
+        }
+        if (document.body.clientWidth < 900) {
+            imgWidth = (document.body.clientWidth / 5) * 4
+        }
+        fn(imgWidth)
+    })
 
-    if (imgWidth > document.body.clientWidth / 2) {
-        imgWidth = document.body.clientWidth / 2
+}
+//计算组件宽高
+const calBox = async () => {
+    let style = {
+        height:  Math.ceil(document.body.clientHeight * 0.9),
+        width: 0,
+        translateX: 0,
+        translateY: 80,
+        scaleX: 1,
+        scaleY: 1
     }
-    if (document.body.clientWidth < 900) {
-        imgWidth = (document.body.clientWidth / 5) * 4
+
+    if (document.body.clientWidth - swiperWidth.value - 700 < 0) {
+        style.width = Math.ceil(document.body.clientWidth);
+        style.translateX = 0
+    } else {
+        style.width = swiperWidth.value + 700;
+        style.translateX = Math.ceil((document.body.clientWidth - swiperWidth.value - 700) / 2)
     }
-    swiperWidth.value = imgWidth
+    //计算一次持久存储
+    boxPosition.value = style
+}
+
+//初始化动画
+const initAnimation = async () => {
+    //初始化box的位置，使用scale缩放处理
+    initTransform.value = `translateX(${beforePosition?.value.left}px) translateY(${beforePosition?.value.top}px)  scaleX(${beforePosition?.value.width / boxPosition.value.width})  scaleY(${beforePosition?.value.width / boxPosition.value.width}) scaleZ(1)`
+    animationState.value = {
+        transform: initTransform.value,
+        width: boxPosition.value.width + 'px',
+        height: boxPosition.value.height + 'px',
+        opacity: '0.1',
+        transition: 'transform 0s'
+    }
+    //链式调用
+    setTimeout(() => {
+        animationFunc('enter')
+    }, 10)
 }
 //params:动画进入和消失的流程
 const animationFunc = async (sign: string) => {
-
-    maskAnimation.value = true
+    maskAnimation.value = true;
     if (throttleLock.value) {
         return
     } else {
         throttleLock.value = true
     }
-    let style = { ...animationState }
     if (sign === 'enter') {
-        swiperWidth.value = position?.value.width;
-        animationState = {
-            transition: '0s ease',
-            ...position?.value,
-            opacity: '1'
+        let transform = `translateX(${boxPosition.value?.translateX}px) translateY(${boxPosition.value?.translateY}px) scaleX(1) scaleY(1) scaleZ(1)`
+        animationState.value = {
+            transform: transform,
+            width: boxPosition.value?.width + 'px',
+            height: boxPosition.value?.height + 'px',
+            opacity: '1',
+            transition: 'transform 0.6s',
+
         }
 
-        await nextTick()
-        await calSwiperWidth()
-        style.top = "80px"
-
-        if (document.body.clientWidth - swiperWidth.value - 700 < 0) {
-            style.left = '0px'
-        } else {
-            style.left = ((document.body.clientWidth - swiperWidth.value - 700) / 2) + "px"
-        }
-
-        style.height = Height + 'px';
-        style.transition = " 0.5s ease"
-        style.opacity = "1"
-        animationState = {
-            ...style
-        }
-        $forceUpdate()
         throttleLock.value = false
 
     } else if (sign === 'out') {
         maskAnimation.value = false
-        animationState = {
-            transition: "0.5s ease",
-            ...position?.value,
-            opacity: "0"
+        animationState.value = {
+            transform: initTransform.value,
+            width: boxPosition.value.width + 'px',
+            height: boxPosition.value.height + 'px',
+            opacity: '0.1',
+            transition: 'transform 0.6s'
         }
-        $forceUpdate()
-
         setTimeout(() => {
             throttleLock.value = false
-            animationState = {
-                transition: '0s ease',
-                height: '0px',
-                top: '0px',
-                left: '0px',
-                opacity: '0'
-            }
-            $forceUpdate()
             emits('closeTraveItem')
-
-        }, 600)
+        }, 400)
     }
 
 }
-const {
-    proxy: { $forceUpdate },
-}: any = getCurrentInstance();
-
-
 
 const orderingCoffee = () => {
     ElMessage.success('谢谢宝宝的咖啡')
@@ -205,21 +223,46 @@ const closeTraveItemFunc = () => {
     animationFunc('out')
 }
 
+onBeforeMount(async () => {
+    await getTravelDetail();
+    await calSwiperWidth(async (width: number) => {
+        swiperWidth.value = width;
+        await calBox().then(data => data);
 
-onMounted(() => {
+        if (beforePosition?.value !== false) {
+            initAnimation()
+        } else {
+            isSpa.value = true;
+            let transform = `translateX(${boxPosition.value?.translateX}px) translateY(${boxPosition.value?.translateY}px) scaleX(1) scaleY(1) scaleZ(1)`
+
+            animationState.value = {
+                height: boxPosition.value.height + 'px',
+                width: boxPosition.value.width + 'px',
+                transform: transform,
+                opacity: '1',
+                transition: 'transform 0s'
+            }
+        }
+    });
+
+
 
 })
+onMounted(async () => {
+
+    // animationFunc('enter')
+})
+
+
+
 </script>
 
 <style lang="scss" scoped>
 .travel_body {
     position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
-    height: 0;
-    // width: 0;
-    z-index: 1000;
-    height: 100%;
     // position: relative;
     -ms-overflow-style: none;
     /* IE and Edge */
@@ -228,8 +271,18 @@ onMounted(() => {
     overflow: scroll;
     display: flex;
     align-items: stretch;
-    // justify-content: center;
     border-radius: 10px;
+    background: var(--h-bg);
+    border: var(--border);
+    transform-origin: left top;
+
+    &.travel_spa {
+        // max-width: 1980px;
+        // position: static;
+        // width: 100%;
+        // height: 100%;
+
+    }
 
     .exit {
         position: absolute;
@@ -240,11 +293,7 @@ onMounted(() => {
         font-style: normal;
     }
 
-    &.travel_active {
-        background: var(--h-bg);
-        border: var(--border);
-        // max-width: 1400px;
-    }
+
 
     .travel_swiper {
         position: relative;
@@ -253,7 +302,6 @@ onMounted(() => {
         // width: 600px;
         height: 100%;
         flex-shrink: 0;
-        transition: .5s ease;
         border-radius: 5px;
         overflow: hidden;
         height: 100%;
@@ -266,7 +314,6 @@ onMounted(() => {
         // opacity: 0;
         transition: 0.4s ease;
         padding-right: 50px;
-        width: 600px;
         height: 100%;
         flex-shrink: 0;
         padding: 50px;
@@ -362,8 +409,6 @@ onMounted(() => {
 
 @media (max-width:1200px) {
     .travel_body {
-        margin: 0 20px;
-
         .travel_list_body {
             width: calc(50vw - 40px);
 
@@ -388,7 +433,7 @@ onMounted(() => {
         .exit {
             position: fixed;
             right: 0.4rem;
-            top: 2.5rem;
+            top: 0;
             z-index: 10;
             font-size: 40px;
         }

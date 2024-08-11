@@ -1,4 +1,4 @@
-type mark = 'a' | 't' | 'm'
+type Mark = 'a' | 't' | 'm'
 class DefNull {
     def: null
 }
@@ -34,9 +34,10 @@ interface NotesListAPIRes extends APIRes {
 }
 
 interface NotesListAPIReq {
-    nav_id: string,
-    page: number,
-    pageSize: number
+    nav_id?: string,
+    sort?: 'proportion'|'desc' | 'asc',
+    page?: number,
+    pageSize?: number
 }
 
 //文章详情
@@ -69,8 +70,21 @@ interface TravelGetAPIResDataItem {
     watchNum:string,
     imgList: TravelImg[]
 }
+interface TravelListGetAPIReq {
+    page?: number,
+    pageSize?: number,
+    sort?: 'proportion'|'desc' | 'asc'
+}
 interface TravelListGetAPIRes extends APIRes {
-    data: TravelGetAPIResDataItem[]
+    data: TravelGetAPIResDataItem[],
+    maxCount: number
+}
+
+interface GetTravelDetailReq {
+    id:string
+}
+interface GetTravelDetailRes extends APIRes {
+    data:TravelGetAPIResDataItem
 }
 
 
@@ -83,6 +97,9 @@ interface CommentItemFrist {
     commentBody: String,
     commentName: String,
     cid: String,
+    createTime: String,
+    icon: String,
+    isHot:'1'|'0',  //是否热门
     commentBack: [CommentItem],
 }
 
@@ -99,13 +116,27 @@ interface CommentUploadGetAPIReq {
     commentName: String,
     cid?: String,
     id: String,
-    mark:mark,
+    icon:String,
+    mark:Mark,
 }
 
-interface CommentGetAPIAPIReq {
+interface CommentGetAPIReq {
     id: String,
-    mark:mark,
+    mark:Mark,
 }
-interface CommentGetAPIAPIRes extends APIRes {
+interface CommentGetAPIRes extends APIRes {
     data:CommentItemFrist[]
+}
+
+interface GetHotCommentListAPIRes  extends APIRes {
+    data: {
+        commentBody: string,
+        commentName: string,
+        aid: string,
+        createTime: string,
+        icon: string,
+        cid:string,
+        mark: Mark,
+        title: string,
+    }[]
 }

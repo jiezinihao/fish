@@ -2,7 +2,7 @@
   <div class="home">
     <canvas id="canvas"></canvas>
     <Nav :process="process" @toTop="toTop" @updateTheme="updateTheme"></Nav>
-    <div class="body" ref="body">
+    <div id="body" class="body" ref="body">
       <!-- <Transition>
         <component :is="tabsComponents[currentTab-1]"></component>
       </Transition> -->
@@ -30,7 +30,8 @@ let process = ref<number>(0);
 let processOrigin = ref<number>(0)
 
 //滚动监听透传Props
-provide('process', readonly(processOrigin));
+provide('processOrigin', readonly(processOrigin));
+provide('process', readonly(process));
 provide('theme', readonly(theme));
 
 const handleScroll = (event: any) => {

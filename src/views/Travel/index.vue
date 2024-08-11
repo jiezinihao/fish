@@ -3,7 +3,7 @@
         <h2 class="title">
             记录身边的人物、风景、故事、还有我和我的猫
         </h2>
-        <div class="container" ref="container" @scroll="handleScroll()">
+        <div class="container" ref="container" >
             <div class="travel_nav" v-for="(item) in travelList" :key="item.travel_id">
                 <div class="thumb">
                     <img :src="item.thumb.url" alt="">
@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <TravelDetail  :position="boxPostion" :currentTravel="currentTravel" :is-show="isShowBox"
+        <TravelDetail v-if="isShowBox" :beforePosition="boxPostion" :travelId="travelId"
             @closeTraveItem="closeTraveItem">
         </TravelDetail>
         <Foot></Foot>
@@ -41,25 +41,25 @@
 
 <script setup lang="ts">
 import TravelDetail from '../../components/TravelDetail/index.vue'
-import { onMounted, ref, reactive, shallowRef } from 'vue';
+import { onMounted, ref, reactive, shallowRef,inject, watch ,nextTick} from 'vue';
 import { TravelListGetAPI } from "../../request/api"
+import { useRouter, useRoute } from 'vue-router';
 // import SwiperNav from "./swiper.vue"
 import Foot from "../../components/Foot/index.vue"
 
 interface TravelList extends TravelGetAPIResDataItem {
-    scorllTop: number,
 }
+const router = useRouter()
+const route = useRoute()
 
 let container = ref<any>(null);
 //打开详情定位
 let boxPostion = reactive({
-    height: '0px',
-    width: '0px',
-    top: '0px',
-    left: '0px',
+    height: 0,
+    width: 0,
+    top: 0,
+    left: 0,
 })
-
-const fristLoading = ref(true)
 
 // const navSwiper = new Swiper('.travel-nav', {
 //     init: false,
@@ -69,13 +69,27 @@ const fristLoading = ref(true)
 // })
 
 //点击旅游名称
-let TravelId = ref(-1);
-const travelList = shallowRef<TravelList[]>();
+const travelId = ref(-1);
+const travelList = ref<TravelList[]>([]);
 let isShowBox = ref(false);
-const currentTravel = shallowRef<TravelGetAPIResDataItem>()
 
-let throttle = ref(true)
-const containerScroll = ref(0)
+const throttle = ref(true)
+const containerScroll = ref(0);
+const process = inject('process', ref(0));
+
+const pageMsg = ref({
+    total:0,
+    page:1,
+    pageSize:4
+})
+
+watch(()=>process.value,()=>{
+    if(process.value>90 && throttle.value){
+        pageMsg.value.page++
+        getTravelList()
+    }
+})
+
 
 // const travelImgList = computed(()=>{
 //     return 
@@ -87,40 +101,20 @@ const containerScroll = ref(0)
 //打开栏目详情
 const showTravelItem = (e: MouseEvent, item: TravelGetAPIResDataItem) => {
     const target = searchTargetElement('travel_nav', e.target);
-    TravelId.value = Number(item.travel_id)
-    currentTravel.value = item
-
+    travelId.value = Number(item.travel_id)
+    router.replace(`?id=${travelId.value}`)
     boxPostion = {
-        height: target.offsetHeight + 'px',
-        width: target.offsetWidth + 'px',
-        top: target.getBoundingClientRect().y + 'px',
-        left: target.getBoundingClientRect().x + 'px',
+        height: target.offsetHeight,
+        width: target.offsetWidth,
+        top: target.getBoundingClientRect().y,
+        left: target.getBoundingClientRect().x,
     }
     isShowBox.value = true
 }
-// const isInScreen = (scorllTop: number) => {
-//     // console.dir(container.value.clientHeight);
 
-//     if (scorllTop - containerScroll.value - container.value.clientHeight > 0) {
-//         return false
-//     } else {
-//         return true
-//     }
-//     // if(document.body.clientHeight - scorllTop -  containerScroll.value)
-// }
 const closeTraveItem = () => {
     isShowBox.value = false
-}
-const handleScroll = () => {
-    // console.dir(e.srcElement.scrollTop);
-    if (throttle.value) {
-
-        containerScroll.value = container.value.scrollTop || 0
-        throttle.value = false;
-        setTimeout(() => {
-            throttle.value = true;
-        }, 500)
-    }
+    router.replace(``)
 
 }
 //深度搜索目标父元素
@@ -138,23 +132,25 @@ const searchTargetElement = (str: string, element: any): any => {
 
 }
 const getTravelList = async () => {
-    const result = await TravelListGetAPI().then(data => data);
-    travelList.value = result.data.map((item, index) => {
-        let scorllTop = index * 400
-        return {
-            ...item,
-            scorllTop
-        }
-    })
-
+    if(throttle.value === false || pageMsg.value.total < (pageMsg.value.page - 1 )*pageMsg.value.pageSize){
+        return
+    }
+    throttle.value = false;
+    setTimeout(()=>{
+        throttle.value = true
+    },1000)
+    const result = await TravelListGetAPI({page:pageMsg.value.page,pageSize:pageMsg.value.pageSize}).then(data => data);
+    travelList.value = [...travelList.value,...result.data ];
+    pageMsg.value.total = result.maxCount;
 }
 
 onMounted(() => {
+    if (route.query.id && route.query?.id !== '') {
+        travelId.value = Number(route.query.id)
+        isShowBox.value = true
+    }
     getTravelList()
 
-    setTimeout(() => {
-        fristLoading.value = false
-    }, 500)
 })
 
 </script>
@@ -163,7 +159,7 @@ onMounted(() => {
 .travel {
     width: 100%;
     height: 100%;
-   
+
     .title {
         font-size: var(--font-size-title);
         font-weight: 700;
@@ -274,10 +270,11 @@ onMounted(() => {
 
 @media screen and (max-width: 900px) {
     .travel {
-        .title{
+        .title {
             font-size: var(--font-size-small);
             margin: 0.4rem;
         }
+
         .container {
             margin: 0 1%;
             margin-bottom: 4rem;
@@ -286,5 +283,4 @@ onMounted(() => {
         }
     }
 }
-
 </style>
