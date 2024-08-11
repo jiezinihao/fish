@@ -22,9 +22,9 @@
                 </div>
                 <div class="acomment_reply comment_item" v-for="itemReply in item.commentBack"
                     :key="itemReply.commentName">
-                    <div class="comment_left">
+                    <!-- <div class="comment_left">
                         <img src="../../assets/img/head.jpg" alt="">
-                    </div>
+                    </div> -->
                     <div class="comment_right">
                         <h5>{{ itemReply.commentName }}</h5>
                         <p>{{ itemReply.commentBody }}</p>
