@@ -172,10 +172,13 @@ onMounted(() => {
 @media screen and (max-width: 900px) {
     .container {
         .comment {
-            padding:0.3rem;
+            padding: 0.3rem;
             padding-top: 0;
         }
 
+        .detail {
+            padding: 0.5rem;
+        }
     }
 
 }

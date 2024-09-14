@@ -4,12 +4,12 @@
             记录身边的人物、风景、故事、还有我和我的猫
         </h2>
         <div class="container" ref="container" >
-            <div class="travel_nav" v-for="(item) in travelList" :key="item.travel_id">
+            <div class="travel_nav" v-for="(item) in travelList" :key="item.travel_id" @click="showTravelItem($event, item)">
                 <div class="thumb">
                     <img :src="item.thumb.url" alt="">
                 </div>
-                <div class="travel_con" @click="showTravelItem($event, item)">
-                    <h2> {{ item.title }}</h2>
+                <div class="travel_con " >
+                    <h2 class="ellipsis"> {{ item.title }}</h2>
                     <div class="travel_opr">
                         <div class="lab">
                             <svg class="icon" aria-hidden="true">

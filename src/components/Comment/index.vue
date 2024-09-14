@@ -413,6 +413,7 @@ onMounted(() => {
                 margin-bottom: 0.4rem;
             }
             .conment_input_con {
+                width: 100%;
                 flex-direction: column;
                 align-items: flex-start;
                 .input_body{

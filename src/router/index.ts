@@ -14,7 +14,7 @@ import TravelDetail from "../views/Travel/Detail/index.vue"
 
 
 const routes: RouteRecordRaw[] = [
-    { path: '/', name:"鱼的博客", redirect: '/index' },
+    { path: '/', name:"鱼的博客" ,redirect: '/index'},
     { path: '/index', name: '鱼的博客', component: Index },
 
     // 动态字段以冒号开始
@@ -48,6 +48,11 @@ const router = createRouter({
 router.beforeResolve ((to) => {
     const name = String(to.name)
     document.title = name || '';
+    console.log(to);
+    if(to.fullPath == "/"){
+        router.push("/index")
+    }
+    
     document.getElementById("body")?.scrollTo({
         top: 0,
         left: 0,

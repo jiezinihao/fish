@@ -1,8 +1,8 @@
 <template>
     <div class="foot">
         <div class="left">
-            <p>© 瑶哩瑶哩玲！</p>
-            <a href="https://beian.miit.gov.cn/">浙ICP备2020033154号-2</a>
+            <!-- <p>© 瑶哩瑶哩玲！</p>
+            <a href="https://beian.miit.gov.cn/">浙ICP备2020033154号-2</a> -->
         </div>
         <div class="friend">
             <h4>友链:</h4>

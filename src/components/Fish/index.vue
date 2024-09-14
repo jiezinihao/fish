@@ -11,9 +11,9 @@
                         <a class="comment_box fade-before" :ani-delay="(index * 0.2) + 's'"
                         @click="hotCommentsClick(item)"
                             v-for="(item, index) in hotCommentsList" :key="index" href="javascript:">
-                            <div class="head_img">
+                            <!-- <div class="head_img">
                                 <img :src="item.icon" alt="">
-                            </div>
+                            </div> -->
                             <div class="comment_title">
                                 <p>{{ item.commentName }}</p>
                                 <time :datetime="item.createTime">{{ item.createTime }}</time>

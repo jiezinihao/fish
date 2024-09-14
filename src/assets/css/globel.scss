@@ -331,3 +331,23 @@ a:where(:hover, :focus, :active) {
   opacity: 1;
   transform: var(--trfm-in, none);
 }
+
+.ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis2{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.ellipsis3{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.font-bold{
+  font-weight: bold;
+}

@@ -6,27 +6,28 @@
         <div class="thumb">
             <img src="../../assets/img/index_bg.jpg" alt="">
             <div class="introduce">
-                <h5>欢迎来到鱼的博客</h5>
-                <h2>我是一个前端开发者</h2>
-                <h5>FISH是一个猫的名字 <span>？</span></h5>
+                <h4>欢迎来到鱼的博客</h4>
+                <h5>我想做的事情很多，我想好好整理我的站点，慢慢的慢慢的</h5>
+                <h5>知道我不能折腾为止</h5>
+                <!-- <h5>FISH是一个猫的名字 </h5> -->
             </div>
         </div>
         <div class="new">
             <h1>最新动态</h1>
             <div class="new_con">
-                <h2>旅行</h2>
+                <h2 class="font-bold">旅行</h2>
                 <div v-for="item in travelList" :key="item.travel_id" @click="goTravel(item.travel_id)">
                     <span>{{ item.title }}</span>
-                    <p>{{ item.body }}</p>
+                    <p class="ellipsis">{{ item.body }}</p>
                     <time :datetime="item.time">{{ item.time }}</time>
                 </div>
 
             </div>
             <div class="new_con">
-                <h2>文章：</h2>
+                <h2 class="font-bold">文章：</h2>
                 <div v-for="item in notesList" :key="item.nav_id" @click="goNotes(item.article_id)">
                     <span></span>
-                    <p>{{ item.title }}</p>
+                    <p class="ellipsis">{{ item.title }}</p>
                     <time :datetime="item.time">{{ item.time }}</time>
                 </div>
             </div>
@@ -153,6 +154,7 @@ onMounted(() => {
 
             h5 {
                 font-size: var(--font-size-medium);
+                color: hsl(var(--font-color)/80%);
             }
 
             h2 {

@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch, provide, readonly } from 'vue'
+import { ref, reactive, onMounted, watch, provide, readonly ,computed} from 'vue'
 // import initLoginBg from "./init.ts"
 import { useRouter, useRoute } from 'vue-router';
 import Nav from "../../components/Nav/index.vue"
@@ -27,11 +27,16 @@ import Nav from "../../components/Nav/index.vue"
 const body = ref<any>(null);
 let theme = ref<string | null>();
 let process = ref<number>(0);
-let processOrigin = ref<number>(0)
+let processOrigin = ref<number>(0);
+const privideProcess = computed(() => {
+  if(process.value < 0) return 0;
+  if(process.value > 100) return 100;
+  return process.value;
+});
 
 //滚动监听透传Props
 provide('processOrigin', readonly(processOrigin));
-provide('process', readonly(process));
+provide('process', readonly(privideProcess));
 provide('theme', readonly(theme));
 
 const handleScroll = (event: any) => {
